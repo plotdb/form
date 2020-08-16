@@ -47,16 +47,14 @@ Validator.prototype = Object.create(Object.prototype) <<< do
   # validate with a specific criteria
   validate-criteria: ({v, c}) ->
     # type not found
-    console.log 1
-    if !(type = @get-type(c.type)) => return
+    if !(type = @get-type(c.type)) => return {result: 2, error: 'type not found'}
     # wrong op or undefined convert
-    console.log 2
-    if !(type[c.op] and type.convert) => return
+    if !(type[c.op] and type.convert) => return {result: 2, error: 'convert or op not found'}
     # if incorrect type of value and options in criteria, return
-    console.log 3
-    if !(type.sanity-check({v, c})) => return
+    if !(type.sanity-check({v, c})) => return {result: 2, error: 'sanity-check failed'}
     # convert value and options in criteria to correct type, then apply op
-    return type[c.op](type.convert({v, c}))
+    if !(ret = type[c.op](type.convert({v, c}))) => return {result: 2, message: c.message}
+    return {result: 0}
 
   # validate with obj
   validate: (obj={}, opt={}) ->
@@ -69,7 +67,7 @@ Validator.prototype = Object.create(Object.prototype) <<< do
       c = criteria[i]
       if !c.enabled => continue
       ret = @validate-criteria({v, c})
-      if !ret or !(res.result?) => return {result: 2, message: 'internal error'}
+      if !ret or !(ret.result?) => return {result: 2, message: 'internal error'}
       if ret.result == 2 => return ret
     return {result: 0}
 
@@ -90,7 +88,9 @@ obj = do
   get-value: -> 5
   is-empty: -> false
   is-required: -> true
-  get-criteria: -> [{enabled: true, type: \number, op: \between, cfg: {i: 2, j: 3}, message: 'not between'}]
+  get-criteria: -> [{enabled: true, type: \number, op: \between, cfg: {i: 2, j: 6}, message: 'not between'}]
 
 ret = validator.validate obj, {}
 console.log ret
+
+module.exports = {Validator}
