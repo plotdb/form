@@ -1,23 +1,26 @@
-module = -> @init.apply @, arguments; @
+base = -> @init.apply @, arguments; @
 
-module.prototype = Object.create(Object.prototype) <<< do
+base.prototype = Object.create(Object.prototype) <<< do
   init: ->
     @ <<< criteria: [], cfg: {}, value: null
     @
   set-value: -> @value = it
   get-value: -> @value
+  is-touched: -> @touched
+  touch: -> @touched = true
   is-empty: ->
   is-required: -> @cfg.required
   get-criteria: -> @criteria or []
+  add-criteria: -> @criteria.push it
   serialize: -> @{criteria, cfg, value}
   deserialize: ->
 
 
-input = -> @module.prototype.apply @, arguments; @
-input.prototype = Object.create(Object.prototype) <<< module.prototype <<< do
-  init: -> @value = {text: ''}
+input = -> base.prototype.init.apply @, arguments; @
+input.prototype = Object.create(Object.prototype) <<< base.prototype <<< do
+  init: -> @value = null
   set-value: -> @value = it
   get-value: -> @value
-  is-empty: -> !!(@get-value!)
+  is-empty: -> !((@get-value!)?)
 
-module.exports = {input, module}
+module.exports = {input, base}

@@ -37,8 +37,12 @@ Validator = ->
 
 Validator.prototype = Object.create(Object.prototype) <<< do
 
-  get-type: (type) -> @types[type]
-  register: (type, obj) -> @types[type] = obj
+  get-type: (type) ->
+    console.log type, @types[type]
+    @types[type]
+  register: (type, obj) ->
+    console.log type, obj
+    @types[type] = obj
 
   # validate / validate-criteria return value: 
   # - result: either 0, 1, or 2 ( success, pending, failed )
@@ -58,22 +62,28 @@ Validator.prototype = Object.create(Object.prototype) <<< do
 
   # validate with obj
   validate: (obj={}, opt={}) ->
+    console.log 1
     if obj.is-empty! =>
-      if !(obj.is-required!) => return if (obj.dirty!) or opt.forced => {result: 0} else {result: 1}
+      if !(obj.is-required!) => return if (obj.is-touched!) or opt.forced => {result: 0} else {result: 1}
       return {result: 2, message: 'required'}
+    console.log 2
     v = obj.get-value!
+    console.log v
     criteria = obj.get-criteria!
+    console.log 3
     for i from 0 til criteria.length =>
+      console.log 4
       c = criteria[i]
       if !c.enabled => continue
       ret = @validate-criteria({v, c})
       if !ret or !(ret.result?) => return {result: 2, message: 'internal error'}
       if ret.result == 2 => return ret
+    console.log 5
     return {result: 0}
 
 
 validator = new Validator!
-validator.register \number, do
+validator.register \number, {
   sanity-check: ({v,c}) -> !(isNaN(v) or (c.cfg.i? and isNaN(c.cfg.i)) or (c.cfg.j? and isNaN(c.cfg.j)))
   convert: ({v,c}) -> [+v, +(c.cfg.i), +(c.cfg.j)]
   gte: ([v,i]) -> v >= i
@@ -82,15 +92,9 @@ validator.register \number, do
   le: ([v,i]) -> v < i
   eq: ([v,i]) -> v == i
   ne: ([v,i]) -> v != i
-  between: ([v,i,j]) -> v >= i and v <= j
-
-obj = do
-  get-value: -> 5
-  is-empty: -> false
-  is-required: -> true
-  get-criteria: -> [{enabled: true, type: \number, op: \between, cfg: {i: 2, j: 6}, message: 'not between'}]
-
-ret = validator.validate obj, {}
-console.log ret
+  between: ([v,i,j]) ->
+    console.log v,i,j
+    v >= i and v <= j
+}
 
 module.exports = {Validator}
