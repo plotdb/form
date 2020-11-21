@@ -20,6 +20,52 @@ rule.prototype = Object.create(Object.prototype) <<< do
   verify: rules.verify
 
 rules.add do
+  i18n: count: zh-tw: \數量, en: \count
+  type: \count
+  sanity-check: ({v,c}) -> v? and c.config.i? and c.config.j?
+  convert: ({v,c}) ->
+    len = if Array.isArray(v) => v.length else if v? => (v.length or "#{v}".length) else 0
+    return [len, +(c.config.i or 0), +(.configj or 0)]
+  default-operation: \gte
+  operations:
+    gte:
+      args: <[i]>
+      func: ({v,c}) -> v >= c.config.i
+    lte:
+      args: <[i]>
+      func: ({v,c}) -> v <= c.config.i
+    eq:
+      args: <[i]>
+      func: ({v,c}) -> v == c.config.i
+    between:
+      args: <[i j]>
+      func: ({v,c}) -> v >= c.config.i and v <= c.config.j
+
+rules.add do
+  i18n: count: zh-tw: \正規表達式, en: 'Regular Expression'
+  type: \regex
+  sanity-check: ({v,c}) -> [v,c.config.i,cconfig.j].reduce(((a,b) -> a and (typeof(b) == \string)),true)
+  convert: ({v,c}) -> return [v,c.config.i, c.config.j].map -> "#it"
+  regex: do
+    type: (v,i,j) -> 
+    convert: (v, i, j) -> return [v,i,j].map -> "#it"
+    match: (v,i) -> (new RegExp(i).exec(v))
+    "not-match": (v,i) -> !(new RegExp(i).exec(v))
+
+rules.add do
+  i18n: count: zh-tw: "小於", en: "smaller"
+  type: \smaller
+  sanity-check: ({v,c}) -> !(isNaN(v) or (c.config.i? and isNaN(c.config.i)) or (c.config.j? and isNaN(c.config.j)))
+  convert: ({v,c}) ->
+    c = {config: {i: +(c.config.i or 0), j: +(c.config.j or 0)}}
+    {v: +v, c}
+  default-operation: \le
+  operations:
+    le:
+      args: <[i]>
+      func: ({v,c}) -> v < c.config.i
+
+rules.add do
   i18n:
     number: zh-tw: \文字, zh: 'String'
   type: \string
@@ -38,8 +84,6 @@ rules.add do
       func: ({v,c}) -> !~v.indexOf(c.config.i)
     email: ({v,c}) -> /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.[a-z]{2,}|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i.exec(v)
     url: ({v,c}) -> /^\s*http(s):\/\/[a-zA-Z0-9-]+/.exec(v)
-
-
 
 rules.add do
   i18n:
