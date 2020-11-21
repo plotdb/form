@@ -14,9 +14,13 @@
     "npm": ">=6.4.1"
   },
   "scripts": {
-    "start": "npx server -r web"
+    "start": "npx server -r web",
+    "test": "npx mocha --require livescript ./test/index.ls",
+    "coverage": "npx nyc --reporter=text npm run test"
   },
   "devDependencies": {
+    "mocha": "^8.2.1",
+    "nyc": "^15.1.0",
     "deploy": "github:zbryikt/deploy",
     "fedep": "0.0.4",
     "livescript": ">=1.6.0",
@@ -41,6 +45,16 @@
       "ldview",
       "bootstrap.native",
       "ldiconfont"
+    ]
+  },
+  "nyc": {
+    "all": true,
+    "extension": ".ls",
+    "require": [
+      "livescript"
+    ],
+    "include": [
+      "src/**/*"
     ]
   }
 }
