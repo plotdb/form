@@ -1,3 +1,54 @@
 extends /base.pug
 block body
-  h1 hi
+  .w-480.mx-auto.rwd.my-4
+    .row
+      .col-md
+        .form-group
+          label Block
+          select.form-control.form-control-sm
+            option(ld-each="block-names")
+      .col-md
+        .form-group
+          label ID
+          input.form-control.form-control-sm
+
+    .form-group
+      label Title
+      input.form-control.form-control-sm
+
+    .form-group
+      label Description
+      textarea.form-control.form-control-sm(rows="3")
+    .row
+      .col-md
+        .form-check
+          input.form-check-input.clickable(ld="check",name="public",type="checkbox")
+          label.form-check-label.no-select.clickable public
+
+      .col-md
+        .form-check
+          input.form-check-input.clickable(ld="check",name="show-desc",type="checkbox")
+          label.form-check-label.no-select.clickable show desc
+      .col-md
+        .form-check
+          input.form-check-input.clickable(ld="check",name="required",type="checkbox")
+          label.form-check-label.no-select.clickable required
+
+    .mt-4
+      .d-flex.align-items-center(ld-each="criteria")
+        .flex-grow-1.mr-2: .form-group
+          label criteria type
+          input.form-control.form-control-sm(ld="input",name="type")
+        .flex-grow-1.mx-2: .form-group
+          label criteria rule
+          input.form-control.form-control-sm(ld="input",name="rule")
+        .flex-grow-1.ml-2: .form-group
+          label criteria value
+          input.form-control.form-control-sm(ld="input",name="value")
+        div
+          .form-group
+            label &nbsp;
+            .btn.btn-sm.btn-text(ld="delete"): i.i-close
+      .btn.btn-sm.btn-outline-secondary(ld="add-criteria") Add Criteria
+    .card.my-4: .card-body
+      input.form-control

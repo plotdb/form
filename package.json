@@ -4,6 +4,9 @@
   "license": "MIT",
   "description": "",
   "version": "0.0.1",
+  "files": [
+    "dist/**/*"
+  ],
   "homepage": "https://github.com/plotdb/form",
   "repository": {
     "type": "git",
@@ -27,8 +30,7 @@
     "stylus": "^0.54.5",
     "uglify-js": "=3.2.0",
     "uglifycss": "0.0.29",
-    "template": "github:zbryikt/template#v2.1.4",
-    "bootstrap.build": "github:plotdb/bootstrap.build",
+    "template": "github:zbryikt/template#v2.1.6",
     "bootstrap.ldui": "github:loadingio/bootstrap.ldui",
     "bootstrap.native": "^3.0.13",
     "@loadingio/ldquery": "^1.1.0",
@@ -39,6 +41,7 @@
   "frontendDependencies": {
     "root": "web/static/assets/lib",
     "modules": [
+      "bootstrap",
       "bootstrap.ldui",
       "ldCover",
       "@loadingio/ldquery",
@@ -56,5 +59,8 @@
     "include": [
       "src/**/*"
     ]
+  },
+  "dependencies": {
+    "bootstrap": "^4.5.3"
   }
 }
