@@ -4,7 +4,7 @@ ruleset = do
   sanity-check: ({v,c}) -> v? and c.config.i? and c.config.j?
   convert: ({v,c}) ->
     len = if Array.isArray(v) => v.length else if v? => (v.length or "#{v}".length) else 0
-    return [len, +(c.config.i or 0), +(.configj or 0)]
+    return [len, +(c.config.i or 0), +(c.config.j or 0)]
   default-operation: \gte
   operations:
     gte:
