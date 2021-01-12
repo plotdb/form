@@ -1,20 +1,15 @@
 extends /base.pug
 block body
 block script
+
   +script("assets/lib/form/dev/form.def.js")
   +script("assets/lib/form/dev/form.imp.js")
   +script("assets/lib/curegex/main/curegex.js")
   script: :lsc
+    la = form.block.get \long-answer
+    console.log la
     term = new form.term {opset: \string, op: \email}
     str = form.type.get \string
     ret = str.cast 'test@test.com'
     ret = term.verify ret
     console.log ret
-
-    /*
-    rule = rulesets.get-rule \string
-    c = new form.term {type: \string, op: \email}
-    console.log rule
-    ret = c.verify 'test@test.com'
-    console.log ret
-    */

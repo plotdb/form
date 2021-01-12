@@ -135,13 +135,13 @@ pug_mixins["script"]("assets/lib/ldcover/main/ldcv.min.js");
 ;pug_debug_line = 22;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
 pug_mixins["script"]("assets/lib/ldview/main/ldview.min.js");
 ;pug_debug_line = 23;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-;pug_debug_line = 4;pug_debug_filename = "src\u002Fpug\u002Frule.pug";
-pug_mixins["script"]("assets/lib/form/dev/form.def.js");
 ;pug_debug_line = 5;pug_debug_filename = "src\u002Fpug\u002Frule.pug";
-pug_mixins["script"]("assets/lib/form/dev/form.imp.js");
+pug_mixins["script"]("assets/lib/form/dev/form.def.js");
 ;pug_debug_line = 6;pug_debug_filename = "src\u002Fpug\u002Frule.pug";
+pug_mixins["script"]("assets/lib/form/dev/form.imp.js");
+;pug_debug_line = 7;pug_debug_filename = "src\u002Fpug\u002Frule.pug";
 pug_mixins["script"]("assets/lib/curegex/main/curegex.js");
-;pug_debug_line = 7;pug_debug_filename = "src\u002Fpug\u002Frule.pug";
+;pug_debug_line = 8;pug_debug_filename = "src\u002Fpug\u002Frule.pug";
 pug_html = pug_html + "\u003Cscript\u003E";
-;pug_debug_line = 7;pug_debug_filename = "src\u002Fpug\u002Frule.pug";
-pug_html = pug_html + "var term, str, ret;\nterm = new form.term({\n  opset: 'string',\n  op: 'email'\n});\nstr = form.type.get('string');\nret = str.cast('test@test.com');\nret = term.verify(ret);\nconsole.log(ret);\n\u002F*\nrule = rulesets.get-rule \\string\nc = new form.term {type: \\string, op: \\email}\nconsole.log rule\nret = c.verify 'test@test.com'\nconsole.log ret\n*\u002F\u003C\u002Fscript\u003E\u003C\u002Fbody\u003E\u003C\u002Fhtml\u003E";}.call(this,"JSON" in locals_for_with?locals_for_with.JSON:typeof JSON!=="undefined"?JSON:undefined,"blockLoader" in locals_for_with?locals_for_with.blockLoader:typeof blockLoader!=="undefined"?blockLoader:undefined,"cssLoader" in locals_for_with?locals_for_with.cssLoader:typeof cssLoader!=="undefined"?cssLoader:undefined,"decache" in locals_for_with?locals_for_with.decache:typeof decache!=="undefined"?decache:undefined,"escape" in locals_for_with?locals_for_with.escape:typeof escape!=="undefined"?escape:undefined,"scriptLoader" in locals_for_with?locals_for_with.scriptLoader:typeof scriptLoader!=="undefined"?scriptLoader:undefined,"version" in locals_for_with?locals_for_with.version:typeof version!=="undefined"?version:undefined));} catch (err) {pug_rethrow(err, pug_debug_filename, pug_debug_line);};return pug_html;}; module.exports = template; })() 
+;pug_debug_line = 8;pug_debug_filename = "src\u002Fpug\u002Frule.pug";
+pug_html = pug_html + "var la, term, str, ret;\nla = form.block.get('long-answer');\nconsole.log(la);\nterm = new form.term({\n  opset: 'string',\n  op: 'email'\n});\nstr = form.type.get('string');\nret = str.cast('test@test.com');\nret = term.verify(ret);\nconsole.log(ret);\u003C\u002Fscript\u003E\u003C\u002Fbody\u003E\u003C\u002Fhtml\u003E";}.call(this,"JSON" in locals_for_with?locals_for_with.JSON:typeof JSON!=="undefined"?JSON:undefined,"blockLoader" in locals_for_with?locals_for_with.blockLoader:typeof blockLoader!=="undefined"?blockLoader:undefined,"cssLoader" in locals_for_with?locals_for_with.cssLoader:typeof cssLoader!=="undefined"?cssLoader:undefined,"decache" in locals_for_with?locals_for_with.decache:typeof decache!=="undefined"?decache:undefined,"escape" in locals_for_with?locals_for_with.escape:typeof escape!=="undefined"?escape:undefined,"scriptLoader" in locals_for_with?locals_for_with.scriptLoader:typeof scriptLoader!=="undefined"?scriptLoader:undefined,"version" in locals_for_with?locals_for_with.version:typeof version!=="undefined"?version:undefined));} catch (err) {pug_rethrow(err, pug_debug_filename, pug_debug_line);};return pug_html;}; module.exports = template; })() 

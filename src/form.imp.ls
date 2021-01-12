@@ -1,4 +1,5 @@
-long-answer = -> @
+form.block.register long-answer = -> @
+long-answer.id = \long-answer
 long-answer.prototype = Object.create(Object.prototype) <<< form.block.prototype <<< do
   attributes: ->
   serialize: ->

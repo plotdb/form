@@ -1,4 +1,6 @@
-<!DOCTYPE html><html><head><link rel="stylesheet" type="text/css" href="assets/lib/bootstrap/main/css/bootstrap.min.css"><link rel="stylesheet" type="text/css" href="assets/lib/bootstrap.ldui/main/bootstrap.ldui.min.css"><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,700|Roboto+Mono"><link rel="stylesheet" type="text/css" href="assets/lib/ldcover/main/ldcv.min.css"><link rel="stylesheet" type="text/css" href="assets/lib/ldiconfont/main/ldif.min.css"><link rel="stylesheet" type="text/css" href="css/index.css"></head><body><script type="text/javascript" src="assets/lib/bootstrap.native/main/bootstrap-native.min.js"></script><script type="text/javascript" src="assets/lib/bootstrap.ldui/main/bootstrap.ldui.min.js"></script><script type="text/javascript" src="assets/lib/@loadingio/ldquery/main/ldq.min.js"></script><script type="text/javascript" src="assets/lib/ldcover/main/ldcv.min.js"></script><script type="text/javascript" src="assets/lib/ldview/main/ldview.min.js"></script><script type="text/javascript" src="assets/lib/form/dev/form.def.js"></script><script type="text/javascript" src="assets/lib/form/dev/form.imp.js"></script><script type="text/javascript" src="assets/lib/curegex/main/curegex.js"></script><script>var term, str, ret;
+<!DOCTYPE html><html><head><link rel="stylesheet" type="text/css" href="assets/lib/bootstrap/main/css/bootstrap.min.css"><link rel="stylesheet" type="text/css" href="assets/lib/bootstrap.ldui/main/bootstrap.ldui.min.css"><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,700|Roboto+Mono"><link rel="stylesheet" type="text/css" href="assets/lib/ldcover/main/ldcv.min.css"><link rel="stylesheet" type="text/css" href="assets/lib/ldiconfont/main/ldif.min.css"><link rel="stylesheet" type="text/css" href="css/index.css"></head><body><script type="text/javascript" src="assets/lib/bootstrap.native/main/bootstrap-native.min.js"></script><script type="text/javascript" src="assets/lib/bootstrap.ldui/main/bootstrap.ldui.min.js"></script><script type="text/javascript" src="assets/lib/@loadingio/ldquery/main/ldq.min.js"></script><script type="text/javascript" src="assets/lib/ldcover/main/ldcv.min.js"></script><script type="text/javascript" src="assets/lib/ldview/main/ldview.min.js"></script><script type="text/javascript" src="assets/lib/form/dev/form.def.js"></script><script type="text/javascript" src="assets/lib/form/dev/form.imp.js"></script><script type="text/javascript" src="assets/lib/curegex/main/curegex.js"></script><script>var la, term, str, ret;
+la = form.block.get('long-answer');
+console.log(la);
 term = new form.term({
   opset: 'string',
   op: 'email'
@@ -6,11 +8,4 @@ term = new form.term({
 str = form.type.get('string');
 ret = str.cast('test@test.com');
 ret = term.verify(ret);
-console.log(ret);
-/*
-rule = rulesets.get-rule \string
-c = new form.term {type: \string, op: \email}
-console.log rule
-ret = c.verify 'test@test.com'
-console.log ret
-*/</script></body></html>
+console.log(ret);</script></body></html>
