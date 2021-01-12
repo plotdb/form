@@ -6,7 +6,9 @@ block script
   +script("assets/lib/curegex/main/curegex.js")
   script: :lsc
     term = new form.term {opset: \string, op: \email}
-    ret = term.verify \test@test.com
+    str = form.type.get \string
+    ret = str.cast 'test@test.com'
+    ret = term.verify ret
     console.log ret
 
     /*

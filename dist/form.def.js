@@ -14,13 +14,38 @@
     return this;
   };
   form.block.prototype = Object.create(Object.prototype);
+  form.block.register = function(it){
+    return (this.list || (this.list = [])).push(new form.block(it));
+  };
+  form.block.get = function(id){
+    return (this.list || (this.list = [])).filter(function(it){
+      return (it.id || it.name) === id;
+    })[0];
+  };
   form.type = function(opt){
     opt == null && (opt = {});
+    this.name = opt.name;
+    this.id = opt.id;
+    this.cast = opt.cast instanceof Function
+      ? opt.cast
+      : function(it){
+        return it;
+      };
+    this.opset = opt.opset instanceof form.opset
+      ? opt.opset
+      : typeof opt.opset === 'object'
+        ? new form.opset(opt.opset)
+        : form.opset.get(opt.opset);
     return this;
   };
   form.type.prototype = Object.create(Object.prototype);
   form.type.register = function(it){
     return (this.list || (this.list = [])).push(new form.type(it));
+  };
+  form.type.get = function(id){
+    return (this.list || (this.list = [])).filter(function(it){
+      return (it.id || it.name) === id;
+    })[0];
   };
   form.opset = function(opt){
     var k, ref$, v, ref1$;
@@ -34,14 +59,16 @@
         func: v
       } : v, ref1$.name = k, ref1$.id = k, ref1$));
     }
-    this.defaultOp = opt.defaultOp || (function(){
-      var ref$, results$ = [];
-      for (k in ref$ = this.ops) {
-        v = ref$[k];
-        results$.push(k);
-      }
-      return results$;
-    }.call(this))[0];
+    this.defaultOp = this.ops[opt.defaultOp]
+      ? opt.defaultOp
+      : (function(){
+        var ref$, results$ = [];
+        for (k in ref$ = this.ops) {
+          v = ref$[k];
+          results$.push(k);
+        }
+        return results$;
+      }.call(this))[0];
     return this;
   };
   form.opset.prototype = import$(Object.create(Object.prototype), {
@@ -51,6 +78,11 @@
   });
   form.opset.register = function(it){
     return (this.list || (this.list = [])).push(new form.opset(it));
+  };
+  form.opset.get = function(id){
+    return (this.list || (this.list = [])).filter(function(it){
+      return (it.id || it.name) === id;
+    })[0];
   };
   form.op = function(opt){
     opt == null && (opt = {});
@@ -99,9 +131,7 @@
         : !this.enabled;
     },
     setOpset: function(id){
-      if (!(this.opset = form.opset.list.filter(function(it){
-        return it.id === id;
-      })[0])) {
+      if (!(this.opset = form.opset.get(id))) {
         throw new Error("no such opset '" + id + "'");
       }
       return this.setOp();

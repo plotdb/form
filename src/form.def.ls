@@ -11,23 +11,35 @@ mgr = new form.manager!
 # 表單單元的定義
 form.block = (opt={}) -> @
 form.block.prototype = Object.create(Object.prototype) <<< {}
+form.block.register = -> @[]list.push new form.block(it)
+form.block.get = (id) -> @[]list.filter(->(it.id or it.name) == id).0
 
 # 單元資料型態的定義
-form.type = (opt={}) -> @
+form.type = (opt={}) ->
+  @ <<< opt{name, id}
+  @cast = if opt.cast instanceof Function => opt.cast else (->it)
+  @opset = if opt.opset instanceof form.opset => opt.opset
+  else if typeof(opt.opset) == \object => new form.opset(opt.opset)
+  else form.opset.get(opt.opset)
+  @
+
 form.type.prototype = Object.create(Object.prototype) <<< {}
 form.type.register = -> @[]list.push new form.type(it)
+form.type.get = (id) -> @[]list.filter(->(it.id or it.name) == id).0
 
 # 資料驗證的規則集
 form.opset = (opt={}) ->
   @ <<< opt{name, id}
   @ <<< {ops: {}}
   for k,v of opt.ops => @ops[k] = new form.op((if typeof(v) == \function => {func: v} else v) <<< {name: k, id: k})
-  @default-op = opt.default-op or [k for k,v of @ops].0
+  @default-op = if @ops[opt.default-op] => opt.default-op else [k for k,v of @ops].0
   @
 
 form.opset.prototype = Object.create(Object.prototype) <<< do
   get-op: (id) -> @ops[id or @default-op]
+
 form.opset.register = -> @[]list.push new form.opset(it)
+form.opset.get = (id)-> @[]list.filter(->(it.id or it.name) == id).0
 
 # 規則運算子
 form.op = (opt = {}) ->
@@ -57,7 +69,7 @@ form.term = (opt={}) ->
 form.term.prototype = Object.create(Object.prototype) <<< do
   toggle: -> @enabled = if it? => it else !@enabled
   set-opset: (id) ->
-    if !(@opset = (form.opset.list.filter -> it.id == id).0) => throw new Error("no such opset '#id'")
+    if !(@opset = form.opset.get id) => throw new Error("no such opset '#id'")
     @set-op!
 
   # called with no arg to reset to default
