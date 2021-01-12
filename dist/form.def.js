@@ -14,8 +14,9 @@
     return this;
   };
   form.block.prototype = Object.create(Object.prototype);
-  form.block.register = function(it){
-    return (this.list || (this.list = [])).push(new form.block(it));
+  form.block.register = function(n, c){
+    var ref$;
+    return (this.list || (this.list = [])).push((ref$ = new form.block(c), ref$.name = n, ref$));
   };
   form.block.get = function(id){
     return (this.list || (this.list = [])).filter(function(it){

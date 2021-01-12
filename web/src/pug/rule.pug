@@ -1,7 +1,14 @@
 extends /base.pug
+block head
+  +css("assets/lib/@plotdb/block/main/block.min.css")
 block body
 block script
 
+  +script("assets/lib/dompurify/main/purify.min.js")
+  +script("assets/lib/proxise/main/proxise.min.js")
+  +script("assets/lib/@plotdb/datadom/main/datadom.min.js")
+  +script("assets/lib/@plotdb/rescope/main/rescope.min.js")
+  +script("assets/lib/@plotdb/block/main/block.min.js")
   +script("assets/lib/form/dev/form.def.js")
   +script("assets/lib/form/dev/form.imp.js")
   +script("assets/lib/curegex/main/curegex.js")

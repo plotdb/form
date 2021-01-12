@@ -11,7 +11,7 @@ mgr = new form.manager!
 # 表單單元的定義
 form.block = (opt={}) -> @
 form.block.prototype = Object.create(Object.prototype) <<< {}
-form.block.register = -> @[]list.push new form.block(it)
+form.block.register = (n,c) -> @[]list.push((new form.block(c)) <<< {name: n})
 form.block.get = (id) -> @[]list.filter(->(it.id or it.name) == id).0
 
 # 單元資料型態的定義
