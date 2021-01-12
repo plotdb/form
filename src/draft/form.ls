@@ -13,23 +13,25 @@ form.prototype = Object.create(Object.prototype) <<< do
     block = @defs.splice i, 1
     @defs.splice if (i > j => j else j - 1), 0, block
 
+/*
 form.blockdef = (opt={}) ->
   @def = opt.def
-  /*
-  {
-    id, type
-    config: {title, description, required, public}
-    criteria: [
-      {attr, ruleset, config},
-      ...
-    ]
-  }
-  */
+  
+  # {
+  #   id, type
+  #   config: {title, description, required, public}
+  #   criteria: [
+  #     {attr, ruleset, config},
+  #     ...
+  #   ]
+  # }
+
   @set-type @def.type
   @
 
 form.blockdef.prototype = Object.create(Object.prototype) <<< do
   set-type: -> @type = form.types.get it
+*/
 
 form.type = (opt={}) ->
   @ <<< opt{name, attr}

@@ -1,0 +1,46 @@
+某欄位合乎條件?
+
+ - 程式檢查 ( 需要 sanity check. 只能給信得過的程式做檢查. )
+ - 透過預先定義的方式檢查.
+
+欄位 ->      取值 ->      確認規格
+
+       ( 各種可能的值 )  ( 值對應的規格 )
+
+field  transform  type  attr  check 
+比方說
+
+ short-answer -> value -> str.length
+
+短答轉成數值, 數值轉成字串, 字串取長度, 長度看大小
+(transform)   (typecasting) (attribute) (criteria)
+
+轉成數值: 預設 + 欄位定義的介面
+
+field: 欄位
+value: 數值 ( field.get field.possible-transforms![Math.random! field.possible-transforms!length] )
+cvalue: 轉換過後的數值 ( value.get value.possible-types![Math.random! value.possible-types!length] )
+avalue: 再取參數 ( cvalue.get cvalue.possible-attr![Math.random! cvalue.possible-attr!length] )
+criteria.verify(avalue)
+
+field 列出可提供的所有屬性.
+屬性列出可對應的資料型態, 或者預設型態 ( string, int )
+各種資料型態有可取的參數
+參數可以過 criteria
+
+
+field:  數字 / 字串 / 檔案們
+value:  數字 / 字串 / 檔案數量, 檔案全體大小, 或檔案們
+cvalue: 字串, 數字 / 字串, 數值 / 字串, 數值, 檔案們
+avalue: 字串長度, 數字, 字串, 檔案們, 檔案數量, 檔案大小
+
+過於複雜. value + cvalue 簡化成 value + type + ruleset:
+
+  數字(int,str), 字串(int,str), 檔案數量(int,str,filecount), 檔案大小(int,str,filesize),檔案們(int,str,files)
+
+field.attr({name}):
+ - name: attribute name.
+ - return {value, type, rule}
+   - value: value of attribute `name`
+   - type: data type
+   - rule: accepted rules

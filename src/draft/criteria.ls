@@ -1,5 +1,6 @@
 criteria = (opt={}) ->
-  @ <<< {type: null, op: null} <<< opt{config}
+  @ <<< {type: null, op: null, config: {}}
+  if opt.config => @config = opt.config
   if opt.type => @set-type opt.type
   @set-op opt.op
   @
@@ -21,4 +22,5 @@ criteria.prototype = Object.create(Object.prototype) <<< do
     if !@rule => throw new Error("type not set")
     @rule.verify(v,@)
 
-module.exports = criteria
+if module? => module.exports = criteria
+if window? => window.criteria = criteria

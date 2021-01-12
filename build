@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+echo "prepare..."
+rm -rf dist
+mkdir -p dist/ruleset
+
+echo "building livescript files ..."
+npx lsc -cp src/form.def.ls > dist/form.def.js
+npx lsc -cp src/form.imp.ls > dist/form.imp.js
+#npx lsc -cp src/rulesets/index.ls > dist/ruleset/index.js
+#npx lsc -cp src/rulesets/text.ls > dist/ruleset/text.js
+#npx lsc -cp src/criteria.ls > dist/criteria.js
+
+echo "copy dist to web ..."
+rm -rf web/static/assets/lib/form/dev/
+mkdir -p web/static/assets/lib/form/dev/
+cp -R dist/* web/static/assets/lib/form/dev/
+

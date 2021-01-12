@@ -1,10 +1,3 @@
-ruleset = (opt) ->
-  @ <<< opt
-  @
-ruleset.prototype = Object.create(Object.prototype) <<< do
-  get-rule: -> return @
-  verify: rulesets.verify
-
 rulesets = do
   list: []
   get-rule: (n) -> @list.filter(->it.type == n).0
@@ -18,4 +11,14 @@ rulesets = do
       if typeof(op) == \function => op {v,c} else op.func {v,c}
     else return false
 
-module.exports = criteria
+ruleset = (opt) ->
+  @ <<< opt
+  @
+ruleset.prototype = Object.create(Object.prototype) <<< do
+  get-rule: -> return @
+  verify: rulesets.verify
+
+if module? => module.exports = rulesets
+if window? => window.ruleset = ruleset
+if window? => window.rulesets = rulesets
+
