@@ -18,6 +18,7 @@ form.block.get = (id) -> @[]list.filter(->(it.id or it.name) == id).0
 form.type = (opt={}) ->
   @ <<< opt{name, id}
   @cast = if opt.cast instanceof Function => opt.cast else (->it)
+  @is-empty = if opt.is-empty instanceof Function => opt.is-empty else (->it)
   @opset = if opt.opset instanceof form.opset => opt.opset
   else if typeof(opt.opset) == \object => new form.opset(opt.opset)
   else form.opset.get(opt.opset)

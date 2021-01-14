@@ -4,19 +4,31 @@ block head
 block body
 block script
 
+  +script("assets/lib/browserfs/main/browserfs.min.js")
+  script: :lsc
+    BrowserFS.install(window)
+    BrowserFS.configure {fs: \LocalStorage}, (e) -> if e => throw e
+
+  +script("assets/lib/@plotdb/pug-browser/main/pug.min.js")
   +script("assets/lib/dompurify/main/purify.min.js")
   +script("assets/lib/proxise/main/proxise.min.js")
   +script("assets/lib/@plotdb/datadom/main/datadom.min.js")
   +script("assets/lib/@plotdb/rescope/main/rescope.min.js")
+  +script("assets/lib/@plotdb/csscope/main/csscope.min.js")
   +script("assets/lib/@plotdb/block/main/block.min.js")
   +script("assets/lib/form/dev/form.def.js")
   +script("assets/lib/form/dev/form.imp.js")
   +script("assets/lib/curegex/main/curegex.js")
   script: :lsc
-    la = form.block.get \long-answer
-    console.log la
-    term = new form.term {opset: \string, op: \email}
-    str = form.type.get \string
-    ret = str.cast 'test@test.com'
-    ret = term.verify ret
-    console.log ret
+    form.init!
+      .then ->
+        la = form.block.get \long-answer
+        console.log la
+        term = new form.term {opset: \string, op: \email}
+        str = form.type.get \string
+        ret = str.cast 'test@test.com'
+        ret = term.verify ret
+        console.log ret
+        form.manager.get {name: 'long-answer', version: '0.0.1'}
+          .then (c) -> c.create!
+          .then (obj) -> obj.attach root: document.body

@@ -1,11 +1,30 @@
-<!DOCTYPE html><html><head><link rel="stylesheet" type="text/css" href="assets/lib/bootstrap/main/css/bootstrap.min.css"><link rel="stylesheet" type="text/css" href="assets/lib/bootstrap.ldui/main/bootstrap.ldui.min.css"><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,700|Roboto+Mono"><link rel="stylesheet" type="text/css" href="assets/lib/ldcover/main/ldcv.min.css"><link rel="stylesheet" type="text/css" href="assets/lib/ldiconfont/main/ldif.min.css"><link rel="stylesheet" type="text/css" href="css/index.css"><link rel="stylesheet" type="text/css" href="assets/lib/@plotdb/block/main/block.min.css"></head><body><script type="text/javascript" src="assets/lib/bootstrap.native/main/bootstrap-native.min.js"></script><script type="text/javascript" src="assets/lib/bootstrap.ldui/main/bootstrap.ldui.min.js"></script><script type="text/javascript" src="assets/lib/@loadingio/ldquery/main/ldq.min.js"></script><script type="text/javascript" src="assets/lib/ldcover/main/ldcv.min.js"></script><script type="text/javascript" src="assets/lib/ldview/main/ldview.min.js"></script><script type="text/javascript" src="assets/lib/dompurify/main/purify.min.js"></script><script type="text/javascript" src="assets/lib/proxise/main/proxise.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/datadom/main/datadom.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/rescope/main/rescope.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/block/main/block.min.js"></script><script type="text/javascript" src="assets/lib/form/dev/form.def.js"></script><script type="text/javascript" src="assets/lib/form/dev/form.imp.js"></script><script type="text/javascript" src="assets/lib/curegex/main/curegex.js"></script><script>var la, term, str, ret;
-la = form.block.get('long-answer');
-console.log(la);
-term = new form.term({
-  opset: 'string',
-  op: 'email'
-});
-str = form.type.get('string');
-ret = str.cast('test@test.com');
-ret = term.verify(ret);
-console.log(ret);</script></body></html>
+<!DOCTYPE html><html><head><link rel="stylesheet" type="text/css" href="assets/lib/bootstrap/main/css/bootstrap.min.css"><link rel="stylesheet" type="text/css" href="assets/lib/bootstrap.ldui/main/bootstrap.ldui.min.css"><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,700|Roboto+Mono"><link rel="stylesheet" type="text/css" href="assets/lib/ldcover/main/ldcv.min.css"><link rel="stylesheet" type="text/css" href="assets/lib/ldiconfont/main/ldif.min.css"><link rel="stylesheet" type="text/css" href="css/index.css"><link rel="stylesheet" type="text/css" href="assets/lib/@plotdb/block/main/block.min.css"></head><body><script type="text/javascript" src="assets/lib/bootstrap.native/main/bootstrap-native.min.js"></script><script type="text/javascript" src="assets/lib/bootstrap.ldui/main/bootstrap.ldui.min.js"></script><script type="text/javascript" src="assets/lib/@loadingio/ldquery/main/ldq.min.js"></script><script type="text/javascript" src="assets/lib/ldcover/main/ldcv.min.js"></script><script type="text/javascript" src="assets/lib/ldview/main/ldview.min.js"></script><script type="text/javascript" src="assets/lib/browserfs/main/browserfs.min.js"></script><script>BrowserFS.install(window);
+BrowserFS.configure({
+  fs: 'LocalStorage'
+}, function(e){
+  if (e) {
+    throw e;
+  }
+});</script><script type="text/javascript" src="assets/lib/@plotdb/pug-browser/main/pug.min.js"></script><script type="text/javascript" src="assets/lib/dompurify/main/purify.min.js"></script><script type="text/javascript" src="assets/lib/proxise/main/proxise.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/datadom/main/datadom.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/rescope/main/rescope.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/csscope/main/csscope.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/block/main/block.min.js"></script><script type="text/javascript" src="assets/lib/form/dev/form.def.js"></script><script type="text/javascript" src="assets/lib/form/dev/form.imp.js"></script><script type="text/javascript" src="assets/lib/curegex/main/curegex.js"></script><script>form.init().then(function(){
+  var la, term, str, ret;
+  la = form.block.get('long-answer');
+  console.log(la);
+  term = new form.term({
+    opset: 'string',
+    op: 'email'
+  });
+  str = form.type.get('string');
+  ret = str.cast('test@test.com');
+  ret = term.verify(ret);
+  console.log(ret);
+  return form.manager.get({
+    name: 'long-answer',
+    version: '0.0.1'
+  }).then(function(c){
+    return c.create();
+  }).then(function(obj){
+    return obj.attach({
+      root: document.body
+    });
+  });
+});</script></body></html>

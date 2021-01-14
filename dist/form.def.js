@@ -32,6 +32,11 @@
       : function(it){
         return it;
       };
+    this.isEmpty = opt.isEmpty instanceof Function
+      ? opt.isEmpty
+      : function(it){
+        return it;
+      };
     this.opset = opt.opset instanceof form.opset
       ? opt.opset
       : typeof opt.opset === 'object'
