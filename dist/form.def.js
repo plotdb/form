@@ -6,7 +6,9 @@
     return this;
   };
   form.prototype = Object.create(Object.prototype);
-  form.manager = function(){};
+  form.manager = function(){
+    return this;
+  };
   form.manager.prototype = Object.create(Object.prototype);
   mgr = new form.manager();
   form.block = function(opt){
@@ -167,7 +169,11 @@
       });
     }
   });
-  window.form = form;
+  if (typeof module != 'undefined' && module !== null) {
+    module.exports = form;
+  } else if (typeof window != 'undefined' && window !== null) {
+    window.form = form;
+  }
   function import$(obj, src){
     var own = {}.hasOwnProperty;
     for (var key in src) if (own.call(src, key)) obj[key] = src[key];

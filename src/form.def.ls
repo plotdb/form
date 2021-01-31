@@ -3,18 +3,25 @@ form = (opt={}) -> @
 form.prototype = Object.create(Object.prototype) <<< {}
 
 # 表單各資源的管理
-form.manager = ->
+form.manager = -> @
 form.manager.prototype = Object.create(Object.prototype) <<< {}
 
 mgr = new form.manager!
 
 # 表單單元的定義
-form.block = (opt={}) -> @
+form.block = (opt={}) ->
+  @
+
 form.block.prototype = Object.create(Object.prototype) <<< {}
 form.block.register = (n,c) -> @[]list.push((new form.block(c)) <<< {name: n})
 form.block.get = (id) -> @[]list.filter(->(it.id or it.name) == id).0
 
-# 單元資料型態的定義
+#blockbase = do
+#  init: ({data}) ->
+#    @data = data{id,alias,title,desc,is-public,is-required,show-desc,config,resouces}
+
+/*
+# 單元資料型態的定義 ( 併入 opset? )
 form.type = (opt={}) ->
   @ <<< opt{name, id}
   @cast = if opt.cast instanceof Function => opt.cast else (->it)
@@ -23,16 +30,38 @@ form.type = (opt={}) ->
   else if typeof(opt.opset) == \object => new form.opset(opt.opset)
   else form.opset.get(opt.opset)
   @
+*/
 
 form.type.prototype = Object.create(Object.prototype) <<< {}
 form.type.register = -> @[]list.push new form.type(it)
 form.type.get = (id) -> @[]list.filter(->(it.id or it.name) == id).0
 
+
+# 規則運算子
+form.op = (opt = {}) ->
+  @ <<< opt{id, name, config, func}
+  @
+
+form.op.prototype = Object.create(Object.prototype) <<< do
+  verify: (val, cfg = {}) ->
+    if (ret = @func val, cfg) instanceof Promise => ret else Promise.resolve(!!ret)
+  get-config-default: ->
+    cfg = {}
+    for k,v of @config => cfg[k] = v.default
+    return cfg
+
+
 # 資料驗證的規則集
 form.opset = (opt={}) ->
   @ <<< opt{name, id}
   @ <<< {ops: {}}
-  for k,v of opt.ops => @ops[k] = new form.op((if typeof(v) == \function => {func: v} else v) <<< {name: k, id: k})
+  ops = if Array.isArray(opt.ops) => opt.ops.map -> {v: it, k: it.id}
+  else [{k,v} for k,v of opt.ops]
+  ops.map ({k,v}) ~>
+    @ops[k] = if v instanceof form.op => v
+    else if k => new form.op((if typeof(v) == \function => {func: v} else v) <<< {id: k})
+    else throw new Error('invalid op when initializing opset.')
+    for k,v of opt.ops => @ops[k] = new form.op((if typeof(v) == \function => {func: v} else v) <<< {name: k, id: k})
   @default-op = if @ops[opt.default-op] => opt.default-op else [k for k,v of @ops].0
   @
 
@@ -41,15 +70,6 @@ form.opset.prototype = Object.create(Object.prototype) <<< do
 
 form.opset.register = -> @[]list.push new form.opset(it)
 form.opset.get = (id)-> @[]list.filter(->(it.id or it.name) == id).0
-
-# 規則運算子
-form.op = (opt = {}) ->
-  @ <<< opt{id, name, config, args, func}
-  @
-
-form.op.prototype = Object.create(Object.prototype) <<< do
-  get-config: -> @config or {}
-  verify: (params) -> !!@func params
 
 
 /**
@@ -62,29 +82,29 @@ form.op.prototype = Object.create(Object.prototype) <<< do
  */
 form.term = (opt={}) ->
   @ <<< {enabled: true, opset: null, op: null, config: {}} <<< opt
-  if opt.opset => @set-opset that
-  if opt.op => @set-op that
-  if opt.config => @set-config that
+  @set-opset opt.opset, opt.op, opt.config
   @
 
 form.term.prototype = Object.create(Object.prototype) <<< do
   toggle: -> @enabled = if it? => it else !@enabled
-  set-opset: (id) ->
-    if !(@opset = form.opset.get id) => throw new Error("no such opset '#id'")
-    @set-op!
+  set-opset: (opset, op, cfg) ->
+    if typeof(opset) == \string => if !(@opset = form.opset.get id) => throw new Error("no such opset '#id'")
+    else if opset instanceof form.opset => @opset = opset
+    else throw new Error("invalid opset")
+    @set-op op, cfg
 
-  # called with no arg to reset to default
-  set-op: (id) ->
+  set-op: (id, cfg) ->
     if !@opset => throw new Error("opset not set")
     if !(@op = @opset.get-op(id)) => throw new Error("no such op '#id'")
-    @set-config!
+    @set-config cfg
 
   set-config: (cfg) ->
     if !@op => throw new Error("op not set")
-    @config = if !cfg => @op.get-config! else cfg
+    @config = if !cfg => @op.get-config-default! else cfg
 
   verify: (v) ->
-    if !@op => throw new Error("op not set")
-    @op.verify({v, c: @config})
+    if !@op => Promis.reject(new Error("op not set"))
+    @op.verify(v, @config)
 
-window.form = form
+if module? => module.exports = form
+else if window? => window.form = form
