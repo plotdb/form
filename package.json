@@ -26,7 +26,7 @@
     "@loadingio/ldquery": "^1.1.3",
     "@plotdb/pug-browser": "0.0.2",
     "bootstrap": "^4.5.3",
-    "bootstrap.ldui": "github:loadingio/bootstrap.ldui",
+    "bootstrap.ldui": "^0.0.1",
     "bootstrap.native": "^3.0.13",
     "browserfs": "^1.4.3",
     "deploy": "github:zbryikt/deploy",

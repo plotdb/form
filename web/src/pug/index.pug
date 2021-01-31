@@ -1,54 +1,58 @@
 extends /base.pug
 block body
-  .w-480.mx-auto.rwd.my-4
-    .row
-      .col-md
-        .form-group
-          label Block
-          select.form-control.form-control-sm
-            option(ld-each="block-names")
-      .col-md
-        .form-group
-          label ID
-          input.form-control.form-control-sm
-
-    .form-group
-      label Title
-      input.form-control.form-control-sm
-
-    .form-group
-      label Description
-      textarea.form-control.form-control-sm(rows="3")
-    .row
-      .col-md
-        .form-check
-          input.form-check-input.clickable(ld="check",name="public",type="checkbox")
-          label.form-check-label.no-select.clickable public
-
-      .col-md
-        .form-check
-          input.form-check-input.clickable(ld="check",name="show-desc",type="checkbox")
-          label.form-check-label.no-select.clickable show desc
-      .col-md
-        .form-check
-          input.form-check-input.clickable(ld="check",name="required",type="checkbox")
-          label.form-check-label.no-select.clickable required
-
-    .mt-4
-      .d-flex.align-items-center(ld-each="criteria")
-        .flex-grow-1.mr-2: .form-group
-          label criteria type
-          input.form-control.form-control-sm(ld="input",name="type")
-        .flex-grow-1.mx-2: .form-group
-          label criteria rule
-          input.form-control.form-control-sm(ld="input",name="rule")
-        .flex-grow-1.ml-2: .form-group
-          label criteria value
-          input.form-control.form-control-sm(ld="input",name="value")
+  .w-640.mx-auto.rwd.my-4
+    .mb-2.d-flex
+      .flex-grow-1
+        div title
+        input.form-control(ld="title")
+      .ml-4
+        div alias
+        select.form-control(ld="alias")
+          option(value="uid") 統編
+          option(value="teamname") 單位名稱
+          option(value="teamname") 自訂..
+    .mb-2
+      div description
+      textarea.form-control(rows="5",ld="desc")
+    .d-flex.mb-2.align-items-center
+      each i in ["isRequired", "isPublic", "showDesc"]
+        .d-flex.align-items-center.mr-4 #[span= i]#[.switch.ml-1(ld="switch",data-name=i)]
+    .mb-2
+      div critera
+      .d-flex.mb-2
+        .mr-2
+          div attr
+          select.form-control.mr-2(ld="picked-attr")
+            option(ld-each="attr") number
+        .mr-2
+          div op
+          select.form-control.mr-2(ld="picked-op")
+            option(ld-each="op") between
+        .mr-2.flex-grow-1(ld-each="op-config")
+          div(ld="name") name
+          input.form-control.mr-2(ld="value",value="1")
         div
-          .form-group
-            label &nbsp;
-            .btn.btn-sm.btn-text(ld="delete"): i.i-close
-      .btn.btn-sm.btn-outline-secondary(ld="add-criteria") Add Criteria
-    .card.my-4: .card-body
-      input.form-control
+          div &nbsp;
+          .btn.btn-outline-primary(ld="add-criteria") #[i.i-plus]
+      hr
+      .d-flex.mb-2.align-items-center(ld-each="criteria")
+        .mr-2
+          div &nbsp;
+          .switch.switch-lg(ld="enabled")
+        .mr-2
+          div attr
+          select.form-control.mr-2
+            option(ld-each="attr") number
+        .mr-2
+          div op
+          select.form-control.mr-2
+            option between
+        .mr-2.flex-grow-1(ld-each="op-config")
+          div(ld="name") name
+          input.form-control.mr-2(ld="value",value="1")
+        div
+          div &nbsp;
+          .btn.btn-outline-danger(ld="delete") #[i.i-close]
+
+block script
+  +script("/js/index.js")
