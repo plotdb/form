@@ -30,11 +30,11 @@ form.type = (opt={}) ->
   else if typeof(opt.opset) == \object => new form.opset(opt.opset)
   else form.opset.get(opt.opset)
   @
-*/
 
 form.type.prototype = Object.create(Object.prototype) <<< {}
 form.type.register = -> @[]list.push new form.type(it)
 form.type.get = (id) -> @[]list.filter(->(it.id or it.name) == id).0
+*/
 
 
 # 規則運算子
@@ -68,7 +68,7 @@ form.opset = (opt={}) ->
 form.opset.prototype = Object.create(Object.prototype) <<< do
   get-op: (id) -> @ops[id or @default-op]
 
-form.opset.register = -> @[]list.push new form.opset(it)
+form.opset.register = -> @[]list.push if it instanceof form.opset => it else new form.opset(it)
 form.opset.get = (id)-> @[]list.filter(->(it.id or it.name) == id).0
 
 
@@ -108,3 +108,53 @@ form.term.prototype = Object.create(Object.prototype) <<< do
 
 if module? => module.exports = form
 else if window? => window.form = form
+
+
+form.opset.register do
+  id: \count
+  default-op: \gte
+  ops:
+    gte: name: '>=', config: {value: type: \number, default: 1}, func: (v,c) -> v >= c.value
+    lte: name: '<=', config: {value: type: \number, default: 1}, func: (v,c) -> v <= c.value
+    eq:  name: '=',  config: {value: type: \number, default: 1}, func: (v,c) -> v == c.value
+    between:
+      name: \between
+      config:
+        v1: type: \number, default: 0
+        v2: type: \number, default: 2
+      func: (v,c) ->
+        [i,j] = if c.v1 < c.v2 => [c.v1, c.v2] else [c.v2, c.v1]
+        return v >= i and v <= j
+
+form.opset.register do
+  id: \number
+  default-op: \gte
+  ops:
+    gt: name: '>', config: {value: type: \number, default: 1}, func: (v,c) -> v > c.value
+    lt: name: '<', config: {value: type: \number, default: 1}, func: (v,c) -> v < c.value
+    gte: name: '>=', config: {value: type: \number, default: 1}, func: (v,c) -> v >= c.value
+    lte: name: '<=', config: {value: type: \number, default: 1}, func: (v,c) -> v <= c.value
+    eq:  name: '=',  config: {value: type: \number, default: 1}, func: (v,c) -> v == c.value
+    between:
+      name: \between
+      config:
+        v1: type: \number, default: 0
+        v2: type: \number, default: 2
+      func: (v,c) ->
+        [i,j] = if c.v1 < c.v2 => [c.v1, c.v2] else [c.v2, c.v1]
+        return v >= i and v <= j
+
+
+
+form.opset.register do
+  id: \string
+  default-op: \include
+  ops:
+    include:
+      config: {i: type: \string, default: 'some text'}
+      func: (v,c) -> ~v.indexOf(c.i)
+    exclude:
+      config: {i: type: \string, default: 'some text'}
+      func: (v,c) -> !~v.indexOf(c.i)
+    email: (v) -> curegex.get(\email).exec(v)
+    url: (v) -> curegex.get(\url).exec(v)

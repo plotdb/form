@@ -25,48 +25,93 @@
       return (it.id || it.name) === id;
     })[0];
   };
-  form.type = function(opt){
+  /*
+  # 單元資料型態的定義 ( 併入 opset? )
+  form.type = (opt={}) ->
+    @ <<< opt{name, id}
+    @cast = if opt.cast instanceof Function => opt.cast else (->it)
+    @is-empty = if opt.is-empty instanceof Function => opt.is-empty else (->it)
+    @opset = if opt.opset instanceof form.opset => opt.opset
+    else if typeof(opt.opset) == \object => new form.opset(opt.opset)
+    else form.opset.get(opt.opset)
+    @
+  
+  form.type.prototype = Object.create(Object.prototype) <<< {}
+  form.type.register = -> @[]list.push new form.type(it)
+  form.type.get = (id) -> @[]list.filter(->(it.id or it.name) == id).0
+  */
+  form.op = function(opt){
     opt == null && (opt = {});
-    this.name = opt.name;
     this.id = opt.id;
-    this.cast = opt.cast instanceof Function
-      ? opt.cast
-      : function(it){
-        return it;
-      };
-    this.isEmpty = opt.isEmpty instanceof Function
-      ? opt.isEmpty
-      : function(it){
-        return it;
-      };
-    this.opset = opt.opset instanceof form.opset
-      ? opt.opset
-      : typeof opt.opset === 'object'
-        ? new form.opset(opt.opset)
-        : form.opset.get(opt.opset);
+    this.name = opt.name;
+    this.config = opt.config;
+    this.func = opt.func;
     return this;
   };
-  form.type.prototype = Object.create(Object.prototype);
-  form.type.register = function(it){
-    return (this.list || (this.list = [])).push(new form.type(it));
-  };
-  form.type.get = function(id){
-    return (this.list || (this.list = [])).filter(function(it){
-      return (it.id || it.name) === id;
-    })[0];
-  };
+  form.op.prototype = import$(Object.create(Object.prototype), {
+    verify: function(val, cfg){
+      var ret;
+      cfg == null && (cfg = {});
+      if ((ret = this.func(val, cfg)) instanceof Promise) {
+        return ret;
+      } else {
+        return Promise.resolve(!!ret);
+      }
+    },
+    getConfigDefault: function(){
+      var cfg, k, ref$, v;
+      cfg = {};
+      for (k in ref$ = this.config) {
+        v = ref$[k];
+        cfg[k] = v['default'];
+      }
+      return cfg;
+    }
+  });
   form.opset = function(opt){
-    var k, ref$, v, ref1$;
+    var ops, k, v, this$ = this;
     opt == null && (opt = {});
     this.name = opt.name;
     this.id = opt.id;
     this.ops = {};
-    for (k in ref$ = opt.ops) {
-      v = ref$[k];
-      this.ops[k] = new form.op((ref1$ = typeof v === 'function' ? {
-        func: v
-      } : v, ref1$.name = k, ref1$.id = k, ref1$));
-    }
+    ops = Array.isArray(opt.ops)
+      ? opt.ops.map(function(it){
+        return {
+          v: it,
+          k: it.id
+        };
+      })
+      : (function(){
+        var ref$, results$ = [];
+        for (k in ref$ = opt.ops) {
+          v = ref$[k];
+          results$.push({
+            k: k,
+            v: v
+          });
+        }
+        return results$;
+      }());
+    ops.map(function(arg$){
+      var k, v, ref$, ref1$, results$ = [];
+      k = arg$.k, v = arg$.v;
+      this$.ops[k] = v instanceof form.op
+        ? v
+        : k
+          ? new form.op((ref$ = typeof v === 'function' ? {
+            func: v
+          } : v, ref$.id = k, ref$))
+          : (function(){
+            throw new Error('invalid op when initializing opset.');
+          }());
+      for (k in ref$ = opt.ops) {
+        v = ref$[k];
+        results$.push(this$.ops[k] = new form.op((ref1$ = typeof v === 'function' ? {
+          func: v
+        } : v, ref1$.name = k, ref1$.id = k, ref1$)));
+      }
+      return results$;
+    });
     this.defaultOp = this.ops[opt.defaultOp]
       ? opt.defaultOp
       : (function(){
@@ -85,30 +130,15 @@
     }
   });
   form.opset.register = function(it){
-    return (this.list || (this.list = [])).push(new form.opset(it));
+    return (this.list || (this.list = [])).push(it instanceof form.opset
+      ? it
+      : new form.opset(it));
   };
   form.opset.get = function(id){
     return (this.list || (this.list = [])).filter(function(it){
       return (it.id || it.name) === id;
     })[0];
   };
-  form.op = function(opt){
-    opt == null && (opt = {});
-    this.id = opt.id;
-    this.name = opt.name;
-    this.config = opt.config;
-    this.args = opt.args;
-    this.func = opt.func;
-    return this;
-  };
-  form.op.prototype = import$(Object.create(Object.prototype), {
-    getConfig: function(){
-      return this.config || {};
-    },
-    verify: function(params){
-      return !!this.func(params);
-    }
-  });
   /**
    * term, for verification of values based on assigned op and config.
    * @constructor
@@ -118,18 +148,9 @@
    * @param {object} config - additional config for chosen op.
    */
   form.term = function(opt){
-    var that;
     opt == null && (opt = {});
     import$((this.enabled = true, this.opset = null, this.op = null, this.config = {}, this), opt);
-    if (that = opt.opset) {
-      this.setOpset(that);
-    }
-    if (that = opt.op) {
-      this.setOp(that);
-    }
-    if (that = opt.config) {
-      this.setConfig(that);
-    }
+    this.setOpset(opt.opset, opt.op, opt.config);
     return this;
   };
   form.term.prototype = import$(Object.create(Object.prototype), {
@@ -138,35 +159,38 @@
         ? it
         : !this.enabled;
     },
-    setOpset: function(id){
-      if (!(this.opset = form.opset.get(id))) {
-        throw new Error("no such opset '" + id + "'");
+    setOpset: function(opset, op, cfg){
+      if (typeof opset === 'string') {
+        if (!(this.opset = form.opset.get(id))) {
+          throw new Error("no such opset '" + id + "'");
+        } else if (opset instanceof form.opset) {
+          this.opset = opset;
+        } else {
+          throw new Error("invalid opset");
+        }
       }
-      return this.setOp();
+      return this.setOp(op, cfg);
     },
-    setOp: function(id){
+    setOp: function(id, cfg){
       if (!this.opset) {
         throw new Error("opset not set");
       }
       if (!(this.op = this.opset.getOp(id))) {
         throw new Error("no such op '" + id + "'");
       }
-      return this.setConfig();
+      return this.setConfig(cfg);
     },
     setConfig: function(cfg){
       if (!this.op) {
         throw new Error("op not set");
       }
-      return this.config = !cfg ? this.op.getConfig() : cfg;
+      return this.config = !cfg ? this.op.getConfigDefault() : cfg;
     },
     verify: function(v){
       if (!this.op) {
-        throw new Error("op not set");
+        Promis.reject(new Error("op not set"));
       }
-      return this.op.verify({
-        v: v,
-        c: this.config
-      });
+      return this.op.verify(v, this.config);
     }
   });
   if (typeof module != 'undefined' && module !== null) {
@@ -174,6 +198,188 @@
   } else if (typeof window != 'undefined' && window !== null) {
     window.form = form;
   }
+  form.opset.register({
+    id: 'count',
+    defaultOp: 'gte',
+    ops: {
+      gte: {
+        name: '>=',
+        config: {
+          value: {
+            type: 'number',
+            'default': 1
+          }
+        },
+        func: function(v, c){
+          return v >= c.value;
+        }
+      },
+      lte: {
+        name: '<=',
+        config: {
+          value: {
+            type: 'number',
+            'default': 1
+          }
+        },
+        func: function(v, c){
+          return v <= c.value;
+        }
+      },
+      eq: {
+        name: '=',
+        config: {
+          value: {
+            type: 'number',
+            'default': 1
+          }
+        },
+        func: function(v, c){
+          return v === c.value;
+        }
+      },
+      between: {
+        name: 'between',
+        config: {
+          v1: {
+            type: 'number',
+            'default': 0
+          },
+          v2: {
+            type: 'number',
+            'default': 2
+          }
+        },
+        func: function(v, c){
+          var ref$, i, j;
+          ref$ = c.v1 < c.v2
+            ? [c.v1, c.v2]
+            : [c.v2, c.v1], i = ref$[0], j = ref$[1];
+          return v >= i && v <= j;
+        }
+      }
+    }
+  });
+  form.opset.register({
+    id: 'number',
+    defaultOp: 'gte',
+    ops: {
+      gt: {
+        name: '>',
+        config: {
+          value: {
+            type: 'number',
+            'default': 1
+          }
+        },
+        func: function(v, c){
+          return v > c.value;
+        }
+      },
+      lt: {
+        name: '<',
+        config: {
+          value: {
+            type: 'number',
+            'default': 1
+          }
+        },
+        func: function(v, c){
+          return v < c.value;
+        }
+      },
+      gte: {
+        name: '>=',
+        config: {
+          value: {
+            type: 'number',
+            'default': 1
+          }
+        },
+        func: function(v, c){
+          return v >= c.value;
+        }
+      },
+      lte: {
+        name: '<=',
+        config: {
+          value: {
+            type: 'number',
+            'default': 1
+          }
+        },
+        func: function(v, c){
+          return v <= c.value;
+        }
+      },
+      eq: {
+        name: '=',
+        config: {
+          value: {
+            type: 'number',
+            'default': 1
+          }
+        },
+        func: function(v, c){
+          return v === c.value;
+        }
+      },
+      between: {
+        name: 'between',
+        config: {
+          v1: {
+            type: 'number',
+            'default': 0
+          },
+          v2: {
+            type: 'number',
+            'default': 2
+          }
+        },
+        func: function(v, c){
+          var ref$, i, j;
+          ref$ = c.v1 < c.v2
+            ? [c.v1, c.v2]
+            : [c.v2, c.v1], i = ref$[0], j = ref$[1];
+          return v >= i && v <= j;
+        }
+      }
+    }
+  });
+  form.opset.register({
+    id: 'string',
+    defaultOp: 'include',
+    ops: {
+      include: {
+        config: {
+          i: {
+            type: 'string',
+            'default': 'some text'
+          }
+        },
+        func: function(v, c){
+          return ~v.indexOf(c.i);
+        }
+      },
+      exclude: {
+        config: {
+          i: {
+            type: 'string',
+            'default': 'some text'
+          }
+        },
+        func: function(v, c){
+          return !~v.indexOf(c.i);
+        }
+      },
+      email: function(v){
+        return curegex.get('email').exec(v);
+      },
+      url: function(v){
+        return curegex.get('url').exec(v);
+      }
+    }
+  });
   function import$(obj, src){
     var own = {}.hasOwnProperty;
     for (var key in src) if (own.call(src, key)) obj[key] = src[key];

@@ -41,12 +41,12 @@ block body
           .switch.switch-lg(ld="enabled")
         .mr-2
           div attr
-          select.form-control.mr-2
-            option(ld-each="attr") number
+          select.form-control.mr-2(ld="attr")
+            option(ld-each="attr-option") number
         .mr-2
           div op
-          select.form-control.mr-2
-            option between
+          select.form-control.mr-2(ld="op")
+            option(ld-each="op-option") between
         .mr-2.flex-grow-1(ld-each="op-config")
           div(ld="name") name
           input.form-control.mr-2(ld="value",value="1")

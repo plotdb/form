@@ -131,6 +131,20 @@ blockbase.prototype
                 this$.criteria.splice(this$.criteria.indexOf(context), 1);
                 return this$.view.render('criteria');
               }
+            },
+            change: {
+              attr: function(arg$){
+                var node, context;
+                node = arg$.node, context = arg$.context;
+                context.opset = this$.attr[node.value].opset;
+                return view.render('criteria');
+              },
+              op: function(arg$){
+                var node, context;
+                node = arg$.node, context = arg$.context;
+                context.op = form.opset.get(context.opset || 'number').getOp(node.value);
+                return view.render('criteria');
+              }
             }
           },
           handler: {
@@ -139,7 +153,7 @@ blockbase.prototype
               node = arg$.node, context = arg$.context;
               return node.classList.toggle('on', !!context.enabled);
             },
-            attr: {
+            "attr-option": {
               list: function(){
                 var k, v;
                 return (function(){
@@ -154,11 +168,58 @@ blockbase.prototype
                   return results$;
                 }.call(this$)) || [];
               },
+              key: function(it){
+                return it.k;
+              },
               handler: function(arg$){
                 var node, data;
                 node = arg$.node, data = arg$.data;
                 node.setAttribute('value', data.k);
                 return node.innerText = data.v.name;
+              }
+            },
+            "op-option": {
+              list: function(arg$){
+                var context, opset, k, ref$, v, results$ = [];
+                context = arg$.context;
+                opset = form.opset.get(context.opset || 'number');
+                for (k in ref$ = opset.ops) {
+                  v = ref$[k];
+                  results$.push(v);
+                }
+                return results$;
+              },
+              handler: function(arg$){
+                var node, data;
+                node = arg$.node, data = arg$.data;
+                node.setAttribute('value', data.id);
+                return node.innerText = data.name;
+              }
+            },
+            "op-config": {
+              list: function(arg$){
+                var context, k, ref$, v, results$ = [];
+                context = arg$.context;
+                for (k in ref$ = (context.op || (context.op = {})).config || {}) {
+                  v = ref$[k];
+                  results$.push({
+                    k: k,
+                    v: v
+                  });
+                }
+                return results$;
+              },
+              key: function(it){
+                return it.k;
+              },
+              view: {
+                text: {
+                  name: function(arg$){
+                    var node, context;
+                    node = arg$.node, context = arg$.context;
+                    return context.k;
+                  }
+                }
               }
             }
           }
