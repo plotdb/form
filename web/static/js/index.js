@@ -51,6 +51,14 @@ blockbase.prototype
           node = arg$.node;
           this$.desc = node.value || '';
           return this$.show();
+        },
+        value: function(arg$){
+          var node;
+          node = arg$.node;
+          this.value = node.value;
+          return this.criteria.map(function(){
+            return form.term;
+          });
         }
       },
       click: {

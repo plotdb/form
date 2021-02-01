@@ -24,6 +24,9 @@ blockbase.prototype
     input:
       title: ({node}) ~> @title = node.value or ''; @show!
       desc: ({node}) ~> @desc = node.value or ''; @show!
+      value: ({node}) ->
+        @value = node.value
+        @criteria.map -> form.term
     click:
       "add-criteria": ~>
         @criteria.push {}
