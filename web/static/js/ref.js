@@ -1,47 +1,83 @@
-var formBlock, formPkg, mgr;
-formBlock = function(opt){
-  var that, this$ = this;
-  opt == null && (opt = {});
-  this.root = typeof opt.root === 'string'
-    ? document.querySelector(opt.root)
-    : (that = opt.root) ? that : null;
-  this.data = {};
-  this.init = proxise.once(function(){
-    return this$._init();
-  });
+/*
+blockbase object
+ - `title`
+ - `desc`
+ - `isPublic`
+ - `isRequired`
+ - `showDesc`
+blockbase.prototype
+ - serialize
+ - deserialize
+*/
+var lform;
+lform = function(){
+  this.title = 'untitled';
+  this.desc = 'no description...';
+  this.isPublic = true;
+  this.isRequired = true;
+  this.showDesc = true;
+  this.criteria = [{}];
+  this.attr = {
+    length: {
+      name: "length",
+      opset: 'count'
+    },
+    string: {
+      name: "string",
+      opset: 'string'
+    },
+    number: {
+      name: "number",
+      opset: 'number'
+    }
+  };
   this.init();
   return this;
 };
-import$(formBlock.prototype, {
-  _init: function(){
-    var _, view, this$ = this;
-    _ = this.data;
+lform.prototype = import$(Object.create(Object.prototype), {
+  serialize: function(){
+    var ret;
+    return ret = {
+      title: this.title,
+      desc: this.desc,
+      isPublic: this.isPublic,
+      isRequired: this.isRequired,
+      showDesc: this.showDesc,
+      criteria: this.criteria
+    };
+  },
+  deserialize: function(obj){
+    var ref$;
+    return this.title = (ref$ = obj.data || (obj.data = {})).title, this.desc = ref$.desc, this.isPublic = ref$.isPublic, this.isRequired = ref$.isRequired, this.showDesc = ref$.showDesc, this.criteria = ref$.criteria, this;
+  },
+  init: function(){
+    var view, this$ = this;
     return this.view = view = new ldView({
-      root: this.root,
+      root: document.body,
       action: {
         input: {
           title: function(arg$){
             var node;
             node = arg$.node;
-            return _.title = node.value || '';
+            return this$.title = node.value || '';
           },
           desc: function(arg$){
             var node;
             node = arg$.node;
-            return _.desc = node.value || '';
+            return this$.desc = node.value || '';
           },
           value: function(arg$){
             var node;
             node = arg$.node;
-            _.value = node.value;
-            return _.criteria.map(function(){
+            this.value = node.value;
+            return this.criteria.map(function(){
               return form.term;
             });
           }
         },
         click: {
           "add-criteria": function(){
-            _.criteria.push({});
+            this$.criteria.push({});
             return this$.view.render('criteria');
           },
           'switch': function(arg$){
@@ -51,7 +87,7 @@ import$(formBlock.prototype, {
             if (!(n === 'isPublic' || n === 'isRequired' || n === 'showDesc')) {
               return;
             }
-            _[n] = !_[n];
+            this$[n] = !this$[n];
             return view.render();
           }
         }
@@ -60,12 +96,12 @@ import$(formBlock.prototype, {
         title: function(arg$){
           var node;
           node = arg$.node;
-          return node.value = _.title || '';
+          return node.value = this$.title;
         },
         desc: function(arg$){
           var node;
           node = arg$.node;
-          return node.value = _.desc || '';
+          return node.value = this$.desc;
         },
         'switch': function(arg$){
           var node, n;
@@ -74,14 +110,14 @@ import$(formBlock.prototype, {
           if (!(n === 'isPublic' || n === 'isRequired' || n === 'showDesc')) {
             return;
           }
-          return node.classList.toggle('on', !!_[n]);
+          return node.classList.toggle('on', !!this$[n]);
         },
         attr: {
           list: function(){
             var k, v;
             return (function(){
               var ref$, results$ = [];
-              for (k in ref$ = _.attr) {
+              for (k in ref$ = this.attr) {
                 v = ref$[k];
                 results$.push({
                   k: k,
@@ -89,7 +125,7 @@ import$(formBlock.prototype, {
                 });
               }
               return results$;
-            }()) || [];
+            }.call(this$)) || [];
           },
           handler: function(arg$){
             var node, data;
@@ -100,7 +136,7 @@ import$(formBlock.prototype, {
         },
         criteria: {
           list: function(){
-            return _.criteria || [];
+            return this$.criteria || [];
           },
           view: {
             action: {
@@ -114,7 +150,7 @@ import$(formBlock.prototype, {
                 'delete': function(arg$){
                   var context;
                   context = arg$.context;
-                  _.criteria.splice(_.criteria.indexOf(context), 1);
+                  this$.criteria.splice(this$.criteria.indexOf(context), 1);
                   return this$.view.render('criteria');
                 }
               },
@@ -122,7 +158,7 @@ import$(formBlock.prototype, {
                 attr: function(arg$){
                   var node, context;
                   node = arg$.node, context = arg$.context;
-                  context.opset = _.attr[node.value].opset;
+                  context.opset = this$.attr[node.value].opset;
                   return view.render('criteria');
                 },
                 op: function(arg$){
@@ -144,7 +180,7 @@ import$(formBlock.prototype, {
                   var k, v;
                   return (function(){
                     var ref$, results$ = [];
-                    for (k in ref$ = _.attr) {
+                    for (k in ref$ = this.attr) {
                       v = ref$[k];
                       results$.push({
                         k: k,
@@ -152,7 +188,7 @@ import$(formBlock.prototype, {
                       });
                     }
                     return results$;
-                  }()) || [];
+                  }.call(this$)) || [];
                 },
                 key: function(it){
                   return it.k;
@@ -215,44 +251,7 @@ import$(formBlock.prototype, {
     });
   }
 });
-formPkg = {
-  pkg: {
-    name: "form",
-    dependencies: []
-  },
-  init: function(){
-    return console.log('pkg');
-  }
-};
-/*
-    new form-block root: document.body
-    bc = new block.class do
-      code: script: ->
-        console.log \ok
-        form-pkg
-    bc.create!
-  .then (bi) ->
-    bi.attach root: document.body
-*/
-mgr = new block.manager({
-  registry: function(arg$){
-    var name, version;
-    name = arg$.name, version = arg$.version;
-    return "/block/" + name + "/" + version + "/index.html";
-  }
-});
-mgr.init().then(function(){
-  return mgr.get({
-    name: "@plotdb/long-answer",
-    version: "0.0.1"
-  });
-}).then(function(bc){
-  return bc.create();
-}).then(function(bi){
-  return bi.attach({
-    root: document.querySelector('#container')
-  });
-});
+new lform();
 function import$(obj, src){
   var own = {}.hasOwnProperty;
   for (var key in src) if (own.call(src, key)) obj[key] = src[key];

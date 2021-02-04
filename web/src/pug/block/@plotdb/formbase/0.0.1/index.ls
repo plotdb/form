@@ -1,14 +1,11 @@
-form-block = (opt={}) ->
-  @root = if typeof(opt.root) == \string => document.querySelector(opt.root) else if opt.root => that else null
-  @data = {}
-  @init = proxise.once ~> @_init!
-  @init!
-  @
-
-form-block.prototype <<< do
-  _init: ->
-    _ = @data
-
+do
+  pkg:
+    name: "@plotdb/formbase", version: "0.0.1"
+  init: ({root}) ->
+    console.log "formbase"
+    <-(->new it!) _
+    @root = root
+    _ = @data = {}
     @view = view = new ldView do
       root: @root
       action:
@@ -80,29 +77,3 @@ form-block.prototype <<< do
                   text:
                     name: ({node, context}) -> return context.k
 
-form-pkg = do
-  pkg:
-    name: "form"
-    dependencies: []
-  init: -> console.log 'pkg'
-
-
-/*
-    new form-block root: document.body
-    bc = new block.class do
-      code: script: ->
-        console.log \ok
-        form-pkg
-    bc.create!
-  .then (bi) ->
-    bi.attach root: document.body
-*/
-
-mgr = new block.manager registry: ({name,version}) -> "/block/#name/#version/index.html"
-mgr.init!
-  .then ->
-    mgr.get {name: "@plotdb/long-answer", version: "0.0.1"}
-  .then (bc) ->
-    bc.create!
-  .then (bi) ->
-    bi.attach root: document.querySelector('#container')

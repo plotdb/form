@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@loadingio/ldquery": "^1.1.3",
-    "@plotdb/block": "^0.0.5",
+    "@plotdb/block": "^0.0.6",
     "@plotdb/datadom": "0.1.0",
     "@plotdb/datahub": "^0.1.1",
     "@plotdb/pug-browser": "0.0.2",

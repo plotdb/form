@@ -1,0 +1,215 @@
+<div><div><plug name="view"></plug></div><hr/><div>control panel</div><hr/><div class="mb-2 d-flex"><div class="flex-grow-1"><div>title</div><input class="form-control" ld="title"/></div><div class="ml-4"><div>alias</div><select class="form-control" ld="alias"><option value="uid">統編</option><option value="teamname">單位名稱</option><option value="teamname">自訂..</option></select></div></div><div class="mb-2"><div>description</div><textarea class="form-control" rows="5" ld="desc"></textarea></div><div class="d-flex mb-2 align-items-center"><div class="d-flex align-items-center mr-4"><span>isRequired</span><div class="switch ml-1" ld="switch" data-name="isRequired"></div></div><div class="d-flex align-items-center mr-4"><span>isPublic</span><div class="switch ml-1" ld="switch" data-name="isPublic"></div></div><div class="d-flex align-items-center mr-4"><span>showDesc</span><div class="switch ml-1" ld="switch" data-name="showDesc"></div></div></div><div class="mb-2"><div>critera</div><div class="d-flex mb-2"><div class="mr-2"><div>attr</div><select class="form-control mr-2" ld="picked-attr"><option ld-each="attr">number</option></select></div><div class="mr-2"><div>op</div><select class="form-control mr-2" ld="picked-op"><option ld-each="op">between</option></select></div><div class="mr-2 flex-grow-1" ld-each="op-config"><div ld="name">name</div><input class="form-control mr-2" ld="value" value="1"/></div><div><div>&nbsp;</div><div class="btn btn-outline-primary" ld="add-criteria"><i class="i-plus"></i></div></div></div><hr/><div class="d-flex mb-2 align-items-center" ld-each="criteria"><div class="mr-2"><div>&nbsp;</div><div class="switch switch-lg" ld="enabled"></div></div><div class="mr-2"><div>attr</div><select class="form-control mr-2" ld="attr"><option ld-each="attr-option">number</option></select></div><div class="mr-2"><div>op</div><select class="form-control mr-2" ld="op"><option ld-each="op-option">between</option></select></div><div class="mr-2 flex-grow-1" ld-each="op-config"><div ld="name">name</div><input class="form-control mr-2" ld="value" value="1"/></div><div><div>&nbsp;</div><div class="btn btn-outline-danger" ld="delete"><i class="i-close"></i></div></div></div></div><script type="@plotdb/block">({
+  pkg: {
+    name: "@plotdb/formbase",
+    version: "0.0.1"
+  },
+  init: function(arg$){
+    var root;
+    root = arg$.root;
+    console.log("formbase");
+    return function(it){
+      return new it();
+    }(function(){
+      var _, view, this$ = this;
+      this.root = root;
+      _ = this.data = {};
+      return this.view = view = new ldView({
+        root: this.root,
+        action: {
+          input: {
+            title: function(arg$){
+              var node;
+              node = arg$.node;
+              return _.title = node.value || '';
+            },
+            desc: function(arg$){
+              var node;
+              node = arg$.node;
+              return _.desc = node.value || '';
+            },
+            value: function(arg$){
+              var node;
+              node = arg$.node;
+              _.value = node.value;
+              return _.criteria.map(function(){
+                return form.term;
+              });
+            }
+          },
+          click: {
+            "add-criteria": function(){
+              _.criteria.push({});
+              return this$.view.render('criteria');
+            },
+            'switch': function(arg$){
+              var node, n;
+              node = arg$.node;
+              n = node.getAttribute('data-name');
+              if (!(n === 'isPublic' || n === 'isRequired' || n === 'showDesc')) {
+                return;
+              }
+              _[n] = !_[n];
+              return view.render();
+            }
+          }
+        },
+        handler: {
+          title: function(arg$){
+            var node;
+            node = arg$.node;
+            return node.value = _.title || '';
+          },
+          desc: function(arg$){
+            var node;
+            node = arg$.node;
+            return node.value = _.desc || '';
+          },
+          'switch': function(arg$){
+            var node, n;
+            node = arg$.node;
+            n = node.getAttribute('data-name');
+            if (!(n === 'isPublic' || n === 'isRequired' || n === 'showDesc')) {
+              return;
+            }
+            return node.classList.toggle('on', !!_[n]);
+          },
+          attr: {
+            list: function(){
+              var k, v;
+              return (function(){
+                var ref$, results$ = [];
+                for (k in ref$ = _.attr) {
+                  v = ref$[k];
+                  results$.push({
+                    k: k,
+                    v: v
+                  });
+                }
+                return results$;
+              }()) || [];
+            },
+            handler: function(arg$){
+              var node, data;
+              node = arg$.node, data = arg$.data;
+              node.setAttribute('value', data.k);
+              return node.innerText = data.v.name;
+            }
+          },
+          criteria: {
+            list: function(){
+              return _.criteria || [];
+            },
+            view: {
+              action: {
+                click: {
+                  enabled: function(arg$){
+                    var context;
+                    context = arg$.context;
+                    context.enabled = !context.enabled;
+                    return this$.view.render('criteria');
+                  },
+                  'delete': function(arg$){
+                    var context;
+                    context = arg$.context;
+                    _.criteria.splice(_.criteria.indexOf(context), 1);
+                    return this$.view.render('criteria');
+                  }
+                },
+                change: {
+                  attr: function(arg$){
+                    var node, context;
+                    node = arg$.node, context = arg$.context;
+                    context.opset = _.attr[node.value].opset;
+                    return view.render('criteria');
+                  },
+                  op: function(arg$){
+                    var node, context;
+                    node = arg$.node, context = arg$.context;
+                    context.op = form.opset.get(context.opset || 'number').getOp(node.value);
+                    return view.render('criteria');
+                  }
+                }
+              },
+              handler: {
+                enabled: function(arg$){
+                  var node, context;
+                  node = arg$.node, context = arg$.context;
+                  return node.classList.toggle('on', !!context.enabled);
+                },
+                "attr-option": {
+                  list: function(){
+                    var k, v;
+                    return (function(){
+                      var ref$, results$ = [];
+                      for (k in ref$ = _.attr) {
+                        v = ref$[k];
+                        results$.push({
+                          k: k,
+                          v: v
+                        });
+                      }
+                      return results$;
+                    }()) || [];
+                  },
+                  key: function(it){
+                    return it.k;
+                  },
+                  handler: function(arg$){
+                    var node, data;
+                    node = arg$.node, data = arg$.data;
+                    node.setAttribute('value', data.k);
+                    return node.innerText = data.v.name;
+                  }
+                },
+                "op-option": {
+                  list: function(arg$){
+                    var context, opset, k, ref$, v, results$ = [];
+                    context = arg$.context;
+                    opset = form.opset.get(context.opset || 'number');
+                    for (k in ref$ = opset.ops) {
+                      v = ref$[k];
+                      results$.push(v);
+                    }
+                    return results$;
+                  },
+                  handler: function(arg$){
+                    var node, data;
+                    node = arg$.node, data = arg$.data;
+                    node.setAttribute('value', data.id);
+                    return node.innerText = data.name;
+                  }
+                },
+                "op-config": {
+                  list: function(arg$){
+                    var context, k, ref$, v, results$ = [];
+                    context = arg$.context;
+                    for (k in ref$ = (context.op || (context.op = {})).config || {}) {
+                      v = ref$[k];
+                      results$.push({
+                        k: k,
+                        v: v
+                      });
+                    }
+                    return results$;
+                  },
+                  key: function(it){
+                    return it.k;
+                  },
+                  view: {
+                    text: {
+                      name: function(arg$){
+                        var node, context;
+                        node = arg$.node, context = arg$.context;
+                        return context.k;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
+    });
+  }
+});</script></div>

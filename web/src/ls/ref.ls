@@ -1,46 +1,63 @@
-form-block = (opt={}) ->
-  @root = if typeof(opt.root) == \string => document.querySelector(opt.root) else if opt.root => that else null
-  @data = {}
-  @init = proxise.once ~> @_init!
+/*
+blockbase object
+ - `title`
+ - `desc`
+ - `isPublic`
+ - `isRequired`
+ - `showDesc`
+blockbase.prototype
+ - serialize
+ - deserialize
+*/
+
+lform = ->
+  @ <<< {title: 'untitled', desc: 'no description...', is-public: true, is-required: true, show-desc: true}
+  @ <<< {criteria: [{}]}
+  @ <<< attr:
+    length: {name: "length", opset: \count}
+    string: {name: "string", opset: \string}
+    number: {name: "number", opset: \number}
   @init!
   @
+lform.prototype = Object.create(Object.prototype) <<< do
+  serialize: ->
+    ret = @{title, desc, is-public, is-required, show-desc, criteria}
+  deserialize: (obj) ->
+    @ <<< obj.{}data{title, desc, is-public, is-required, show-desc, criteria}
 
-form-block.prototype <<< do
-  _init: ->
-    _ = @data
-
+  init: ->
     @view = view = new ldView do
-      root: @root
+      root: document.body
       action:
         input:
-          title: ({node}) ~> _.title = node.value or ''
-          desc: ({node}) ~> _.desc = node.value or ''
+          title: ({node}) ~> @title = node.value or ''
+          desc: ({node}) ~> @desc = node.value or ''
           value: ({node}) ->
-            _.value = node.value
-            _.criteria.map -> form.term
+            @value = node.value
+            @criteria.map -> form.term
         click:
           "add-criteria": ~>
-            _.criteria.push {}
+            @criteria.push {}
             @view.render \criteria
           switch: ({node}) ~>
             n = node.getAttribute(\data-name)
             if !(n in <[isPublic isRequired showDesc]>) => return
-            _[n] = !_[n]
+            @[n] = !@[n]
             view.render!
       handler:
-        title: ({node}) ~> node.value = _.title or ''
-        desc: ({node}) ~> node.value = _.desc or ''
+        title: ({node}) ~> node.value = @title
+        desc: ({node}) ~> node.value = @desc
         switch: ({node}) ~>
           n = node.getAttribute(\data-name)
           if !(n in <[isPublic isRequired showDesc]>) => return
-          node.classList.toggle \on, !!_.[n]
+          node.classList.toggle \on, !!@[n]
         attr:
-          list: ~> [{k,v} for k,v of _.attr] or []
+          list: ~> [{k,v} for k,v of @attr] or []
           handler: ({node, data}) ->
             node.setAttribute \value, data.k
             node.innerText = data.v.name
         criteria:
-          list: ~> _.criteria or []
+          list: ~> @criteria or []
           view: do
             action:
               click:
@@ -48,11 +65,11 @@ form-block.prototype <<< do
                   context.enabled = !context.enabled
                   @view.render \criteria
                 delete: ({context}) ~>
-                  _.criteria.splice _.criteria.indexOf(context), 1
+                  @criteria.splice @criteria.indexOf(context), 1
                   @view.render \criteria
               change:
                 attr: ({node, context}) ~>
-                  context.opset = _.attr[node.value].opset
+                  context.opset = @attr[node.value].opset
                   view.render \criteria
                 op: ({node, context}) ~>
                   context.op = form.opset.get(context.opset or 'number').get-op(node.value)
@@ -61,7 +78,7 @@ form-block.prototype <<< do
               enabled: ({node, context}) ->
                 node.classList.toggle \on, !!context.enabled
               "attr-option":
-                list: ~> [{k,v} for k,v of _.attr] or []
+                list: ~> [{k,v} for k,v of @attr] or []
                 key: -> it.k
                 handler: ({node, data}) ->
                   node.setAttribute \value, data.k
@@ -80,29 +97,7 @@ form-block.prototype <<< do
                   text:
                     name: ({node, context}) -> return context.k
 
-form-pkg = do
-  pkg:
-    name: "form"
-    dependencies: []
-  init: -> console.log 'pkg'
 
 
-/*
-    new form-block root: document.body
-    bc = new block.class do
-      code: script: ->
-        console.log \ok
-        form-pkg
-    bc.create!
-  .then (bi) ->
-    bi.attach root: document.body
-*/
+new lform!
 
-mgr = new block.manager registry: ({name,version}) -> "/block/#name/#version/index.html"
-mgr.init!
-  .then ->
-    mgr.get {name: "@plotdb/long-answer", version: "0.0.1"}
-  .then (bc) ->
-    bc.create!
-  .then (bi) ->
-    bi.attach root: document.querySelector('#container')
