@@ -42,7 +42,7 @@
     "mocha": "^8.2.1",
     "nyc": "^15.1.0",
     "stylus": "^0.54.5",
-    "template": "github:zbryikt/template#v2.3.10",
+    "template": "github:zbryikt/template#v2.3.11",
     "uglify-js": "=3.2.0",
     "uglifycss": "0.0.29"
   },
