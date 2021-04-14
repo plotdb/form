@@ -24,8 +24,8 @@
   },
   "devDependencies": {
     "@loadingio/ldquery": "^2.0.0",
-    "@plotdb/block": "^0.0.6",
-    "@plotdb/datadom": "0.1.0",
+    "@plotdb/block": "^1.0.0",
+    "@plotdb/datadom": "0.1.1",
     "@plotdb/datahub": "^0.1.1",
     "@plotdb/pug-browser": "0.0.2",
     "bootstrap": "^4.5.3",
@@ -82,15 +82,15 @@
     "@plotdb/csscope": "^0.2.1",
     "@plotdb/datadom": "^0.1.0",
     "@plotdb/rescope": "^0.2.2",
-    "curegex": "0.0.3",
+    "curegex": "^0.0.3",
     "dompurify": "^2.2.6",
-    "proxise": "0.1.1"
+    "proxise": "^0.1.2"
   },
   "dependencies": {
     "@plotdb/csscope": "^0.2.1",
     "@plotdb/rescope": "^0.2.2",
-    "curegex": "0.0.3",
+    "curegex": "^0.0.3",
     "dompurify": "^2.2.6",
-    "proxise": "0.1.1"
+    "proxise": "^0.1.2"
   }
 }
