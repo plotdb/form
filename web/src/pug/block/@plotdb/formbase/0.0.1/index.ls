@@ -19,7 +19,7 @@ init: ({root, context}) ->
           _.criteria.map -> form.term
       click:
         "add-criteria": ~>
-          _.criteria.push {}
+          _.[]criteria.push {}
           @view.render \criteria
         switch: ({node}) ~>
           n = node.getAttribute(\data-name)
@@ -58,6 +58,8 @@ init: ({root, context}) ->
               op: ({node, context}) ~>
                 context.op = form.opset.get(context.opset or 'number').get-op(node.value)
                 view.render \criteria
+          init:
+            dropdown: ({node}) -> new BSN.Dropdown(node)
           handler:
             enabled: ({node, context}) ->
               node.classList.toggle \on, !!context.enabled

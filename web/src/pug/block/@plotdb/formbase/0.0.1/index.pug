@@ -2,8 +2,8 @@
   .p-4
     .d-flex
       .flex-grow-1
-        h3(ld="title") 問題的標題
-        p 關於問題的簡單描述 ...
+        h3(ld="title",contenteditable="true") 問題的標題
+        p(contenteditable="true") 關於問題的簡單描述 ...
       div
         .ml-4: .dropdown(ld="dropdown")
           .btn.btn-light.dropdown-toggle(data-toggle="dropdown") 短名
@@ -16,18 +16,24 @@
     plug(name="view")
   .border-top.border-bottom
     .m-4
-      .d-flex.align-items-center.justify-content-between
-        .mr-2: .switch.switch-lg
+      .d-flex.mb-1.align-items-center.justify-content-between(ld-each="criteria")
+        .mr-2: .switch.switch-lg(ld="enabled")
         .mr-2: .dropdown(ld="dropdown")
-          .btn.btn-light.dropdown-toggle 數值
+          .btn.btn-light.dropdown-toggle(data-toggle="dropdown") 數值
           .dropdown-menu
+            .dropdown-item 字串
+            .dropdown-item 列表
+            .dropdown-item 檔案大小
         .mr-2: .dropdown(ld="dropdown")
-          .btn.btn-light.dropdown-toggle ≧大於或等於
+          .btn.btn-light.dropdown-toggle(data-toggle="dropdown") ≧ 大於或等於
           .dropdown-menu
+            .dropdown-item ≦ 小於或等於
+            .dropdown-item ≠ 不等於
+            .dropdown-item = 等於
         .mr-2: input.form-control.simple(placeholder="值 1")
         .mr-2: input.form-control.simple(placeholder="值 2")
-        i.i-close.text-danger(ld="delete")
-    .mx-4.my-4: a(href="#") 增加條件 ...
+        i.i-close.text-danger.clickable(ld="delete")
+      .mt-4: .btn.btn-link.p-0(ld="add-criteria") 增加條件 ...
   .p-4
     .d-flex.align-items-center
       .mr-2: .btn.btn-sm.btn-outline-danger(ld="delete") #[i.i-close] 刪除
