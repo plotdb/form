@@ -1,15 +1,12 @@
-<div class="rounded-lg shadow mb-4"><div class="p-4"><div class="d-flex"><div class="flex-grow-1"><h3 ld="title">問題的標題</h3><p>關於問題的簡單描述 ...</p></div><div><div class="ml-4"><div class="dropdown" ld="dropdown"><div class="btn btn-light dropdown-toggle" data-toggle="dropdown">短名</div><div class="dropdown-menu dropdown-menu-right"><div class="dropdown-item">統一編號</div><div class="dropdown-item">電話</div><div class="dropdown-item">團隊名稱</div><div class="dropdown-item"><input class="form-control" placeholder="自訂 ..."/></div></div></div></div></div></div><plug name="view"></plug></div><div class="border-top border-bottom"><div class="m-4"><div class="d-flex align-items-center justify-content-between"><div class="mr-2"><div class="switch switch-lg"></div></div><div class="mr-2"><div class="dropdown" ld="dropdown"><div class="btn btn-light dropdown-toggle">數值</div><div class="dropdown-menu"></div></div></div><div class="mr-2"><div class="dropdown" ld="dropdown"><div class="btn btn-light dropdown-toggle">≧大於或等於</div><div class="dropdown-menu"></div></div></div><div class="mr-2"><input class="form-control simple" placeholder="值 1"/></div><div class="mr-2"><input class="form-control simple" placeholder="值 2"/></div><i class="i-close text-danger" ld="delete"></i></div></div><div class="mx-4 my-4"><a href="#">增加條件 ...</a></div></div><div class="p-4"><div class="d-flex align-items-center"><div class="mr-2"><div class="btn btn-sm btn-outline-danger" ld="delete"><i class="i-close"></i> 刪除</div></div><div class="mr-2"><div class="btn btn-sm btn-outline-secondary" ld="clone"><i class="i-clone"></i> 複製</div></div><div class="flex-grow-1 justify-content-end d-flex"><div class="ml-4 d-flex align-items-center line-height-1em">公開 <div class="switch ml-2" ld="switch" data-name="isPublic"></div></div><div class="ml-4 d-flex align-items-center line-height-1em">必填 <div class="switch ml-2 on" ld="switch" data-name="isRequired"></div></div><div class="ml-4 d-flex align-items-center line-height-1em">顯示描述 <div class="switch ml-2" ld="switch" data-name="showDesc"></div></div></div></div></div><script type="@plotdb/block">({
+<div><div><plug name="view"></plug></div><hr/><div>control panel</div><hr/><div class="mb-2 d-flex"><div class="flex-grow-1"><div>title</div><input class="form-control" ld="title"/></div><div class="ml-4"><div>alias</div><select class="form-control" ld="alias"><option value="uid">統編</option><option value="teamname">單位名稱</option><option value="teamname">自訂..</option></select></div></div><div class="mb-2"><div>description</div><textarea class="form-control" rows="5" ld="desc"></textarea></div><div class="d-flex mb-2 align-items-center"><div class="d-flex align-items-center mr-4"><span>isRequired</span><div class="switch ml-1" ld="switch" data-name="isRequired"></div></div><div class="d-flex align-items-center mr-4"><span>isPublic</span><div class="switch ml-1" ld="switch" data-name="isPublic"></div></div><div class="d-flex align-items-center mr-4"><span>showDesc</span><div class="switch ml-1" ld="switch" data-name="showDesc"></div></div></div><div class="mb-2"><div>critera</div><div class="d-flex mb-2"><div class="mr-2"><div>attr</div><select class="form-control mr-2" ld="picked-attr"><option ld-each="attr">number</option></select></div><div class="mr-2"><div>op</div><select class="form-control mr-2" ld="picked-op"><option ld-each="op">between</option></select></div><div class="mr-2 flex-grow-1" ld-each="op-config"><div ld="name">name</div><input class="form-control mr-2" ld="value" value="1"/></div><div><div>&nbsp;</div><div class="btn btn-outline-primary" ld="add-criteria"><i class="i-plus"></i></div></div></div><hr/><div class="d-flex mb-2 align-items-center" ld-each="criteria"><div class="mr-2"><div>&nbsp;</div><div class="switch switch-lg" ld="enabled"></div></div><div class="mr-2"><div>attr</div><select class="form-control mr-2" ld="attr"><option ld-each="attr-option">number</option></select></div><div class="mr-2"><div>op</div><select class="form-control mr-2" ld="op"><option ld-each="op-option">between</option></select></div><div class="mr-2 flex-grow-1" ld-each="op-config"><div ld="name">name</div><input class="form-control mr-2" ld="value" value="1"/></div><div><div>&nbsp;</div><div class="btn btn-outline-danger" ld="delete"><i class="i-close"></i></div></div></div></div><script type="@plotdb/block">({
   pkg: {
-    name: "@plotdb/base",
-    version: "0.0.1",
-    dependencies: [{
-      url: "/assets/lib/bootstrap.native/main/bootstrap-native.min.js"
-    }]
+    name: "@plotdb/formbase",
+    version: "0.0.1"
   },
   init: function(arg$){
-    var root, context, BSN;
-    root = arg$.root, context = arg$.context;
-    BSN = context.BSN;
+    var root;
+    root = arg$.root;
+    console.log("formbase");
     return function(it){
       return new it();
     }(function(){
@@ -54,13 +51,6 @@
               _[n] = !_[n];
               return view.render();
             }
-          }
-        },
-        init: {
-          dropdown: function(arg$){
-            var node;
-            node = arg$.node;
-            return new BSN.Dropdown(node);
           }
         },
         handler: {

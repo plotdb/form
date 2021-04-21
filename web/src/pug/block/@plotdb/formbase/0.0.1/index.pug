@@ -1,60 +1,40 @@
-div
-  div
+.rounded-lg.shadow.mb-4
+  .p-4
+    .d-flex
+      .flex-grow-1
+        h3(ld="title") 問題的標題
+        p 關於問題的簡單描述 ...
+      div
+        .ml-4: .dropdown(ld="dropdown")
+          .btn.btn-light.dropdown-toggle(data-toggle="dropdown") 短名
+          .dropdown-menu.dropdown-menu-right
+            .dropdown-item 統一編號
+            .dropdown-item 電話
+            .dropdown-item 團隊名稱
+            .dropdown-item: input.form-control(placeholder="自訂 ...")
+    //-input.form-control.simple(placeholder="請在這裡輸入 ...")
     plug(name="view")
-  hr
-  div control panel
-  hr
-  .mb-2.d-flex
-    .flex-grow-1
-      div title
-      input.form-control(ld="title")
-    .ml-4
-      div alias
-      select.form-control(ld="alias")
-        option(value="uid") 統編
-        option(value="teamname") 單位名稱
-        option(value="teamname") 自訂..
-  .mb-2
-    div description
-    textarea.form-control(rows="5",ld="desc")
-  .d-flex.mb-2.align-items-center
-    each i in ["isRequired", "isPublic", "showDesc"]
-      .d-flex.align-items-center.mr-4 #[span= i]#[.switch.ml-1(ld="switch",data-name=i)]
-  .mb-2
-    div critera
-    .d-flex.mb-2
-      .mr-2
-        div attr
-        select.form-control.mr-2(ld="picked-attr")
-          option(ld-each="attr") number
-      .mr-2
-        div op
-        select.form-control.mr-2(ld="picked-op")
-          option(ld-each="op") between
-      .mr-2.flex-grow-1(ld-each="op-config")
-        div(ld="name") name
-        input.form-control.mr-2(ld="value",value="1")
-      div
-        div &nbsp;
-        .btn.btn-outline-primary(ld="add-criteria") #[i.i-plus]
-    hr
-    .d-flex.mb-2.align-items-center(ld-each="criteria")
-      .mr-2
-        div &nbsp;
-        .switch.switch-lg(ld="enabled")
-      .mr-2
-        div attr
-        select.form-control.mr-2(ld="attr")
-          option(ld-each="attr-option") number
-      .mr-2
-        div op
-        select.form-control.mr-2(ld="op")
-          option(ld-each="op-option") between
-      .mr-2.flex-grow-1(ld-each="op-config")
-        div(ld="name") name
-        input.form-control.mr-2(ld="value",value="1")
-      div
-        div &nbsp;
-        .btn.btn-outline-danger(ld="delete") #[i.i-close]
+  .border-top.border-bottom
+    .m-4
+      .d-flex.align-items-center.justify-content-between
+        .mr-2: .switch.switch-lg
+        .mr-2: .dropdown(ld="dropdown")
+          .btn.btn-light.dropdown-toggle 數值
+          .dropdown-menu
+        .mr-2: .dropdown(ld="dropdown")
+          .btn.btn-light.dropdown-toggle ≧大於或等於
+          .dropdown-menu
+        .mr-2: input.form-control.simple(placeholder="值 1")
+        .mr-2: input.form-control.simple(placeholder="值 2")
+        i.i-close.text-danger(ld="delete")
+    .mx-4.my-4: a(href="#") 增加條件 ...
+  .p-4
+    .d-flex.align-items-center
+      .mr-2: .btn.btn-sm.btn-outline-danger(ld="delete") #[i.i-close] 刪除
+      .mr-2: .btn.btn-sm.btn-outline-secondary(ld="clone") #[i.i-clone] 複製
+      .flex-grow-1.justify-content-end.d-flex
+        .ml-4.d-flex.align-items-center.line-height-1em 公開 #[.switch.ml-2(ld="switch",data-name="isPublic")]
+        .ml-4.d-flex.align-items-center.line-height-1em 必填 #[.switch.ml-2.on(ld="switch",data-name="isRequired")]
+        .ml-4.d-flex.align-items-center.line-height-1em 顯示描述 #[.switch.ml-2(ld="switch",data-name="showDesc")]
 
   script(type="@plotdb/block"): include:lsc index.ls
