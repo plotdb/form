@@ -10,13 +10,24 @@ block head
     .form-control::placeholder
       color: #d9dadb
 block body
-  h1 hi
   .w-640.mx-auto.rwd.my-4
     .rounded-lg.shadow
       .p-4
-        h3 問題的標題
-        p 關於問題的簡單描述 ...
+        .d-flex
+          .flex-grow-1
+            h3 問題的標題
+            p 關於問題的簡單描述 ...
+          div
+            .ml-4: .dropdown
+              .btn.btn-light.dropdown-toggle(data-toggle="dropdown") 短名
+              .dropdown-menu.dropdown-menu-right
+                .dropdown-item 統一編號
+                .dropdown-item 電話
+                .dropdown-item 團隊名稱
+                .dropdown-item: input.form-control(placeholder="自訂 ...")
+
         input.form-control.simple(placeholder="請在這裡輸入 ...")
+
       .border-top.border-bottom
         each i in [1,2,3]
           .m-4
@@ -39,7 +50,11 @@ block body
             .ml-4.d-flex.align-items-center 公開 #[.switch.ml-2]
             .ml-4.d-flex.align-items-center 必填 #[.switch.ml-2.on]
             .ml-4.d-flex.align-items-center 顯示描述 #[.switch.ml-2]
-            .ml-4: .dropdown
-              .btn.btn-light.dropdown-toggle 用途
-              .dropdown-menu
 
+            //-.ml-4: .dropdown
+              .btn.btn-light.dropdown-toggle(data-toggle="dropdown") 短名
+              .dropdown-menu
+                .dropdown-item 統一編號
+                .dropdown-item 電話
+                .dropdown-item 團隊名稱
+                .dropdown-item: input.form-control(placeholder="自訂 ...")
