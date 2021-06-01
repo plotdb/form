@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
+
 echo "prepare..."
 rm -rf dist
-mkdir -p dist/ruleset
+mkdir -p dist
 
 echo "building livescript files ..."
-npx lsc -cp src/form.def.ls > dist/form.def.js
-npx lsc -cp src/form.imp.ls > dist/form.imp.js
+npx lsc -cpb src/op.ls > dist/op.js
+#npx lsc -cp src/form.def.ls > dist/form.def.js
+#npx lsc -cp src/form.imp.ls > dist/form.imp.js
 #npx lsc -cp src/rulesets/index.ls > dist/ruleset/index.js
 #npx lsc -cp src/rulesets/text.ls > dist/ruleset/text.js
 #npx lsc -cp src/criteria.ls > dist/criteria.js

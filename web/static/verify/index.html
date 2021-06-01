@@ -1,0 +1,34 @@
+<!DOCTYPE html><html><head><link rel="stylesheet" type="text/css" href="/assets/lib/bootstrap/main/css/bootstrap.min.css"><link rel="stylesheet" type="text/css" href="/assets/lib/bootstrap.ldui/main/bootstrap.ldui.min.css"></head><body><script type="text/javascript" src="/assets/lib/form/dev/op.js"></script><script>var op1, op2, opset;
+op1 = new form.op({
+  id: 'email',
+  config: {},
+  func: function(v, c){
+    return v.length < c.len;
+  }
+});
+op2 = new form.op({
+  id: 'between',
+  config: {},
+  func: function(v, c){
+    return v > c.range[0] && v < c.range[1];
+  }
+});
+opset = new form.opset({
+  id: 'random-set',
+  ops: [op1, op2],
+  defaultOp: 'email'
+});
+form.opset.register(opset);
+opset = form.opset.get('random-set');
+console.log(opset.getOp('email'));
+console.log(opset.ops);
+opset.getOp('email').verify('tkirby@gmail.com', {
+  len: 50
+}).then(function(it){
+  console.log(it);
+  return opset.getOp('between').verify(50, {
+    range: [20, 60]
+  });
+}).then(function(it){
+  return console.log(it);
+});</script></body></html>

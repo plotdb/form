@@ -31,6 +31,9 @@
      - return either true/false or Promise.
      - return / resolve to true if `value` passed verification.
  - API
+   - `id` - public member for the id of theis op.
+   - `name` - public member for the name of this op.
+   - `config` - public member for the config of this op.
    - `verify(params)` - return true / false or Promise.
 
 
@@ -65,7 +68,11 @@ Once we have ops, we would like to have them in group, based on similar usage or
    - `defaultOp`: id of the op in this opset that should be used as a default op.
      - if omitted, a random one will be picked.
  - API
-   - `get-op(id)`
+   - `id` - public member for the id of theis opset.
+   - `name` - public member for the name of this opset.
+   - `get-op(id)` - get `op` with id `id` in this opset.
+   - `get-ops() - get op list in this opset.
+
  - class API
    - `register(cfg)`
    - `get(id)`
