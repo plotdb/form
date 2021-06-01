@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@loadingio/ldquery": "^2.0.0",
-    "@plotdb/block": "^1.0.0",
+    "@plotdb/block": "^1.2.1",
     "@plotdb/datadom": "0.1.1",
     "@plotdb/datahub": "^0.1.1",
     "@plotdb/pug-browser": "0.0.2",
@@ -42,7 +42,7 @@
     "mocha": "^8.2.1",
     "nyc": "^15.1.0",
     "stylus": "^0.54.5",
-    "template": "github:zbryikt/template#v2.3.11",
+    "template": "github:zbryikt/template#v2.3.13",
     "uglify-js": "=3.2.0",
     "uglifycss": "0.0.29"
   },
@@ -79,16 +79,16 @@
     ]
   },
   "peerDependencies": {
-    "@plotdb/csscope": "^0.2.1",
-    "@plotdb/datadom": "^0.1.0",
-    "@plotdb/rescope": "^0.2.2",
+    "@plotdb/csscope": "^0.3.0",
+    "@plotdb/datadom": "^0.1.1",
+    "@plotdb/rescope": "^1.1.6",
     "curegex": "^0.0.3",
     "dompurify": "^2.2.6",
     "proxise": "^0.1.2"
   },
   "dependencies": {
-    "@plotdb/csscope": "^0.2.1",
-    "@plotdb/rescope": "^0.2.2",
+    "@plotdb/csscope": "^0.3.0",
+    "@plotdb/rescope": "^1.1.6",
     "curegex": "^0.0.3",
     "dompurify": "^2.2.6",
     "proxise": "^0.1.2"
