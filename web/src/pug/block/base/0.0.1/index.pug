@@ -6,12 +6,12 @@
         p(contenteditable="true") 關於問題的簡單描述 ...
       div
         .ml-4: .dropdown(ld="dropdown")
-          .btn.btn-light.dropdown-toggle(data-toggle="dropdown") 短名
+          .btn.btn-light.dropdown-toggle(ld="shortname",data-toggle="dropdown") 代稱
           .dropdown-menu.dropdown-menu-right
-            .dropdown-item 統一編號
-            .dropdown-item 電話
-            .dropdown-item 團隊名稱
-            .dropdown-item: input.form-control(placeholder="自訂 ...")
+            .dropdown-item(ld="set-shortname",data-value="統一編號") 統一編號
+            .dropdown-item(ld="set-shortname",data-value="電話") 電話
+            .dropdown-item(ld="set-shortname",data-value="團隊名稱") 團隊名稱
+            .dropdown-item.px-2: input.form-control(ld="custom-shortname",placeholder="自訂 ...")
     plug(name="view")
   .border-top.border-bottom
     .m-4

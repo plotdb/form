@@ -2,6 +2,16 @@
 
 這裡定義表單元件設計的基本結構.
 
+## Form Data
+
+ - title: '...'
+ - desc: '...'
+ - criteria: []
+ - config: {}
+
+
+## Form Structure
+
  - form-lib
    - blocks
    - types

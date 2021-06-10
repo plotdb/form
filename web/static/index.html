@@ -14,7 +14,8 @@ manager.init().then(function(){
 }).then(function(it){
   return it.create();
 }).then(function(it){
-  return it.attach({
+  it.attach({
     root: root
   });
+  return console.log(it['interface']());
 });</script></body></html>

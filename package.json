@@ -64,6 +64,7 @@
       "@plotdb/datadom",
       "@plotdb/datahub",
       "@plotdb/rescope",
+      "@plotdb/suuid",
       "@plotdb/csscope"
     ]
   },
@@ -78,18 +79,19 @@
     ]
   },
   "peerDependencies": {
+    "@plotdb/block": "^1.4.2",
     "@plotdb/csscope": "^0.4.0",
     "@plotdb/datadom": "^0.1.1",
     "@plotdb/rescope": "^1.1.8",
-    "@plotdb/block": "^1.4.2",
     "curegex": "^0.0.3",
     "dompurify": "^2.2.6",
     "proxise": "^0.1.2"
   },
   "dependencies": {
+    "@plotdb/block": "^1.4.2",
     "@plotdb/csscope": "^0.4.0",
     "@plotdb/rescope": "^1.1.8",
-    "@plotdb/block": "^1.4.2",
+    "@plotdb/suuid": "^0.4.0",
     "curegex": "^0.0.3",
     "dompurify": "^2.2.6",
     "proxise": "^0.1.2"

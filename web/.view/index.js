@@ -187,7 +187,7 @@ pug_mixins["script"]("assets/lib/@plotdb/block/main/block.min.js");
 ;pug_debug_line = 6;pug_debug_filename = "src\u002Fpug\u002Findex.pug";
 pug_html = pug_html + "\u003Cscript\u003E";
 ;pug_debug_line = 6;pug_debug_filename = "src\u002Fpug\u002Findex.pug";
-pug_html = pug_html + "var manager;\nmanager = new block.manager({\n  registry: function(arg$){\n    var name, version;\n    name = arg$.name, version = arg$.version;\n    return \"\u002Fblock\u002F\" + name + \"\u002F\" + version + \"\u002Findex.html\";\n  }\n});\nmanager.init().then(function(){\n  return manager.get({\n    name: \"short-answer\",\n    version: \"0.0.1\"\n  });\n}).then(function(it){\n  return it.create();\n}).then(function(it){\n  return it.attach({\n    root: root\n  });\n});\u003C\u002Fscript\u003E\u003C\u002Fbody\u003E\u003C\u002Fhtml\u003E";
+pug_html = pug_html + "var manager;\nmanager = new block.manager({\n  registry: function(arg$){\n    var name, version;\n    name = arg$.name, version = arg$.version;\n    return \"\u002Fblock\u002F\" + name + \"\u002F\" + version + \"\u002Findex.html\";\n  }\n});\nmanager.init().then(function(){\n  return manager.get({\n    name: \"short-answer\",\n    version: \"0.0.1\"\n  });\n}).then(function(it){\n  return it.create();\n}).then(function(it){\n  it.attach({\n    root: root\n  });\n  return console.log(it['interface']());\n});\u003C\u002Fscript\u003E\u003C\u002Fbody\u003E\u003C\u002Fhtml\u003E";
     }.call(this, "Array" in locals_for_with ?
         locals_for_with.Array :
         typeof Array !== 'undefined' ? Array : undefined, "JSON" in locals_for_with ?
