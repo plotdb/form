@@ -23,6 +23,7 @@
     "doc": "npx jsdoc dist -d jsdoc"
   },
   "devDependencies": {
+    "@loadingio/debounce.js": "^0.0.1",
     "@loadingio/ldquery": "^2.0.0",
     "@plotdb/datadom": "0.1.1",
     "@plotdb/datahub": "^0.1.1",
@@ -53,6 +54,7 @@
       "bootstrap.native",
       "ldcover",
       "@loadingio/ldquery",
+      "@loadingio/debounce.js",
       "ldview",
       "ldiconfont",
       "curegex",
@@ -79,7 +81,7 @@
     ]
   },
   "peerDependencies": {
-    "@plotdb/block": "^1.4.2",
+    "@plotdb/block": "^1.4.3",
     "@plotdb/csscope": "^0.4.0",
     "@plotdb/datadom": "^0.1.1",
     "@plotdb/rescope": "^1.1.8",
@@ -88,7 +90,7 @@
     "proxise": "^0.1.2"
   },
   "dependencies": {
-    "@plotdb/block": "^1.4.2",
+    "@plotdb/block": "^1.4.3",
     "@plotdb/csscope": "^0.4.0",
     "@plotdb/rescope": "^1.1.8",
     "@plotdb/suuid": "^0.4.0",

@@ -88,6 +88,14 @@ form.opset = function(opt){
 form.opset.prototype = import$(Object.create(Object.prototype), {
   getOp: function(id){
     return this.ops[id || this.defaultOp];
+  },
+  getOps: function(){
+    var k, ref$, v, results$ = [];
+    for (k in ref$ = this.ops) {
+      v = ref$[k];
+      results$.push(v);
+    }
+    return results$;
   }
 });
 form.opset.register = function(it){
@@ -122,8 +130,8 @@ form.term.prototype = import$(Object.create(Object.prototype), {
   },
   setOpset: function(opset, op, cfg){
     if (typeof opset === 'string') {
-      if (!(this.opset = form.opset.get(id))) {
-        throw new Error("no such opset '" + id + "'");
+      if (!(this.opset = form.opset.get(opset))) {
+        throw new Error("no such opset '" + opset + "'");
       } else if (opset instanceof form.opset) {
         this.opset = opset;
       } else {
@@ -152,6 +160,14 @@ form.term.prototype = import$(Object.create(Object.prototype), {
       Promis.reject(new Error("op not set"));
     }
     return this.op.verify(v, this.config);
+  },
+  serialize: function(){
+    return {
+      enabled: this.enabled,
+      opset: this.opset.id,
+      op: this.op.id,
+      config: this.config
+    };
   }
 });
 function import$(obj, src){

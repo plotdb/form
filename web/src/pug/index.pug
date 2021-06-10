@@ -1,6 +1,11 @@
 extends /base.pug
 block body
   #root.w-1024.rwd.mx-auto.my-4
+    .d-flex.mb-4
+      .btn.btn-outline-secondary.mr-2(ld="serialize") serialize
+      .btn.btn-outline-secondary.mr-2(ld="mode",data-name="edit") edit
+      .btn.btn-outline-secondary.mr-2(ld="mode",data-name="view") view
+      .btn.btn-outline-secondary.mr-2(ld="set") random value
 
 block script
   script: include:lsc index.ls

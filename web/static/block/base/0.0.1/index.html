@@ -1,4 +1,4 @@
-<div class="rounded-lg shadow mb-4"><div class="p-4"><div class="d-flex"><div class="flex-grow-1"><h3 ld="title" contenteditable="true">問題的標題</h3><p contenteditable="true">關於問題的簡單描述 ...</p></div><div><div class="ml-4"><div class="dropdown" ld="dropdown"><div class="btn btn-light dropdown-toggle" ld="shortname" data-toggle="dropdown">代稱</div><div class="dropdown-menu dropdown-menu-right"><div class="dropdown-item" ld="set-shortname" data-value="統一編號">統一編號</div><div class="dropdown-item" ld="set-shortname" data-value="電話">電話</div><div class="dropdown-item" ld="set-shortname" data-value="團隊名稱">團隊名稱</div><div class="dropdown-item px-2"><input class="form-control" ld="custom-shortname" placeholder="自訂 ..."/></div></div></div></div></div></div><plug name="view"></plug></div><div class="border-top border-bottom"><div class="m-4"><div class="d-flex mb-1 align-items-center justify-content-between" ld-each="criteria"><div class="mr-2"><div class="switch switch-lg" ld="enabled"></div></div><div class="mr-2"><div class="dropdown" ld="dropdown"><div class="btn btn-light dropdown-toggle" data-toggle="dropdown">數值</div><div class="dropdown-menu"><div class="dropdown-item">字串</div><div class="dropdown-item">列表</div><div class="dropdown-item">檔案大小</div></div></div></div><div class="mr-2"><div class="dropdown" ld="dropdown"><div class="btn btn-light dropdown-toggle" data-toggle="dropdown">≧ 大於或等於</div><div class="dropdown-menu"><div class="dropdown-item">≦ 小於或等於</div><div class="dropdown-item">≠ 不等於</div><div class="dropdown-item">= 等於</div></div></div></div><div class="mr-2"><input class="form-control simple" placeholder="值 1"/></div><div class="mr-2"><input class="form-control simple" placeholder="值 2"/></div><i class="i-close text-danger clickable" ld="delete"></i></div><div class="mt-4"><div class="btn btn-link p-0" ld="add-criteria">增加條件 ...</div></div></div></div><div class="p-4"><div class="d-flex align-items-center"><div class="mr-2"><div class="btn btn-sm btn-outline-danger" ld="delete"><i class="i-close"></i> 刪除</div></div><div class="mr-2"><div class="btn btn-sm btn-outline-secondary" ld="clone"><i class="i-clone"></i> 複製</div></div><div class="flex-grow-1 justify-content-end d-flex"><div class="ml-4 d-flex align-items-center line-height-1em">公開 <div class="switch ml-2" ld="switch" data-name="isPublic"></div></div><div class="ml-4 d-flex align-items-center line-height-1em">必填 <div class="switch ml-2 on" ld="switch" data-name="isRequired"></div></div><div class="ml-4 d-flex align-items-center line-height-1em">顯示描述 <div class="switch ml-2" ld="switch" data-name="showDesc"></div></div></div></div></div><script type="@plotdb/block">({
+<div class="rounded-lg shadow mb-4"><div class="p-4"><div class="d-flex"><div class="flex-grow-1"><h3 ld="title" contenteditable="true">問題的標題</h3><p contenteditable="true">關於問題的簡單描述 ...</p></div><div ld="edit-only"><div class="ml-4"><div class="dropdown" ld="dropdown"><div class="btn btn-light dropdown-toggle" ld="shortname" data-toggle="dropdown">代稱</div><div class="dropdown-menu dropdown-menu-right"><div class="dropdown-item" ld="set-shortname" data-value="統一編號">統一編號</div><div class="dropdown-item" ld="set-shortname" data-value="電話">電話</div><div class="dropdown-item" ld="set-shortname" data-value="團隊名稱">團隊名稱</div><div class="dropdown-item px-2"><input class="form-control" ld="custom-shortname" placeholder="自訂 ..."/></div></div></div></div></div></div><plug name="view"></plug><div class="text-danger py-2 d-none" ld="error-hint">輸入的值不符規定.</div></div><div class="border-top border-bottom" ld="edit-only"><div class="m-4"><div class="d-flex mb-1 align-items-center justify-content-between" ld-each="term"><div class="mr-2"><div class="switch switch-lg" ld="enabled"></div></div><div class="mr-2"><div class="dropdown" ld="dropdown"><div class="btn btn-light dropdown-toggle" ld="opset" data-toggle="dropdown">...</div><div class="dropdown-menu"><div class="dropdown-item" ld-each="set-opset">...</div></div></div></div><div class="mr-2"><div class="dropdown" ld="dropdown"><div class="btn btn-light dropdown-toggle" ld="op" data-toggle="dropdown">...</div><div class="dropdown-menu"><div class="dropdown-item" ld-each="set-op">...</div></div></div></div><div class="mr-2"><input class="form-control simple" placeholder="值 1"/></div><div class="mr-2"><input class="form-control simple" placeholder="值 2"/></div><div class="mr-2 flex-grow-1"><input class="form-control simple" placeholder="錯誤訊息"/></div><i class="i-close text-danger clickable" ld="delete"></i></div><div class="mt-4"><div class="btn btn-link p-0" ld="add-term">增加條件 ...</div></div></div></div><div class="p-4" ld="edit-only"><div class="d-flex align-items-center"><div class="mr-2"><div class="btn btn-sm btn-outline-danger" ld="delete"><i class="i-close"></i> 刪除</div></div><div class="mr-2"><div class="btn btn-sm btn-outline-secondary" ld="clone"><i class="i-clone"></i> 複製</div></div><div class="flex-grow-1 justify-content-end d-flex"><div class="ml-4 d-flex align-items-center line-height-1em">公開 <div class="switch ml-2" ld="switch" data-name="isPublic"></div></div><div class="ml-4 d-flex align-items-center line-height-1em">必填 <div class="switch ml-2 on" ld="switch" data-name="isRequired"></div></div><div class="ml-4 d-flex align-items-center line-height-1em">顯示描述 <div class="switch ml-2" ld="switch" data-name="showDesc"></div></div></div></div></div><script type="@plotdb/block">({
   pkg: {
     name: "@plotdb/base",
     version: "0.0.1",
@@ -8,6 +8,8 @@
       }, {
         url: "/assets/lib/@plotdb/suuid/main/suuid.bundle.min.js"
       }, {
+        url: "/assets/lib/form/dev/op.js"
+      }, {
         url: "/assets/lib/ldview/main/index.min.js"
       }
     ]
@@ -15,16 +17,74 @@
   'interface': function(){
     return this;
   },
-  init: function(arg$){
-    var root, context, BSN, ldview, suuid, data, view;
-    root = arg$.root, context = arg$.context;
-    BSN = context.BSN, ldview = context.ldview, suuid = context.suuid;
+  init: function(opt){
+    var ref$, BSN, ldview, suuid, form, data, opset, view, this$ = this;
+    opt == null && (opt = {});
+    ref$ = opt.context, BSN = ref$.BSN, ldview = ref$.ldview, suuid = ref$.suuid, form = ref$.form;
+    opt.pubsub.on('init', function(){
+      return console.log('ok');
+    });
     this.data = data = {
       config: {},
       key: suuid()
     };
+    this.mode = opt.data.mode;
+    this.node = function(){
+      return opt.root.querySelector('[ld-scope][plug=view]');
+    };
+    this.value = function(v, source){
+      source == null && (source = false);
+      if (v != null) {
+        this._value = v;
+        this.verify();
+      }
+      if (!source) {
+        opt.pubsub.fire('change', this._value);
+      }
+      return this._value;
+    };
+    this.verify = function(){
+      var this$ = this;
+      return Promise.all(this.data.term.map(function(it){
+        return it.verify(this$._value);
+      })).then(function(it){
+        return it.reduce(function(a, b){
+          return a && b;
+        }, true);
+      }).then(function(it){
+        this$.hasError = !it;
+        return view.render();
+      });
+    };
+    this.setMode = function(it){
+      this$.mode = it;
+      return this$.view.render();
+    };
+    this.serialize = function(){
+      var ref$, ret, ref1$;
+      ret = (ref1$ = {}, ref1$.key = (ref$ = this$.data).key, ref1$.title = ref$.title, ref1$.desc = ref$.desc, ref1$);
+      ret.config = JSON.parse(JSON.stringify(this$.data.config || {}));
+      ret.term = this$.data.term.map(function(it){
+        return it.serialize();
+      });
+      return ret;
+    };
+    opset = new form.opset({
+      id: 'string',
+      ops: {
+        include: function(v, c){
+          return ~(v || '').indexOf('test');
+        },
+        exclude: function(v, c){
+          return !~(v || '').indexOf('test');
+        },
+        email: function(v){
+          return /^[^@]+@[^@]+$/.exec(v);
+        }
+      }
+    });
     return this.view = view = new ldview({
-      root: root,
+      root: opt.root,
       action: {
         input: {
           title: function(arg$){
@@ -56,11 +116,14 @@
             evt = arg$.evt;
             return evt.stopPropagation();
           },
-          "add-criteria": function(arg$){
+          "add-term": function(arg$){
             var views;
             views = arg$.views;
-            (data.criteria || (data.criteria = [])).push({});
-            return views[0].render('criteria');
+            (data.term || (data.term = [])).push(new form.term({
+              opset: opset
+            }));
+            this$.verify();
+            return views[0].render('term');
           },
           'switch': function(arg$){
             var node, n;
@@ -87,6 +150,16 @@
         }
       },
       handler: {
+        "error-hint": function(arg$){
+          var node;
+          node = arg$.node;
+          return node.classList.toggle('d-none', this$.mode === 'edit' || !this$.hasError);
+        },
+        "edit-only": function(arg$){
+          var node;
+          node = arg$.node;
+          return node.classList.toggle('d-none', this$.mode !== 'edit');
+        },
         "set-shortname": function(arg$){
           var node;
           node = arg$.node;
@@ -116,9 +189,9 @@
           }
           return node.classList.toggle('on', !!(data.config || (data.config = {}))[n]);
         },
-        criteria: {
+        term: {
           list: function(){
-            return data.criteria || (data.criteria = []);
+            return data.term || (data.term = []);
           },
           view: {
             action: {
@@ -132,8 +205,8 @@
                 'delete': function(arg$){
                   var ctx, views;
                   ctx = arg$.ctx, views = arg$.views;
-                  data.criteria.splice(data.criteria.indexOf(ctx), 1);
-                  return views[1].render('criteria');
+                  data.term.splice(data.term.indexOf(ctx), 1);
+                  return views[1].render('term');
                 }
               },
               change: {
@@ -158,56 +231,90 @@
                 return new BSN.Dropdown(node);
               }
             },
+            text: {
+              opset: function(arg$){
+                var ctx;
+                ctx = arg$.ctx;
+                if (!ctx.opset) {
+                  return "";
+                } else {
+                  return ctx.opset.name || ctx.opset.id;
+                }
+              },
+              op: function(arg$){
+                var ctx;
+                ctx = arg$.ctx;
+                if (!ctx.op) {
+                  return "";
+                } else {
+                  return ctx.op.name || ctx.op.id;
+                }
+              }
+            },
             handler: {
               enabled: function(arg$){
                 var node, ctx;
                 node = arg$.node, ctx = arg$.ctx;
                 return node.classList.toggle('on', !!ctx.enabled);
               },
-              "op-option": {
+              "set-op": {
                 list: function(arg$){
-                  var ctx, opset, k, ref$, v, results$ = [];
+                  var ctx;
                   ctx = arg$.ctx;
-                  opset = form.opset.get(ctx.opset || 'number');
-                  for (k in ref$ = opset.ops) {
-                    v = ref$[k];
-                    results$.push(v);
+                  return ctx.opset.getOps();
+                },
+                action: {
+                  click: function(arg$){
+                    var data, ctx, views;
+                    data = arg$.data, ctx = arg$.ctx, views = arg$.views;
+                    ctx.setOp(data.id);
+                    return views[0].render();
                   }
-                  return results$;
                 },
                 handler: function(arg$){
                   var node, data;
                   node = arg$.node, data = arg$.data;
-                  node.setAttribute('value', data.id);
-                  return node.innerText = data.name;
+                  node.textContent = data.name || data.id;
+                  return node.setAttribute('data-id', data.id);
                 }
               },
-              "op-config": {
-                list: function(arg$){
-                  var ctx, k, ref$, v, results$ = [];
-                  ctx = arg$.ctx;
-                  for (k in ref$ = (ctx.op || (ctx.op = {})).config || {}) {
-                    v = ref$[k];
-                    results$.push({
-                      k: k,
-                      v: v
-                    });
-                  }
-                  return results$;
+              "set-opset": {
+                list: function(){
+                  return [opset];
                 },
-                key: function(it){
-                  return it.k;
-                },
-                view: {
-                  text: {
-                    name: function(arg$){
-                      var node, ctx;
-                      node = arg$.node, ctx = arg$.ctx;
-                      return ctx.k;
+                action: {
+                  click: function(arg$){
+                    var data, ctx, views;
+                    data = arg$.data, ctx = arg$.ctx, views = arg$.views;
+                    if (ctx.opset.id === data.id) {
+                      return;
                     }
+                    ctx.setOpset(data);
+                    return views[0].render();
                   }
+                },
+                handler: function(arg$){
+                  var node, data;
+                  node = arg$.node, data = arg$.data;
+                  node.textContent = data.name || data.id;
+                  return node.setAttribute('data-id', data.id);
                 }
               }
+              /*
+              "op-option":
+                list: ({ctx}) ~>
+                  opset = form.opset.get(ctx.opset or 'number')
+                  [v for k,v of opset.ops]
+                handler: ({node, data}) ->
+                  node.setAttribute \value, data.id
+                  node.innerText = data.name
+              "op-config":
+                list: ({ctx}) -> [{k,v} for k,v of ctx.{}op.config or {}]
+                key: -> it.k
+                view:
+                  text:
+                    name: ({node, ctx}) -> return ctx.k
+              */
             }
           }
         }

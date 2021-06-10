@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,700|Roboto+Mono"><link rel="stylesheet" type="text/css" href="assets/lib/bootstrap/main/css/bootstrap.min.css"><link rel="stylesheet" type="text/css" href="assets/lib/bootstrap.ldui/main/bootstrap.ldui.min.css"><link rel="stylesheet" type="text/css" href="assets/lib/ldcover/main/ldcv.min.css"><link rel="stylesheet" type="text/css" href="assets/lib/ldiconfont/main/ldif.min.css"><link rel="stylesheet" type="text/css" href="css/index.css"></head><body><div class="w-1024 rwd mx-auto my-4" id="root"></div><script type="text/javascript" src="assets/lib/bootstrap.native/main/bootstrap-native.min.js"></script><script type="text/javascript" src="assets/lib/bootstrap.ldui/main/bootstrap.ldui.min.js"></script><script type="text/javascript" src="assets/lib/@loadingio/ldquery/main/ldq.min.js"></script><script type="text/javascript" src="assets/lib/proxise/main/proxise.min.js"></script><script type="text/javascript" src="assets/lib/ldcover/main/ldcv.min.js"></script><script type="text/javascript" src="assets/lib/ldview/main/index.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/datadom/main/datadom.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/datahub/main/datahub.bundle.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/csscope/main/csscope.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/rescope/main/rescope.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/block/main/block.min.js"></script><script>var manager;
+<!DOCTYPE html><html><head><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,700|Roboto+Mono"><link rel="stylesheet" type="text/css" href="assets/lib/bootstrap/main/css/bootstrap.min.css"><link rel="stylesheet" type="text/css" href="assets/lib/bootstrap.ldui/main/bootstrap.ldui.min.css"><link rel="stylesheet" type="text/css" href="assets/lib/ldcover/main/ldcv.min.css"><link rel="stylesheet" type="text/css" href="assets/lib/ldiconfont/main/ldif.min.css"><link rel="stylesheet" type="text/css" href="css/index.css"></head><body><div class="w-1024 rwd mx-auto my-4" id="root"><div class="d-flex mb-4"><div class="btn btn-outline-secondary mr-2" ld="serialize">serialize</div><div class="btn btn-outline-secondary mr-2" ld="mode" data-name="edit">edit</div><div class="btn btn-outline-secondary mr-2" ld="mode" data-name="view">view</div><div class="btn btn-outline-secondary mr-2" ld="set">random value</div></div></div><script type="text/javascript" src="assets/lib/bootstrap.native/main/bootstrap-native.min.js"></script><script type="text/javascript" src="assets/lib/bootstrap.ldui/main/bootstrap.ldui.min.js"></script><script type="text/javascript" src="assets/lib/@loadingio/debounce.js/main/debounce.min.js"></script><script type="text/javascript" src="assets/lib/@loadingio/ldquery/main/ldq.min.js"></script><script type="text/javascript" src="assets/lib/proxise/main/proxise.min.js"></script><script type="text/javascript" src="assets/lib/ldcover/main/ldcv.min.js"></script><script type="text/javascript" src="assets/lib/ldview/main/index.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/datadom/main/datadom.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/datahub/main/datahub.bundle.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/csscope/main/csscope.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/rescope/main/rescope.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/block/main/block.min.js"></script><script>var manager;
 manager = new block.manager({
   registry: function(arg$){
     var name, version;
@@ -12,10 +12,37 @@ manager.init().then(function(){
     version: "0.0.1"
   });
 }).then(function(it){
-  return it.create();
+  return it.create({
+    data: 'hello world'
+  });
 }).then(function(it){
+  var obj, view;
   it.attach({
     root: root
   });
-  return console.log(it['interface']());
+  obj = it['interface']();
+  view = new ldview({
+    root: document,
+    action: {
+      click: {
+        serialize: function(){
+          return console.log(obj.serialize());
+        },
+        mode: function(arg$){
+          var node;
+          node = arg$.node;
+          return obj.setMode(node.getAttribute('data-name'));
+        },
+        set: function(arg$){
+          var node;
+          node = arg$.node;
+          return obj.value(Math.random());
+        }
+      }
+    }
+  });
+  obj.setMode('view');
+  return debounce(1000).then(function(){
+    return obj.setMode('edit');
+  });
 });</script></body></html>

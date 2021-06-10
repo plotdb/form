@@ -4,7 +4,7 @@
       .flex-grow-1
         h3(ld="title",contenteditable="true") 問題的標題
         p(contenteditable="true") 關於問題的簡單描述 ...
-      div
+      div(ld="edit-only")
         .ml-4: .dropdown(ld="dropdown")
           .btn.btn-light.dropdown-toggle(ld="shortname",data-toggle="dropdown") 代稱
           .dropdown-menu.dropdown-menu-right
@@ -13,28 +13,31 @@
             .dropdown-item(ld="set-shortname",data-value="團隊名稱") 團隊名稱
             .dropdown-item.px-2: input.form-control(ld="custom-shortname",placeholder="自訂 ...")
     plug(name="view")
-  .border-top.border-bottom
+    .text-danger.py-2.d-none(ld="error-hint") 輸入的值不符規定.
+  .border-top.border-bottom(ld="edit-only")
     .m-4
-      .d-flex.mb-1.align-items-center.justify-content-between(ld-each="criteria")
+      .d-flex.mb-1.align-items-center.justify-content-between(ld-each="term")
         .mr-2: .switch.switch-lg(ld="enabled")
         .mr-2
           .dropdown(ld="dropdown")
-            .btn.btn-light.dropdown-toggle(data-toggle="dropdown") 數值
+            .btn.btn-light.dropdown-toggle(ld="opset",data-toggle="dropdown") ...
             .dropdown-menu
-              .dropdown-item 字串
-              .dropdown-item 列表
-              .dropdown-item 檔案大小
+              .dropdown-item(ld-each="set-opset") ...
         .mr-2: .dropdown(ld="dropdown")
-          .btn.btn-light.dropdown-toggle(data-toggle="dropdown") ≧ 大於或等於
+          .btn.btn-light.dropdown-toggle(ld="op",data-toggle="dropdown") ...
           .dropdown-menu
+            .dropdown-item(ld-each="set-op") ...
+          //-.dropdown-menu
             .dropdown-item ≦ 小於或等於
+            .dropdown-item ≧ 大於或等於
             .dropdown-item ≠ 不等於
             .dropdown-item = 等於
         .mr-2: input.form-control.simple(placeholder="值 1")
         .mr-2: input.form-control.simple(placeholder="值 2")
+        .mr-2.flex-grow-1: input.form-control.simple(placeholder="錯誤訊息")
         i.i-close.text-danger.clickable(ld="delete")
-      .mt-4: .btn.btn-link.p-0(ld="add-criteria") 增加條件 ...
-  .p-4
+      .mt-4: .btn.btn-link.p-0(ld="add-term") 增加條件 ...
+  .p-4(ld="edit-only")
     .d-flex.align-items-center
       .mr-2: .btn.btn-sm.btn-outline-danger(ld="delete") #[i.i-close] 刪除
       .mr-2: .btn.btn-sm.btn-outline-secondary(ld="clone") #[i.i-clone] 複製

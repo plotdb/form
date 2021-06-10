@@ -11,32 +11,21 @@
     dependencies: ["https://cdnjs.cloudflare.com/ajax/libs/marked/1.2.7/marked.min.js", "https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.2.6/purify.min.js"]
   },
   init: function(arg$){
-    var root, context, dompurify, marked, ldview, view, this$ = this;
-    root = arg$.root, context = arg$.context;
+    var root, parent, context, pubsub, dompurify, marked, ldview, view;
+    root = arg$.root, parent = arg$.parent, context = arg$.context, pubsub = arg$.pubsub;
     dompurify = context.dompurify, marked = context.marked, ldview = context.ldview;
-    this.block = {};
-    return this.view = view = new ldview({
-      root: root.querySelector('[plug=view]'),
+    pubsub.on('change', function(it){
+      return view.get('input-field').value = it;
+    });
+    return view = new ldview({
+      root: parent.node(),
       action: {
         input: {
-          "input-field": function(arg$){
-            var node, views, ref$;
-            node = arg$.node, views = arg$.views;
-            ((ref$ = this$.block).value || (ref$.value = {})).content = node.value;
-            return views[0].render();
+          'input-field': function(arg$){
+            var node;
+            node = arg$.node;
+            return parent.value(node.value, true);
           }
-        }
-      },
-      handler: {
-        "edit-only": function(arg$){
-          var node;
-          node = arg$.node;
-          return node.classList.toggle('d-none', mode !== 'edit');
-        },
-        "input-field": function(arg$){
-          var node, ref$;
-          node = arg$.node;
-          return node.value = ((ref$ = this$.block).value || (ref$.value = {})).content || '';
         }
       }
     });

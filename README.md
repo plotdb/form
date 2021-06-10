@@ -25,11 +25,12 @@
 
  - constructor options:
    - `id`: unique id for used by program.
-   - `name`: verbose name shown in interface. fallback to `id if omitted.
+   - `name`: verbose name shown in interface. fallback to `id` if omitted.
    - `config`: an object representing configs of this `op`, in `@plotdb/config` format.
    - `func(value, config)`: verify `value` based on `config`. 
      - return either true/false or Promise.
      - return / resolve to true if `value` passed verification.
+
  - API
    - `id` - public member for the id of theis op.
    - `name` - public member for the name of this op.
@@ -100,6 +101,7 @@ A term is a basically an `op` of a specific `opset` and a `config` that can be u
    - `set-config(cfg)` - use `cfg` as the config to use when calling `op.verify`
      - config is reset to default value if `cfg` is omitted.
    - `verify(v)` - verify a given value `v` based on the `op` and `config` set.
+   - `serialize()` - return a serialized term that can be used to reconstruct a term object.
 
 
 ## form.block

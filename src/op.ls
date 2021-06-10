@@ -13,6 +13,7 @@ form.op.prototype = Object.create(Object.prototype) <<< do
     for k,v of @config => cfg[k] = v.default
     return cfg
 
+
 # 資料驗證的規則集
 form.opset = (opt={}) ->
   @ <<< opt{name, id}
@@ -29,9 +30,10 @@ form.opset = (opt={}) ->
 
 form.opset.prototype = Object.create(Object.prototype) <<< do
   get-op: (id) -> @ops[id or @default-op]
+  get-ops: -> [v for k,v of @ops]
 
 form.opset.register = -> @[]list.push if it instanceof form.opset => it else new form.opset(it)
-form.opset.get = (id)-> @[]list.filter(->(it.id or it.name) == id).0
+form.opset.get = (id) -> @[]list.filter(->(it.id or it.name) == id).0
 
 
 /**
@@ -50,7 +52,7 @@ form.term = (opt={}) ->
 form.term.prototype = Object.create(Object.prototype) <<< do
   toggle: -> @enabled = if it? => it else !@enabled
   set-opset: (opset, op, cfg) ->
-    if typeof(opset) == \string => if !(@opset = form.opset.get id) => throw new Error("no such opset '#id'")
+    if typeof(opset) == \string => if !(@opset = form.opset.get opset) => throw new Error("no such opset '#opset'")
     else if opset instanceof form.opset => @opset = opset
     else throw new Error("invalid opset")
     @set-op op, cfg
@@ -67,3 +69,6 @@ form.term.prototype = Object.create(Object.prototype) <<< do
   verify: (v) ->
     if !@op => Promis.reject(new Error("op not set"))
     @op.verify(v, @config)
+
+  serialize: ->
+    return {enabled: @enabled, opset: @opset.id, op: @op.id, config: @config}
