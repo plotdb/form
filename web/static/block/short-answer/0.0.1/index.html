@@ -1,0 +1,44 @@
+<div><div class="form-short-answer" ld-scope="ld-scope" plug="view"><div class="position-relative"><input class="form-control" ld="input-field edit-panel" placeholder="輸入數值 ... "/></div></div><script type="@plotdb/block">({
+  pkg: {
+    name: "@plotdb/short-answer",
+    version: "0.0.1",
+    extend: {
+      name: "base",
+      version: "0.0.1"
+    },
+    license: "MIT",
+    description: "",
+    dependencies: ["https://cdnjs.cloudflare.com/ajax/libs/marked/1.2.7/marked.min.js", "https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.2.6/purify.min.js"]
+  },
+  init: function(arg$){
+    var root, context, dompurify, marked, ldview, view, this$ = this;
+    root = arg$.root, context = arg$.context;
+    dompurify = context.dompurify, marked = context.marked, ldview = context.ldview;
+    this.block = {};
+    return this.view = view = new ldview({
+      root: root.querySelector('[plug=view]'),
+      action: {
+        input: {
+          "input-field": function(arg$){
+            var node, views, ref$;
+            node = arg$.node, views = arg$.views;
+            ((ref$ = this$.block).value || (ref$.value = {})).content = node.value;
+            return views[0].render();
+          }
+        }
+      },
+      handler: {
+        "edit-only": function(arg$){
+          var node;
+          node = arg$.node;
+          return node.classList.toggle('d-none', mode !== 'edit');
+        },
+        "input-field": function(arg$){
+          var node, ref$;
+          node = arg$.node;
+          return node.value = ((ref$ = this$.block).value || (ref$.value = {})).content || '';
+        }
+      }
+    });
+  }
+});</script></div>

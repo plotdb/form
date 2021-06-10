@@ -1,0 +1,193 @@
+<div class="rounded-lg shadow mb-4"><div class="p-4"><div class="d-flex"><div class="flex-grow-1"><h3 ld="title" contenteditable="true">問題的標題</h3><p contenteditable="true">關於問題的簡單描述 ...</p></div><div><div class="ml-4"><div class="dropdown" ld="dropdown"><div class="btn btn-light dropdown-toggle" data-toggle="dropdown">短名</div><div class="dropdown-menu dropdown-menu-right"><div class="dropdown-item">統一編號</div><div class="dropdown-item">電話</div><div class="dropdown-item">團隊名稱</div><div class="dropdown-item"><input class="form-control" placeholder="自訂 ..."/></div></div></div></div></div></div><plug name="view"></plug></div><div class="border-top border-bottom"><div class="m-4"><div class="d-flex mb-1 align-items-center justify-content-between" ld-each="criteria"><div class="mr-2"><div class="switch switch-lg" ld="enabled"></div></div><div class="mr-2"><div class="dropdown" ld="dropdown"><div class="btn btn-light dropdown-toggle" data-toggle="dropdown">數值</div><div class="dropdown-menu"><div class="dropdown-item">字串</div><div class="dropdown-item">列表</div><div class="dropdown-item">檔案大小</div></div></div></div><div class="mr-2"><div class="dropdown" ld="dropdown"><div class="btn btn-light dropdown-toggle" data-toggle="dropdown">≧ 大於或等於</div><div class="dropdown-menu"><div class="dropdown-item">≦ 小於或等於</div><div class="dropdown-item">≠ 不等於</div><div class="dropdown-item">= 等於</div></div></div></div><div class="mr-2"><input class="form-control simple" placeholder="值 1"/></div><div class="mr-2"><input class="form-control simple" placeholder="值 2"/></div><i class="i-close text-danger clickable" ld="delete"></i></div><div class="mt-4"><div class="btn btn-link p-0" ld="add-criteria">增加條件 ...</div></div></div></div><div class="p-4"><div class="d-flex align-items-center"><div class="mr-2"><div class="btn btn-sm btn-outline-danger" ld="delete"><i class="i-close"></i> 刪除</div></div><div class="mr-2"><div class="btn btn-sm btn-outline-secondary" ld="clone"><i class="i-clone"></i> 複製</div></div><div class="flex-grow-1 justify-content-end d-flex"><div class="ml-4 d-flex align-items-center line-height-1em">公開 <div class="switch ml-2" ld="switch" data-name="isPublic"></div></div><div class="ml-4 d-flex align-items-center line-height-1em">必填 <div class="switch ml-2 on" ld="switch" data-name="isRequired"></div></div><div class="ml-4 d-flex align-items-center line-height-1em">顯示描述 <div class="switch ml-2" ld="switch" data-name="showDesc"></div></div></div></div></div><script type="@plotdb/block">({
+  /*
+  {
+    title:
+    desc: 
+    criteria: [ ... ]
+    config: {}
+  }
+  */
+  pkg: {
+    name: "@plotdb/base",
+    version: "0.0.1",
+    dependencies: [
+      {
+        url: "/assets/lib/bootstrap.native/main/bootstrap-native-v4.min.js"
+      }, {
+        url: "/assets/lib/ldview/main/index.min.js"
+      }
+    ]
+  },
+  init: function(arg$){
+    var root, context, BSN, ldview;
+    root = arg$.root, context = arg$.context;
+    BSN = context.BSN, ldview = context.ldview;
+    console.log(BSN);
+    return function(it){
+      return it.apply({});
+    }(function(){
+      var data, view;
+      this.data = data = {
+        config: {}
+      };
+      return this.view = view = new ldview({
+        root: root,
+        action: {
+          input: {
+            title: function(arg$){
+              var node, ctx;
+              node = arg$.node, ctx = arg$.ctx;
+              return data.title = node.value || '';
+            },
+            desc: function(arg$){
+              var node, ctx;
+              node = arg$.node, ctx = arg$.ctx;
+              return data.desc = node.value || '';
+            }
+          },
+          click: {
+            "add-criteria": function(arg$){
+              var views;
+              views = arg$.views;
+              (data.criteria || (data.criteria = [])).push({});
+              return views[0].render('criteria');
+            },
+            'switch': function(arg$){
+              var node, n;
+              node = arg$.node;
+              n = node.getAttribute('data-name');
+              if (!(n === 'isPublic' || n === 'isRequired' || n === 'showDesc')) {
+                return;
+              }
+              (data.config || (data.config = {}))[n] = !data.config[n];
+              return view.render();
+            }
+          }
+        },
+        init: {
+          dropdown: function(arg$){
+            var node;
+            node = arg$.node;
+            return new BSN.Dropdown(node);
+          }
+        },
+        handler: {
+          title: function(arg$){
+            var node;
+            node = arg$.node;
+            return node.value = data.title || '';
+          },
+          desc: function(arg$){
+            var node;
+            node = arg$.node;
+            return node.value = data.desc || '';
+          },
+          'switch': function(arg$){
+            var node, n;
+            node = arg$.node;
+            n = node.getAttribute('data-name');
+            if (!(n === 'isPublic' || n === 'isRequired' || n === 'showDesc')) {
+              return;
+            }
+            return node.classList.toggle('on', !!(data.config || (data.config = {}))[n]);
+          },
+          criteria: {
+            list: function(){
+              return data.criteria || (data.criteria = []);
+            },
+            view: {
+              action: {
+                click: {
+                  enabled: function(arg$){
+                    var ctx, views;
+                    ctx = arg$.ctx, views = arg$.views;
+                    ctx.enabled = !ctx.enabled;
+                    return views[0].render();
+                  },
+                  'delete': function(arg$){
+                    var ctx, views;
+                    ctx = arg$.ctx, views = arg$.views;
+                    data.criteria.splice(data.criteria.indexOf(ctx), 1);
+                    return views[0].render();
+                  }
+                },
+                change: {
+                  attr: function(arg$){
+                    var node, ctx, views;
+                    node = arg$.node, ctx = arg$.ctx, views = arg$.views;
+                    ctx.opset = data.attr[node.value].opset;
+                    return views[0].render();
+                  },
+                  op: function(arg$){
+                    var node, views, ctx;
+                    node = arg$.node, views = arg$.views, ctx = arg$.ctx;
+                    ctx.op = form.opset.get(ctx.opset || 'number').getOp(node.value);
+                    return views[0].render();
+                  }
+                }
+              },
+              init: {
+                dropdown: function(arg$){
+                  var node;
+                  node = arg$.node;
+                  return new BSN.Dropdown(node);
+                }
+              },
+              handler: {
+                enabled: function(arg$){
+                  var node, ctx;
+                  node = arg$.node, ctx = arg$.ctx;
+                  return node.classList.toggle('on', !!ctx.enabled);
+                },
+                "op-option": {
+                  list: function(arg$){
+                    var ctx, opset, k, ref$, v, results$ = [];
+                    ctx = arg$.ctx;
+                    opset = form.opset.get(ctx.opset || 'number');
+                    for (k in ref$ = opset.ops) {
+                      v = ref$[k];
+                      results$.push(v);
+                    }
+                    return results$;
+                  },
+                  handler: function(arg$){
+                    var node, data;
+                    node = arg$.node, data = arg$.data;
+                    node.setAttribute('value', data.id);
+                    return node.innerText = data.name;
+                  }
+                },
+                "op-config": {
+                  list: function(arg$){
+                    var ctx, k, ref$, v, results$ = [];
+                    ctx = arg$.ctx;
+                    for (k in ref$ = (ctx.op || (ctx.op = {})).config || {}) {
+                      v = ref$[k];
+                      results$.push({
+                        k: k,
+                        v: v
+                      });
+                    }
+                    return results$;
+                  },
+                  key: function(it){
+                    return it.k;
+                  },
+                  view: {
+                    text: {
+                      name: function(arg$){
+                        var node, ctx;
+                        node = arg$.node, ctx = arg$.ctx;
+                        return ctx.k;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
+    });
+  }
+});</script></div>

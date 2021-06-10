@@ -1,0 +1,46 @@
+.rounded-lg.shadow.mb-4
+  .p-4
+    .d-flex
+      .flex-grow-1
+        h3(ld="title",contenteditable="true") 問題的標題
+        p(contenteditable="true") 關於問題的簡單描述 ...
+      div
+        .ml-4: .dropdown(ld="dropdown")
+          .btn.btn-light.dropdown-toggle(data-toggle="dropdown") 短名
+          .dropdown-menu.dropdown-menu-right
+            .dropdown-item 統一編號
+            .dropdown-item 電話
+            .dropdown-item 團隊名稱
+            .dropdown-item: input.form-control(placeholder="自訂 ...")
+    plug(name="view")
+  .border-top.border-bottom
+    .m-4
+      .d-flex.mb-1.align-items-center.justify-content-between(ld-each="criteria")
+        .mr-2: .switch.switch-lg(ld="enabled")
+        .mr-2
+          .dropdown(ld="dropdown")
+            .btn.btn-light.dropdown-toggle(data-toggle="dropdown") 數值
+            .dropdown-menu
+              .dropdown-item 字串
+              .dropdown-item 列表
+              .dropdown-item 檔案大小
+        .mr-2: .dropdown(ld="dropdown")
+          .btn.btn-light.dropdown-toggle(data-toggle="dropdown") ≧ 大於或等於
+          .dropdown-menu
+            .dropdown-item ≦ 小於或等於
+            .dropdown-item ≠ 不等於
+            .dropdown-item = 等於
+        .mr-2: input.form-control.simple(placeholder="值 1")
+        .mr-2: input.form-control.simple(placeholder="值 2")
+        i.i-close.text-danger.clickable(ld="delete")
+      .mt-4: .btn.btn-link.p-0(ld="add-criteria") 增加條件 ...
+  .p-4
+    .d-flex.align-items-center
+      .mr-2: .btn.btn-sm.btn-outline-danger(ld="delete") #[i.i-close] 刪除
+      .mr-2: .btn.btn-sm.btn-outline-secondary(ld="clone") #[i.i-clone] 複製
+      .flex-grow-1.justify-content-end.d-flex
+        .ml-4.d-flex.align-items-center.line-height-1em 公開 #[.switch.ml-2(ld="switch",data-name="isPublic")]
+        .ml-4.d-flex.align-items-center.line-height-1em 必填 #[.switch.ml-2.on(ld="switch",data-name="isRequired")]
+        .ml-4.d-flex.align-items-center.line-height-1em 顯示描述 #[.switch.ml-2(ld="switch",data-name="showDesc")]
+
+  script(type="@plotdb/block"): include:lsc index.ls

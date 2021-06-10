@@ -142,6 +142,8 @@ prefix = function(n) { return (!n?[]:(Array.isArray(n)?n:[n])).map(function(it){
 ;pug_debug_line = 7;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
 pug_html = pug_html + "\u003Chead\u003E";
 ;pug_debug_line = 8;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
+;pug_debug_line = 3;pug_debug_filename = "src\u002Fpug\u002Fdev\u002Fui\u002Fblock.pug";
+pug_html = pug_html + "\u003Cbase href=\"\u002F\"\u003E";
 ;pug_debug_line = 9;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
 pug_mixins["css"]("https://fonts.googleapis.com/css?family=Roboto:300,400,700|Roboto+Mono");
 ;pug_debug_line = 10;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
@@ -155,12 +157,15 @@ pug_mixins["css"]("assets/lib/ldiconfont/main/ldif.min.css");
 ;pug_debug_line = 14;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
 pug_mixins["css"]("css/index.css");
 ;pug_debug_line = 15;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_html = pug_html + "\u003C\u002Fhead\u003E";
+;pug_debug_line = 5;pug_debug_filename = "src\u002Fpug\u002Fdev\u002Fui\u002Fblock.pug";
+pug_html = pug_html + "\u003Cstyle type=\"text\u002Fcss\"\u003E";
+;pug_debug_line = 5;pug_debug_filename = "src\u002Fpug\u002Fdev\u002Fui\u002Fblock.pug";
+pug_html = pug_html + ".form-control.simple {\n  border-width: 0 0 1px 0;\n  border-color: #f9f9f9;\n  background: #fdfdfd;\n}\n.form-control::placeholder {\n  color: #d9dadb;\n}\n\u003C\u002Fstyle\u003E\u003C\u002Fhead\u003E";
 ;pug_debug_line = 16;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
 pug_html = pug_html + "\u003Cbody\u003E";
 ;pug_debug_line = 18;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-;pug_debug_line = 3;pug_debug_filename = "src\u002Fpug\u002Findex.pug";
-pug_html = pug_html + "\u003Cdiv class=\"w-1024 rwd mx-auto my-4\" id=\"root\"\u003E\u003C\u002Fdiv\u003E";
+;pug_debug_line = 13;pug_debug_filename = "src\u002Fpug\u002Fdev\u002Fui\u002Fblock.pug";
+pug_html = pug_html + "\u003Cdiv class=\"w-640 mx-auto rwd my-4\" id=\"container\"\u003E\u003C\u002Fdiv\u003E";
 ;pug_debug_line = 19;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
 pug_mixins["script"]("assets/lib/bootstrap.native/main/bootstrap-native.min.js");
 ;pug_debug_line = 20;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
@@ -184,10 +189,10 @@ pug_mixins["script"]("assets/lib/@plotdb/rescope/main/rescope.min.js");
 ;pug_debug_line = 29;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
 pug_mixins["script"]("assets/lib/@plotdb/block/main/block.min.js");
 ;pug_debug_line = 30;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-;pug_debug_line = 6;pug_debug_filename = "src\u002Fpug\u002Findex.pug";
+;pug_debug_line = 15;pug_debug_filename = "src\u002Fpug\u002Fdev\u002Fui\u002Fblock.pug";
 pug_html = pug_html + "\u003Cscript\u003E";
-;pug_debug_line = 6;pug_debug_filename = "src\u002Fpug\u002Findex.pug";
-pug_html = pug_html + "var manager;\nmanager = new block.manager({\n  registry: function(arg$){\n    var name, version;\n    name = arg$.name, version = arg$.version;\n    return \"\u002Fblock\u002F\" + name + \"\u002F\" + version + \"\u002Findex.html\";\n  }\n});\nmanager.init().then(function(){\n  return manager.get({\n    name: \"short-answer\",\n    version: \"0.0.1\"\n  });\n}).then(function(it){\n  return it.create();\n}).then(function(it){\n  return it.attach({\n    root: root\n  });\n});\u003C\u002Fscript\u003E\u003C\u002Fbody\u003E\u003C\u002Fhtml\u003E";
+;pug_debug_line = 15;pug_debug_filename = "src\u002Fpug\u002Fdev\u002Fui\u002Fblock.pug";
+pug_html = pug_html + "var mgr;\nmgr = new block.manager({\n  registry: function(arg$){\n    var name, version;\n    name = arg$.name, version = arg$.version;\n    return \"\u002Fblock\u002F\" + name + \"\u002F\" + version + \"\u002Findex.html\";\n  }\n});\nmgr.init().then(function(){\n  return mgr.get({\n    name: \"@plotdb\u002Fshort-answer\",\n    version: \"0.0.1\"\n  });\n}).then(function(bc){\n  return bc.create();\n}).then(function(bi){\n  return bi.attach({\n    root: document.querySelector('#container')\n  });\n}).then(function(){\n  return mgr.get({\n    name: \"@plotdb\u002Flong-answer\",\n    version: \"0.0.1\"\n  });\n}).then(function(bc){\n  return bc.create();\n}).then(function(bi){\n  return bi.attach({\n    root: document.querySelector('#container')\n  });\n});\u003C\u002Fscript\u003E\u003C\u002Fbody\u003E\u003C\u002Fhtml\u003E";
     }.call(this, "Array" in locals_for_with ?
         locals_for_with.Array :
         typeof Array !== 'undefined' ? Array : undefined, "JSON" in locals_for_with ?

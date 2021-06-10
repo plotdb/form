@@ -1,22 +1,14 @@
  (function() { function pug_attr(t,e,n,r){if(!1===e||null==e||!e&&("class"===t||"style"===t))return"";if(!0===e)return" "+(r?t:t+'="'+t+'"');var f=typeof e;return"object"!==f&&"function"!==f||"function"!=typeof e.toJSON||(e=e.toJSON()),"string"==typeof e||(e=JSON.stringify(e),n||-1===e.indexOf('"'))?(n&&(e=pug_escape(e))," "+t+'="'+e+'"'):" "+t+"='"+e.replace(/'/g,"&#39;")+"'"}
-function pug_attrs(t,r){var a="";for(var s in t)if(pug_has_own_property.call(t,s)){var u=t[s];if("class"===s){u=pug_classes(u),a=pug_attr(s,u,!1,r)+a;continue}"style"===s&&(u=pug_style(u)),a+=pug_attr(s,u,!1,r)}return a}
-function pug_classes(s,r){return Array.isArray(s)?pug_classes_array(s,r):s&&"object"==typeof s?pug_classes_object(s):s||""}
-function pug_classes_array(r,a){for(var s,e="",u="",c=Array.isArray(a),g=0;g<r.length;g++)(s=pug_classes(r[g]))&&(c&&a[g]&&(s=pug_escape(s)),e=e+u+s,u=" ");return e}
-function pug_classes_object(r){var a="",n="";for(var o in r)o&&r[o]&&pug_has_own_property.call(r,o)&&(a=a+n+o,n=" ");return a}
 function pug_escape(e){var a=""+e,t=pug_match_html.exec(a);if(!t)return e;var r,c,n,s="";for(r=t.index,c=0;r<a.length;r++){switch(a.charCodeAt(r)){case 34:n="&quot;";break;case 38:n="&amp;";break;case 60:n="&lt;";break;case 62:n="&gt;";break;default:continue}c!==r&&(s+=a.substring(c,r)),c=r+1,s+=n}return c!==r?s+a.substring(c,r):s}
-var pug_has_own_property=Object.prototype.hasOwnProperty;
 var pug_match_html=/["&<>]/;
-function pug_merge(e,r){if(1===arguments.length){for(var t=e[0],g=1;g<e.length;g++)t=pug_merge(t,e[g]);return t}for(var l in r)if("class"===l){var n=e[l]||[];e[l]=(Array.isArray(n)?n:[n]).concat(r[l]||[])}else if("style"===l){var n=pug_style(e[l]);n=n&&";"!==n[n.length-1]?n+";":n;var a=pug_style(r[l]);a=a&&";"!==a[a.length-1]?a+";":a,e[l]=n+a}else e[l]=r[l];return e}
-function pug_rethrow(e,n,r,t){if(!(e instanceof Error))throw e;if(!("undefined"==typeof window&&n||t))throw e.message+=" on line "+r,e;var o,a,i,s;try{t=t||require("fs").readFileSync(n,{encoding:"utf8"}),o=3,a=t.split("\n"),i=Math.max(r-o,0),s=Math.min(a.length,r+o)}catch(t){return e.message+=" - could not read from "+n+" ("+t.message+")",void pug_rethrow(e,null,r)}o=a.slice(i,s).map(function(e,n){var t=n+i+1;return(t==r?"  > ":"    ")+t+"| "+e}).join("\n"),e.path=n;try{e.message=(n||"Pug")+":"+r+"\n"+o+"\n\n"+e.message}catch(e){}throw e}
-function pug_style(r){if(!r)return"";if("object"==typeof r){var t="";for(var e in r)pug_has_own_property.call(r,e)&&(t=t+e+":"+r[e]+";");return t}return r+""}function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;var pug_debug_filename, pug_debug_line;try {;
+function pug_rethrow(e,n,r,t){if(!(e instanceof Error))throw e;if(!("undefined"==typeof window&&n||t))throw e.message+=" on line "+r,e;var o,a,i,s;try{t=t||require("fs").readFileSync(n,{encoding:"utf8"}),o=3,a=t.split("\n"),i=Math.max(r-o,0),s=Math.min(a.length,r+o)}catch(t){return e.message+=" - could not read from "+n+" ("+t.message+")",void pug_rethrow(e,null,r)}o=a.slice(i,s).map(function(e,n){var t=n+i+1;return(t==r?"  > ":"    ")+t+"| "+e}).join("\n"),e.path=n;try{e.message=(n||"Pug")+":"+r+"\n"+o+"\n\n"+e.message}catch(e){}throw e}function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;var pug_debug_filename, pug_debug_line;try {;
     var locals_for_with = (locals || {});
     
-    (function (Array, JSON, b64img, blockLoader, cssLoader, decache, escape, prefix, scriptLoader, version) {
-      ;pug_debug_line = 2;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
+    (function (JSON, b64img, blockLoader, cssLoader, decache, escape, scriptLoader, version) {
+      ;pug_debug_line = 1;pug_debug_filename = "src\u002Fpug\u002Fdev\u002Fverify\u002Findex.pug";
 pug_html = pug_html + "\u003C!DOCTYPE html\u003E";
-;pug_debug_line = 3;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
+;pug_debug_line = 2;pug_debug_filename = "src\u002Fpug\u002Fdev\u002Fverify\u002Findex.pug";
 pug_html = pug_html + "\u003Chtml\u003E";
-;pug_debug_line = 4;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
 ;pug_debug_line = 2;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fnode_modules\u002Fbootstrap.ldui\u002Fdist\u002Findex.pug";
 if(!scriptLoader) { scriptLoader = {url: {}, config: {}}; }
 ;pug_debug_line = 3;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fnode_modules\u002Fbootstrap.ldui\u002Fdist\u002Findex.pug";
@@ -115,82 +107,22 @@ var loremtext = {
 
 
 
-;pug_debug_line = 1;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fnode_modules\u002Fldview\u002Fdist\u002Findex.pug";
-prefix = function(n) { return (!n?[]:(Array.isArray(n)?n:[n])).map(function(it){ return `${prefix.currentName}$${it}`; }).join(' ');}
-;pug_debug_line = 2;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fnode_modules\u002Fldview\u002Fdist\u002Findex.pug";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-;pug_debug_line = 7;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
+;pug_debug_line = 4;pug_debug_filename = "src\u002Fpug\u002Fdev\u002Fverify\u002Findex.pug";
 pug_html = pug_html + "\u003Chead\u003E";
-;pug_debug_line = 8;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-;pug_debug_line = 9;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["css"]("https://fonts.googleapis.com/css?family=Roboto:300,400,700|Roboto+Mono");
-;pug_debug_line = 10;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["css"]("assets/lib/bootstrap/main/css/bootstrap.min.css");
-;pug_debug_line = 11;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["css"]("assets/lib/bootstrap.ldui/main/bootstrap.ldui.min.css");
-;pug_debug_line = 12;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["css"]("assets/lib/ldcover/main/ldcv.min.css");
-;pug_debug_line = 13;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["css"]("assets/lib/ldiconfont/main/ldif.min.css");
-;pug_debug_line = 14;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["css"]("css/index.css");
-;pug_debug_line = 15;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
+;pug_debug_line = 5;pug_debug_filename = "src\u002Fpug\u002Fdev\u002Fverify\u002Findex.pug";
+pug_mixins["css"]("/assets/lib/bootstrap/main/css/bootstrap.min.css");
+;pug_debug_line = 6;pug_debug_filename = "src\u002Fpug\u002Fdev\u002Fverify\u002Findex.pug";
+pug_mixins["css"]("/assets/lib/bootstrap.ldui/main/bootstrap.ldui.min.css");
 pug_html = pug_html + "\u003C\u002Fhead\u003E";
-;pug_debug_line = 16;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
+;pug_debug_line = 7;pug_debug_filename = "src\u002Fpug\u002Fdev\u002Fverify\u002Findex.pug";
 pug_html = pug_html + "\u003Cbody\u003E";
-;pug_debug_line = 18;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-;pug_debug_line = 3;pug_debug_filename = "src\u002Fpug\u002Findex.pug";
-pug_html = pug_html + "\u003Cdiv class=\"w-1024 rwd mx-auto my-4\" id=\"root\"\u003E\u003C\u002Fdiv\u003E";
-;pug_debug_line = 19;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["script"]("assets/lib/bootstrap.native/main/bootstrap-native.min.js");
-;pug_debug_line = 20;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["script"]("assets/lib/bootstrap.ldui/main/bootstrap.ldui.min.js");
-;pug_debug_line = 21;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["script"]("assets/lib/@loadingio/ldquery/main/ldq.min.js");
-;pug_debug_line = 22;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["script"]("assets/lib/proxise/main/proxise.min.js");
-;pug_debug_line = 23;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["script"]("assets/lib/ldcover/main/ldcv.min.js");
-;pug_debug_line = 24;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["script"]("assets/lib/ldview/main/index.min.js");
-;pug_debug_line = 25;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["script"]("assets/lib/@plotdb/datadom/main/datadom.min.js");
-;pug_debug_line = 26;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["script"]("assets/lib/@plotdb/datahub/main/datahub.bundle.min.js");
-;pug_debug_line = 27;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["script"]("assets/lib/@plotdb/csscope/main/csscope.min.js");
-;pug_debug_line = 28;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["script"]("assets/lib/@plotdb/rescope/main/rescope.min.js");
-;pug_debug_line = 29;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["script"]("assets/lib/@plotdb/block/main/block.min.js");
-;pug_debug_line = 30;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-;pug_debug_line = 6;pug_debug_filename = "src\u002Fpug\u002Findex.pug";
+;pug_debug_line = 8;pug_debug_filename = "src\u002Fpug\u002Fdev\u002Fverify\u002Findex.pug";
+pug_mixins["script"]("/assets/lib/form/dev/op.js");
+;pug_debug_line = 9;pug_debug_filename = "src\u002Fpug\u002Fdev\u002Fverify\u002Findex.pug";
 pug_html = pug_html + "\u003Cscript\u003E";
-;pug_debug_line = 6;pug_debug_filename = "src\u002Fpug\u002Findex.pug";
-pug_html = pug_html + "var manager;\nmanager = new block.manager({\n  registry: function(arg$){\n    var name, version;\n    name = arg$.name, version = arg$.version;\n    return \"\u002Fblock\u002F\" + name + \"\u002F\" + version + \"\u002Findex.html\";\n  }\n});\nmanager.init().then(function(){\n  return manager.get({\n    name: \"short-answer\",\n    version: \"0.0.1\"\n  });\n}).then(function(it){\n  return it.create();\n}).then(function(it){\n  return it.attach({\n    root: root\n  });\n});\u003C\u002Fscript\u003E\u003C\u002Fbody\u003E\u003C\u002Fhtml\u003E";
-    }.call(this, "Array" in locals_for_with ?
-        locals_for_with.Array :
-        typeof Array !== 'undefined' ? Array : undefined, "JSON" in locals_for_with ?
+;pug_debug_line = 9;pug_debug_filename = "src\u002Fpug\u002Fdev\u002Fverify\u002Findex.pug";
+pug_html = pug_html + "var op1, op2, opset;\nop1 = new form.op({\n  id: 'email',\n  config: {},\n  func: function(v, c){\n    return v.length \u003C c.len;\n  }\n});\nop2 = new form.op({\n  id: 'between',\n  config: {},\n  func: function(v, c){\n    return v \u003E c.range[0] && v \u003C c.range[1];\n  }\n});\nopset = new form.opset({\n  id: 'random-set',\n  ops: [op1, op2],\n  defaultOp: 'email'\n});\nform.opset.register(opset);\nopset = form.opset.get('random-set');\nconsole.log(opset.getOp('email'));\nconsole.log(opset.ops);\nopset.getOp('email').verify('tkirby@gmail.com', {\n  len: 50\n}).then(function(it){\n  console.log(it);\n  return opset.getOp('between').verify(50, {\n    range: [20, 60]\n  });\n}).then(function(it){\n  return console.log(it);\n});\u003C\u002Fscript\u003E\u003C\u002Fbody\u003E\u003C\u002Fhtml\u003E";
+    }.call(this, "JSON" in locals_for_with ?
         locals_for_with.JSON :
         typeof JSON !== 'undefined' ? JSON : undefined, "b64img" in locals_for_with ?
         locals_for_with.b64img :
@@ -202,9 +134,7 @@ pug_html = pug_html + "var manager;\nmanager = new block.manager({\n  registry: 
         locals_for_with.decache :
         typeof decache !== 'undefined' ? decache : undefined, "escape" in locals_for_with ?
         locals_for_with.escape :
-        typeof escape !== 'undefined' ? escape : undefined, "prefix" in locals_for_with ?
-        locals_for_with.prefix :
-        typeof prefix !== 'undefined' ? prefix : undefined, "scriptLoader" in locals_for_with ?
+        typeof escape !== 'undefined' ? escape : undefined, "scriptLoader" in locals_for_with ?
         locals_for_with.scriptLoader :
         typeof scriptLoader !== 'undefined' ? scriptLoader : undefined, "version" in locals_for_with ?
         locals_for_with.version :
