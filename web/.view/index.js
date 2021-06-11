@@ -184,30 +184,36 @@ pug_mixins["script"]("assets/lib/bootstrap.native/main/bootstrap-native.min.js")
 ;pug_debug_line = 20;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
 pug_mixins["script"]("assets/lib/bootstrap.ldui/main/bootstrap.ldui.min.js");
 ;pug_debug_line = 21;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["script"]("assets/lib/@loadingio/debounce.js/main/debounce.min.js");
+pug_mixins["script"]("assets/lib/i18next/main/umd/i18next.min.js");
 ;pug_debug_line = 22;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["script"]("assets/lib/@loadingio/ldquery/main/ldq.min.js");
+pug_mixins["script"]("assets/lib/i18next-chained-backend/main/umd/i18nextChainedBackend.min.js");
 ;pug_debug_line = 23;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["script"]("assets/lib/proxise/main/proxise.min.js");
+pug_mixins["script"]("assets/lib/i18next-resources-to-backend/main/umd/i18nextResourcesToBackend.min.js");
 ;pug_debug_line = 24;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["script"]("assets/lib/ldcover/main/ldcv.min.js");
+pug_mixins["script"]("assets/lib/@loadingio/debounce.js/main/debounce.min.js");
 ;pug_debug_line = 25;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["script"]("assets/lib/ldview/main/index.min.js");
+pug_mixins["script"]("assets/lib/@loadingio/ldquery/main/ldq.min.js");
 ;pug_debug_line = 26;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["script"]("assets/lib/@plotdb/datadom/main/datadom.min.js");
+pug_mixins["script"]("assets/lib/proxise/main/proxise.min.js");
 ;pug_debug_line = 27;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["script"]("assets/lib/@plotdb/datahub/main/datahub.bundle.min.js");
+pug_mixins["script"]("assets/lib/ldcover/main/ldcv.min.js");
 ;pug_debug_line = 28;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["script"]("assets/lib/@plotdb/csscope/main/csscope.min.js");
+pug_mixins["script"]("assets/lib/ldview/main/index.min.js");
 ;pug_debug_line = 29;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["script"]("assets/lib/@plotdb/rescope/main/rescope.min.js");
+pug_mixins["script"]("assets/lib/@plotdb/datadom/main/datadom.min.js");
 ;pug_debug_line = 30;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
-pug_mixins["script"]("assets/lib/@plotdb/block/main/block.min.js");
+pug_mixins["script"]("assets/lib/@plotdb/datahub/main/datahub.bundle.min.js");
 ;pug_debug_line = 31;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
+pug_mixins["script"]("assets/lib/@plotdb/csscope/main/csscope.min.js");
+;pug_debug_line = 32;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
+pug_mixins["script"]("assets/lib/@plotdb/rescope/main/rescope.min.js");
+;pug_debug_line = 33;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
+pug_mixins["script"]("assets/lib/@plotdb/block/main/block.min.js");
+;pug_debug_line = 34;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
 ;pug_debug_line = 11;pug_debug_filename = "src\u002Fpug\u002Findex.pug";
 pug_html = pug_html + "\u003Cscript\u003E";
 ;pug_debug_line = 11;pug_debug_filename = "src\u002Fpug\u002Findex.pug";
-pug_html = pug_html + "var manager;\nmanager = new block.manager({\n  registry: function(arg$){\n    var name, version;\n    name = arg$.name, version = arg$.version;\n    return \"\u002Fblock\u002F\" + name + \"\u002F\" + version + \"\u002Findex.html\";\n  }\n});\nmanager.init().then(function(){\n  return manager.get({\n    name: \"short-answer\",\n    version: \"0.0.1\"\n  });\n}).then(function(it){\n  return it.create({\n    data: 'hello world'\n  });\n}).then(function(it){\n  var obj, view;\n  it.attach({\n    root: root\n  });\n  obj = it['interface']();\n  view = new ldview({\n    root: document,\n    action: {\n      click: {\n        serialize: function(){\n          return console.log(obj.serialize());\n        },\n        mode: function(arg$){\n          var node;\n          node = arg$.node;\n          return obj.setMode(node.getAttribute('data-name'));\n        },\n        set: function(arg$){\n          var node;\n          node = arg$.node;\n          return obj.value(Math.random());\n        }\n      }\n    }\n  });\n  obj.setMode('view');\n  return debounce(1000).then(function(){\n    return obj.setMode('edit');\n  });\n});\u003C\u002Fscript\u003E\u003C\u002Fbody\u003E\u003C\u002Fhtml\u003E";
+pug_html = pug_html + "var manager;\nmanager = new block.manager({\n  registry: function(arg$){\n    var name, version;\n    name = arg$.name, version = arg$.version;\n    return \"\u002Fblock\u002F\" + name + \"\u002F\" + version + \"\u002Findex.html\";\n  }\n});\n\u002F*\n use chainedbackend \u002F resources\n - https:\u002F\u002Fwww.i18next.com\u002Fhow-to\u002Fbackend-fallback#browser-fallback-with-local-bundled-translations\n - https:\u002F\u002Fwww.i18next.com\u002Foverview\u002Fgetting-started\n*\u002F\ni18next.use(i18nextChainedBackend).init({\n  fallbackLng: 'en',\n  resources: {\n    en: {\n      translation: {\n        \"hi\": \"hello world\"\n      }\n    }\n  }\n  \u002F*\n  backend: backends: [\n    i18nextResourcesToBackend {\n      en: translations: hi: \\hello\n    }\n  ]\n  *\u002F\n}).then(function(){\n  console.log(i18next.t('hi'));\n  return manager.init();\n}).then(function(){\n  return manager.get({\n    name: \"short-answer\",\n    version: \"0.0.1\"\n  });\n}).then(function(it){\n  return it.create({\n    data: {\n      i18n: i18next,\n      data: 'hello world'\n    }\n  });\n}).then(function(it){\n  var obj, view;\n  it.attach({\n    root: root\n  });\n  obj = it['interface']();\n  view = new ldview({\n    root: document,\n    action: {\n      click: {\n        serialize: function(){\n          return console.log(obj.serialize());\n        },\n        mode: function(arg$){\n          var node;\n          node = arg$.node;\n          return obj.setMode(node.getAttribute('data-name'));\n        },\n        set: function(arg$){\n          var node;\n          node = arg$.node;\n          return obj.value(Math.random());\n        }\n      }\n    }\n  });\n  obj.setMode('view');\n  return debounce(1000).then(function(){\n    return obj.setMode('edit');\n  });\n});\u003C\u002Fscript\u003E\u003C\u002Fbody\u003E\u003C\u002Fhtml\u003E";
     }.call(this, "Array" in locals_for_with ?
         locals_for_with.Array :
         typeof Array !== 'undefined' ? Array : undefined, "JSON" in locals_for_with ?

@@ -10,6 +10,15 @@ interface: -> @
 init: (opt = {}) ->
   {BSN, ldview, suuid,form} = opt.context
   opt.pubsub.on \init, -> console.log \ok
+  console.log opt.data
+  i18n = opt.data.i18n
+
+  i18n.addResourceBundle \en, \translation, {
+    include: "包含"
+    exclude: "排除"
+    email: "電子郵件"
+  }, true, true
+
   @data = data = {config: {}, key: suuid!}
   @mode = opt.data.mode
   @node = -> opt.root.querySelector('[ld-scope][plug=view]')
@@ -100,8 +109,8 @@ init: (opt = {}) ->
           init: dropdown: ({node}) ->
             new BSN.Dropdown(node)
           text:
-            opset: ({ctx}) -> if !ctx.opset => "" else (ctx.opset.name or ctx.opset.id)
-            op: ({ctx}) -> if !ctx.op => "" else (ctx.op.name or ctx.op.id)
+            opset: ({ctx}) -> i18n.t(if !ctx.opset => "" else (ctx.opset.name or ctx.opset.id))
+            op: ({ctx}) -> i18n.t(if !ctx.op => "" else (ctx.op.name or ctx.op.id))
           handler:
             enabled: ({node, ctx}) ->
               node.classList.toggle \on, !!ctx.enabled
@@ -111,7 +120,7 @@ init: (opt = {}) ->
                 ctx.set-op data.id
                 views.0.render!
               handler: ({node, data}) ->
-                node.textContent = data.name or data.id
+                node.textContent = i18n.t(data.name or data.id)
                 node.setAttribute \data-id, data.id
             "set-opset":
               list: -> [opset]

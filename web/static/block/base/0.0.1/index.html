@@ -18,12 +18,19 @@
     return this;
   },
   init: function(opt){
-    var ref$, BSN, ldview, suuid, form, data, opset, view, this$ = this;
+    var ref$, BSN, ldview, suuid, form, i18n, data, opset, view, this$ = this;
     opt == null && (opt = {});
     ref$ = opt.context, BSN = ref$.BSN, ldview = ref$.ldview, suuid = ref$.suuid, form = ref$.form;
     opt.pubsub.on('init', function(){
       return console.log('ok');
     });
+    console.log(opt.data);
+    i18n = opt.data.i18n;
+    i18n.addResourceBundle('en', 'translation', {
+      include: "包含",
+      exclude: "排除",
+      email: "電子郵件"
+    }, true, true);
     this.data = data = {
       config: {},
       key: suuid()
@@ -235,20 +242,16 @@
               opset: function(arg$){
                 var ctx;
                 ctx = arg$.ctx;
-                if (!ctx.opset) {
-                  return "";
-                } else {
-                  return ctx.opset.name || ctx.opset.id;
-                }
+                return i18n.t(!ctx.opset
+                  ? ""
+                  : ctx.opset.name || ctx.opset.id);
               },
               op: function(arg$){
                 var ctx;
                 ctx = arg$.ctx;
-                if (!ctx.op) {
-                  return "";
-                } else {
-                  return ctx.op.name || ctx.op.id;
-                }
+                return i18n.t(!ctx.op
+                  ? ""
+                  : ctx.op.name || ctx.op.id);
               }
             },
             handler: {
@@ -274,7 +277,7 @@
                 handler: function(arg$){
                   var node, data;
                   node = arg$.node, data = arg$.data;
-                  node.textContent = data.name || data.id;
+                  node.textContent = i18n.t(data.name || data.id);
                   return node.setAttribute('data-id', data.id);
                 }
               },

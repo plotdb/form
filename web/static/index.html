@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,700|Roboto+Mono"><link rel="stylesheet" type="text/css" href="assets/lib/bootstrap/main/css/bootstrap.min.css"><link rel="stylesheet" type="text/css" href="assets/lib/bootstrap.ldui/main/bootstrap.ldui.min.css"><link rel="stylesheet" type="text/css" href="assets/lib/ldcover/main/ldcv.min.css"><link rel="stylesheet" type="text/css" href="assets/lib/ldiconfont/main/ldif.min.css"><link rel="stylesheet" type="text/css" href="css/index.css"></head><body><div class="w-1024 rwd mx-auto my-4" id="root"><div class="d-flex mb-4"><div class="btn btn-outline-secondary mr-2" ld="serialize">serialize</div><div class="btn btn-outline-secondary mr-2" ld="mode" data-name="edit">edit</div><div class="btn btn-outline-secondary mr-2" ld="mode" data-name="view">view</div><div class="btn btn-outline-secondary mr-2" ld="set">random value</div></div></div><script type="text/javascript" src="assets/lib/bootstrap.native/main/bootstrap-native.min.js"></script><script type="text/javascript" src="assets/lib/bootstrap.ldui/main/bootstrap.ldui.min.js"></script><script type="text/javascript" src="assets/lib/@loadingio/debounce.js/main/debounce.min.js"></script><script type="text/javascript" src="assets/lib/@loadingio/ldquery/main/ldq.min.js"></script><script type="text/javascript" src="assets/lib/proxise/main/proxise.min.js"></script><script type="text/javascript" src="assets/lib/ldcover/main/ldcv.min.js"></script><script type="text/javascript" src="assets/lib/ldview/main/index.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/datadom/main/datadom.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/datahub/main/datahub.bundle.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/csscope/main/csscope.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/rescope/main/rescope.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/block/main/block.min.js"></script><script>var manager;
+<!DOCTYPE html><html><head><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,700|Roboto+Mono"><link rel="stylesheet" type="text/css" href="assets/lib/bootstrap/main/css/bootstrap.min.css"><link rel="stylesheet" type="text/css" href="assets/lib/bootstrap.ldui/main/bootstrap.ldui.min.css"><link rel="stylesheet" type="text/css" href="assets/lib/ldcover/main/ldcv.min.css"><link rel="stylesheet" type="text/css" href="assets/lib/ldiconfont/main/ldif.min.css"><link rel="stylesheet" type="text/css" href="css/index.css"></head><body><div class="w-1024 rwd mx-auto my-4" id="root"><div class="d-flex mb-4"><div class="btn btn-outline-secondary mr-2" ld="serialize">serialize</div><div class="btn btn-outline-secondary mr-2" ld="mode" data-name="edit">edit</div><div class="btn btn-outline-secondary mr-2" ld="mode" data-name="view">view</div><div class="btn btn-outline-secondary mr-2" ld="set">random value</div></div></div><script type="text/javascript" src="assets/lib/bootstrap.native/main/bootstrap-native.min.js"></script><script type="text/javascript" src="assets/lib/bootstrap.ldui/main/bootstrap.ldui.min.js"></script><script type="text/javascript" src="assets/lib/i18next/main/umd/i18next.min.js"></script><script type="text/javascript" src="assets/lib/i18next-chained-backend/main/umd/i18nextChainedBackend.min.js"></script><script type="text/javascript" src="assets/lib/i18next-resources-to-backend/main/umd/i18nextResourcesToBackend.min.js"></script><script type="text/javascript" src="assets/lib/@loadingio/debounce.js/main/debounce.min.js"></script><script type="text/javascript" src="assets/lib/@loadingio/ldquery/main/ldq.min.js"></script><script type="text/javascript" src="assets/lib/proxise/main/proxise.min.js"></script><script type="text/javascript" src="assets/lib/ldcover/main/ldcv.min.js"></script><script type="text/javascript" src="assets/lib/ldview/main/index.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/datadom/main/datadom.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/datahub/main/datahub.bundle.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/csscope/main/csscope.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/rescope/main/rescope.min.js"></script><script type="text/javascript" src="assets/lib/@plotdb/block/main/block.min.js"></script><script>var manager;
 manager = new block.manager({
   registry: function(arg$){
     var name, version;
@@ -6,14 +6,41 @@ manager = new block.manager({
     return "/block/" + name + "/" + version + "/index.html";
   }
 });
-manager.init().then(function(){
+/*
+ use chainedbackend / resources
+ - https://www.i18next.com/how-to/backend-fallback#browser-fallback-with-local-bundled-translations
+ - https://www.i18next.com/overview/getting-started
+*/
+i18next.use(i18nextChainedBackend).init({
+  fallbackLng: 'en',
+  resources: {
+    en: {
+      translation: {
+        "hi": "hello world"
+      }
+    }
+  }
+  /*
+  backend: backends: [
+    i18nextResourcesToBackend {
+      en: translations: hi: \hello
+    }
+  ]
+  */
+}).then(function(){
+  console.log(i18next.t('hi'));
+  return manager.init();
+}).then(function(){
   return manager.get({
     name: "short-answer",
     version: "0.0.1"
   });
 }).then(function(it){
   return it.create({
-    data: 'hello world'
+    data: {
+      i18n: i18next,
+      data: 'hello world'
+    }
   });
 }).then(function(it){
   var obj, view;

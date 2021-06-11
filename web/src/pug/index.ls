@@ -1,8 +1,32 @@
 manager = new block.manager registry: ({name,version}) -> "/block/#name/#version/index.html"
-manager.init!
+
+/*
+ use chainedbackend / resources
+ - https://www.i18next.com/how-to/backend-fallback#browser-fallback-with-local-bundled-translations
+ - https://www.i18next.com/overview/getting-started
+*/
+
+i18next
+  .use i18nextChainedBackend
+  .init do
+    fallbackLng: \en
+    resources:
+      en:
+        translation:
+          "hi": "hello world"
+    /*
+    backend: backends: [
+      i18nextResourcesToBackend {
+        en: translations: hi: \hello
+      }
+    ]
+    */
+  .then ->
+    console.log i18next.t('hi')
+    manager.init!
   .then ->
     manager.get {name: "short-answer", version: "0.0.1"}
-  .then -> it.create {data: 'hello world'}
+  .then -> it.create {data: {i18n: i18next, data: 'hello world'}}
   .then ->
     it.attach {root}
     obj = it.interface!
