@@ -3,4 +3,3 @@ node_modules
 .swp
 secret.*
 *.log
-web/static/assets/lib/
