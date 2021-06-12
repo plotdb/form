@@ -11,23 +11,13 @@ manager = new block.manager({
  - https://www.i18next.com/how-to/backend-fallback#browser-fallback-with-local-bundled-translations
  - https://www.i18next.com/overview/getting-started
 */
-i18next.use(i18nextChainedBackend).init({
+i18next.init({
   fallbackLng: 'en',
-  resources: {
-    en: {
-      translation: {
-        "hi": "hello world"
-      }
-    }
-  }
-  /*
-  backend: backends: [
-    i18nextResourcesToBackend {
-      en: translations: hi: \hello
-    }
-  ]
-  */
+  defaultLng: 'zh-TW'
 }).then(function(){
+  return i18next.changeLanguage('zh-TW');
+}).then(function(){
+  block.i18n.use(i18next);
   console.log(i18next.t('hi'));
   return manager.init();
 }).then(function(){
@@ -38,7 +28,6 @@ i18next.use(i18nextChainedBackend).init({
 }).then(function(it){
   return it.create({
     data: {
-      i18n: i18next,
       data: 'hello world'
     }
   });

@@ -1,24 +1,28 @@
 pkg:
-  name: "@plotdb/base", version: "0.0.1"
+  name: "base", version: "0.0.1"
   dependencies: [
     {url: "/assets/lib/bootstrap.native/main/bootstrap-native-v4.min.js"}
     {url: "/assets/lib/@plotdb/suuid/main/suuid.bundle.min.js"}
     {url: "/assets/lib/form/dev/op.js"}
     {url: "/assets/lib/ldview/main/index.min.js"}
   ]
+  i18n:
+    "zh-TW": {
+      string: "文字"
+      include: "包含"
+      exclude: "排除"
+      email: "電子郵件"
+      required: "必填"
+      "show description": "顯示描述"
+      public: "公開"
+      "add criteria": "增加條件"
+    }
+
 interface: -> @
 init: (opt = {}) ->
   {BSN, ldview, suuid,form} = opt.context
-  opt.pubsub.on \init, -> console.log \ok
-  console.log opt.data
-  i18n = opt.data.i18n
-
-  i18n.addResourceBundle \en, \translation, {
-    include: "包含"
-    exclude: "排除"
-    email: "電子郵件"
-  }, true, true
-
+  t = opt.t
+  opt.pubsub.on \init, ->
   @data = data = {config: {}, key: suuid!}
   @mode = opt.data.mode
   @node = -> opt.root.querySelector('[ld-scope][plug=view]')
@@ -76,6 +80,10 @@ init: (opt = {}) ->
     text:
       "shortname": -> data.alias or '設定代稱..'
     handler:
+      t: ({node}) ->
+        if !(v = node.getAttribute(\t)) => return
+        if node.hasAttribute \t-attr => node.setAttribute node.getAttribute(\t-attr), t(v)
+        else node.textContent = t(v)
       "error-hint": ({node}) ~> node.classList.toggle \d-none, ((@mode == \edit) or !@has-error)
       "edit-only": ({node}) ~> node.classList.toggle \d-none, @mode != \edit
       "set-shortname": ({node}) ->
@@ -109,8 +117,8 @@ init: (opt = {}) ->
           init: dropdown: ({node}) ->
             new BSN.Dropdown(node)
           text:
-            opset: ({ctx}) -> i18n.t(if !ctx.opset => "" else (ctx.opset.name or ctx.opset.id))
-            op: ({ctx}) -> i18n.t(if !ctx.op => "" else (ctx.op.name or ctx.op.id))
+            opset: ({ctx}) -> t(if !ctx.opset => "" else (ctx.opset.name or ctx.opset.id))
+            op: ({ctx}) -> t(if !ctx.op => "" else (ctx.op.name or ctx.op.id))
           handler:
             enabled: ({node, ctx}) ->
               node.classList.toggle \on, !!ctx.enabled
@@ -120,7 +128,7 @@ init: (opt = {}) ->
                 ctx.set-op data.id
                 views.0.render!
               handler: ({node, data}) ->
-                node.textContent = i18n.t(data.name or data.id)
+                node.textContent = t(data.name or data.id)
                 node.setAttribute \data-id, data.id
             "set-opset":
               list: -> [opset]
@@ -129,7 +137,7 @@ init: (opt = {}) ->
                 ctx.set-opset data
                 views.0.render!
               handler: ({node, data}) ->
-                node.textContent = data.name or data.id
+                node.textContent = t(data.name or data.id)
                 node.setAttribute \data-id, data.id
             /*
             "op-option":

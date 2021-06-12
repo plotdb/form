@@ -1,6 +1,6 @@
-<div class="rounded-lg shadow mb-4"><div class="p-4"><div class="d-flex"><div class="flex-grow-1"><h3 ld="title" contenteditable="true">問題的標題</h3><p contenteditable="true">關於問題的簡單描述 ...</p></div><div ld="edit-only"><div class="ml-4"><div class="dropdown" ld="dropdown"><div class="btn btn-light dropdown-toggle" ld="shortname" data-toggle="dropdown">代稱</div><div class="dropdown-menu dropdown-menu-right"><div class="dropdown-item" ld="set-shortname" data-value="統一編號">統一編號</div><div class="dropdown-item" ld="set-shortname" data-value="電話">電話</div><div class="dropdown-item" ld="set-shortname" data-value="團隊名稱">團隊名稱</div><div class="dropdown-item px-2"><input class="form-control" ld="custom-shortname" placeholder="自訂 ..."/></div></div></div></div></div></div><plug name="view"></plug><div class="text-danger py-2 d-none" ld="error-hint">輸入的值不符規定.</div></div><div class="border-top border-bottom" ld="edit-only"><div class="m-4"><div class="d-flex mb-1 align-items-center justify-content-between" ld-each="term"><div class="mr-2"><div class="switch switch-lg" ld="enabled"></div></div><div class="mr-2"><div class="dropdown" ld="dropdown"><div class="btn btn-light dropdown-toggle" ld="opset" data-toggle="dropdown">...</div><div class="dropdown-menu"><div class="dropdown-item" ld-each="set-opset">...</div></div></div></div><div class="mr-2"><div class="dropdown" ld="dropdown"><div class="btn btn-light dropdown-toggle" ld="op" data-toggle="dropdown">...</div><div class="dropdown-menu"><div class="dropdown-item" ld-each="set-op">...</div></div></div></div><div class="mr-2"><input class="form-control simple" placeholder="值 1"/></div><div class="mr-2"><input class="form-control simple" placeholder="值 2"/></div><div class="mr-2 flex-grow-1"><input class="form-control simple" placeholder="錯誤訊息"/></div><i class="i-close text-danger clickable" ld="delete"></i></div><div class="mt-4"><div class="btn btn-link p-0" ld="add-term">增加條件 ...</div></div></div></div><div class="p-4" ld="edit-only"><div class="d-flex align-items-center"><div class="mr-2"><div class="btn btn-sm btn-outline-danger" ld="delete"><i class="i-close"></i> 刪除</div></div><div class="mr-2"><div class="btn btn-sm btn-outline-secondary" ld="clone"><i class="i-clone"></i> 複製</div></div><div class="flex-grow-1 justify-content-end d-flex"><div class="ml-4 d-flex align-items-center line-height-1em">公開 <div class="switch ml-2" ld="switch" data-name="isPublic"></div></div><div class="ml-4 d-flex align-items-center line-height-1em">必填 <div class="switch ml-2 on" ld="switch" data-name="isRequired"></div></div><div class="ml-4 d-flex align-items-center line-height-1em">顯示描述 <div class="switch ml-2" ld="switch" data-name="showDesc"></div></div></div></div></div><script type="@plotdb/block">({
+<div class="rounded-lg shadow mb-4"><div class="p-4"><div class="d-flex"><div class="flex-grow-1"><h3 ld="title" contenteditable="true">問題的標題</h3><p contenteditable="true">關於問題的簡單描述 ...</p></div><div ld="edit-only"><div class="ml-4"><div class="dropdown" ld="dropdown"><div class="btn btn-light dropdown-toggle" ld="shortname" data-toggle="dropdown">代稱</div><div class="dropdown-menu dropdown-menu-right"><div class="dropdown-item" ld="set-shortname" data-value="統一編號">統一編號</div><div class="dropdown-item" ld="set-shortname" data-value="電話">電話</div><div class="dropdown-item" ld="set-shortname" data-value="團隊名稱">團隊名稱</div><div class="dropdown-item px-2"><input class="form-control" ld="custom-shortname" placeholder="自訂 ..."/></div></div></div></div></div></div><plug name="view"></plug><div class="text-danger py-2 d-none" ld="error-hint">輸入的值不符規定.</div></div><div class="border-top border-bottom" ld="edit-only"><div class="m-4"><div class="d-flex mb-1 align-items-center justify-content-between" ld-each="term"><div class="mr-2"><div class="switch switch-lg" ld="enabled"></div></div><div class="mr-2"><div class="dropdown" ld="dropdown"><div class="btn btn-light dropdown-toggle" ld="opset" data-toggle="dropdown">...</div><div class="dropdown-menu"><div class="dropdown-item" ld-each="set-opset">...</div></div></div></div><div class="mr-2"><div class="dropdown" ld="dropdown"><div class="btn btn-light dropdown-toggle" ld="op" data-toggle="dropdown">...</div><div class="dropdown-menu"><div class="dropdown-item" ld-each="set-op">...</div></div></div></div><div class="mr-2"><input class="form-control simple" placeholder="值 1"/></div><div class="mr-2"><input class="form-control simple" placeholder="值 2"/></div><div class="mr-2 flex-grow-1"><input class="form-control simple" ld="t" t="error message" t-attr="placeholder"/></div><i class="i-close text-danger clickable" ld="delete"></i></div><div class="mt-4"><div class="btn btn-link p-0" ld="add-term"><span ld="t" t="add criteria"></span> ...</div></div></div></div><div class="p-4" ld="edit-only"><div class="d-flex align-items-center"><div class="mr-2"><div class="btn btn-sm btn-outline-danger" ld="delete"><i class="i-close"></i> <span ld="t" t="delete"></span></div></div><div class="mr-2"><div class="btn btn-sm btn-outline-secondary" ld="clone"><i class="i-clone"></i> <span ld="t" t="copy"></span></div></div><div class="flex-grow-1 justify-content-end d-flex"><div class="ml-4 d-flex align-items-center line-height-1em"><span ld="t" t="public"></span><div class="switch ml-2" ld="switch" data-name="isPublic"></div></div><div class="ml-4 d-flex align-items-center line-height-1em"><span ld="t" t="required"></span><div class="switch ml-2 on" ld="switch" data-name="isRequired"></div></div><div class="ml-4 d-flex align-items-center line-height-1em"><span ld="t" t="show description"></span><div class="switch ml-2" ld="switch" data-name="showDesc"></div></div></div></div></div><script type="@plotdb/block">({
   pkg: {
-    name: "@plotdb/base",
+    name: "base",
     version: "0.0.1",
     dependencies: [
       {
@@ -12,25 +12,29 @@
       }, {
         url: "/assets/lib/ldview/main/index.min.js"
       }
-    ]
+    ],
+    i18n: {
+      "zh-TW": {
+        string: "文字",
+        include: "包含",
+        exclude: "排除",
+        email: "電子郵件",
+        required: "必填",
+        "show description": "顯示描述",
+        'public': "公開",
+        "add criteria": "增加條件"
+      }
+    }
   },
   'interface': function(){
     return this;
   },
   init: function(opt){
-    var ref$, BSN, ldview, suuid, form, i18n, data, opset, view, this$ = this;
+    var ref$, BSN, ldview, suuid, form, t, data, opset, view, this$ = this;
     opt == null && (opt = {});
     ref$ = opt.context, BSN = ref$.BSN, ldview = ref$.ldview, suuid = ref$.suuid, form = ref$.form;
-    opt.pubsub.on('init', function(){
-      return console.log('ok');
-    });
-    console.log(opt.data);
-    i18n = opt.data.i18n;
-    i18n.addResourceBundle('en', 'translation', {
-      include: "包含",
-      exclude: "排除",
-      email: "電子郵件"
-    }, true, true);
+    t = opt.t;
+    opt.pubsub.on('init', function(){});
     this.data = data = {
       config: {},
       key: suuid()
@@ -157,6 +161,18 @@
         }
       },
       handler: {
+        t: function(arg$){
+          var node, v;
+          node = arg$.node;
+          if (!(v = node.getAttribute('t'))) {
+            return;
+          }
+          if (node.hasAttribute('t-attr')) {
+            return node.setAttribute(node.getAttribute('t-attr'), t(v));
+          } else {
+            return node.textContent = t(v);
+          }
+        },
         "error-hint": function(arg$){
           var node;
           node = arg$.node;
@@ -242,14 +258,14 @@
               opset: function(arg$){
                 var ctx;
                 ctx = arg$.ctx;
-                return i18n.t(!ctx.opset
+                return t(!ctx.opset
                   ? ""
                   : ctx.opset.name || ctx.opset.id);
               },
               op: function(arg$){
                 var ctx;
                 ctx = arg$.ctx;
-                return i18n.t(!ctx.op
+                return t(!ctx.op
                   ? ""
                   : ctx.op.name || ctx.op.id);
               }
@@ -277,7 +293,7 @@
                 handler: function(arg$){
                   var node, data;
                   node = arg$.node, data = arg$.data;
-                  node.textContent = i18n.t(data.name || data.id);
+                  node.textContent = t(data.name || data.id);
                   return node.setAttribute('data-id', data.id);
                 }
               },
@@ -299,7 +315,7 @@
                 handler: function(arg$){
                   var node, data;
                   node = arg$.node, data = arg$.data;
-                  node.textContent = data.name || data.id;
+                  node.textContent = t(data.name || data.id);
                   return node.setAttribute('data-id', data.id);
                 }
               }

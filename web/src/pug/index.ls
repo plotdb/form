@@ -7,26 +7,20 @@ manager = new block.manager registry: ({name,version}) -> "/block/#name/#version
 */
 
 i18next
-  .use i18nextChainedBackend
   .init do
     fallbackLng: \en
-    resources:
-      en:
-        translation:
-          "hi": "hello world"
-    /*
-    backend: backends: [
-      i18nextResourcesToBackend {
-        en: translations: hi: \hello
-      }
-    ]
-    */
+    defaultLng: \zh-TW
+
   .then ->
+    i18next.changeLanguage \zh-TW
+  .then ->
+    block.i18n.use i18next
     console.log i18next.t('hi')
     manager.init!
   .then ->
     manager.get {name: "short-answer", version: "0.0.1"}
-  .then -> it.create {data: {i18n: i18next, data: 'hello world'}}
+  .then ->
+    it.create {data: {data: 'hello world'}}
   .then ->
     it.attach {root}
     obj = it.interface!

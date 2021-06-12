@@ -1,5 +1,5 @@
 pkg: do
-  name: "@plotdb/short-answer", version: "0.0.1"
+  name: "short-answer", version: "0.0.1"
   extend: name: "base", version: "0.0.1"
   license: "MIT"
   description: ""
