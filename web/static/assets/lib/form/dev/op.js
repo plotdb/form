@@ -129,14 +129,16 @@ form.term.prototype = import$(Object.create(Object.prototype), {
       : !this.enabled;
   },
   setOpset: function(opset, op, cfg){
+    console.log(">", opset.id, opset instanceof form.opset);
     if (typeof opset === 'string') {
       if (!(this.opset = form.opset.get(opset))) {
         throw new Error("no such opset '" + opset + "'");
-      } else if (opset instanceof form.opset) {
-        this.opset = opset;
-      } else {
-        throw new Error("invalid opset");
       }
+    } else if (opset instanceof form.opset) {
+      console.log('ok!');
+      this.opset = opset;
+    } else {
+      throw new Error("invalid opset");
     }
     return this.setOp(op, cfg);
   },

@@ -52,8 +52,10 @@ form.term = (opt={}) ->
 form.term.prototype = Object.create(Object.prototype) <<< do
   toggle: -> @enabled = if it? => it else !@enabled
   set-opset: (opset, op, cfg) ->
-    if typeof(opset) == \string => if !(@opset = form.opset.get opset) => throw new Error("no such opset '#opset'")
-    else if opset instanceof form.opset => @opset = opset
+    if typeof(opset) == \string =>
+      if !(@opset = form.opset.get opset) => throw new Error("no such opset '#opset'")
+    else if (opset instanceof form.opset) =>
+      @opset = opset
     else throw new Error("invalid opset")
     @set-op op, cfg
 
