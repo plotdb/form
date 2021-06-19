@@ -13,7 +13,8 @@
             .dropdown-item(ld="set-shortname",data-value="團隊名稱") 團隊名稱
             .dropdown-item.px-2: input.form-control(ld="custom-shortname",placeholder="自訂 ...")
     plug(name="view")
-    .text-danger.py-2.d-none(ld="error-hint") 輸入的值不符規定.
+    .text-danger.py-2.d-none(ld="error-hint")
+    .text-success.py-2.d-none.pl-2(ld="ok-hint"): i.i-check
   .border-top.border-bottom(ld="edit-only")
     .m-4
       .d-flex.mb-1.align-items-center.justify-content-between(ld-each="term")
@@ -27,15 +28,10 @@
           .btn.btn-light.dropdown-toggle(ld="op",data-toggle="dropdown") ...
           .dropdown-menu
             .dropdown-item(ld-each="set-op") ...
-          //-.dropdown-menu
-            .dropdown-item ≦ 小於或等於
-            .dropdown-item ≧ 大於或等於
-            .dropdown-item ≠ 不等於
-            .dropdown-item = 等於
-        .mr-2: input.form-control.simple(placeholder="值 1")
-        .mr-2: input.form-control.simple(placeholder="值 2")
+        .d-flex.flex-grow-1(ld-scope,ld="config-root")
+          .mr-2.flex-grow-1(ld-each="config")
         .mr-2.flex-grow-1
-          input.form-control.simple(t="error message",t-attr="placeholder")
+          input.form-control.simple(ld="errmsg",t="error message",t-attr="placeholder")
         i.i-close.text-danger.clickable(ld="delete")
       .mt-4: .btn.btn-link.p-0(ld="add-term") #[span(t="add criteria")] ...
   .p-4(ld="edit-only")
@@ -49,8 +45,5 @@
         .ml-4.d-flex.align-items-center.line-height-1em
           span(t="required")
           .switch.ml-2.on(ld="switch",data-name="isRequired")
-        .ml-4.d-flex.align-items-center.line-height-1em
-          span(t="show description")
-          .switch.ml-2(ld="switch",data-name="showDesc")
 
   script(type="@plotdb/block"): include:lsc index.ls

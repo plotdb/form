@@ -1,0 +1,62 @@
+<div><div plug="config"><input class="form-control" ld="input"/></div><script type="@plotdb/block">(function(it){
+  return it();
+})(function(){
+  var blockFactory;
+  blockFactory = {
+    pkg: {
+      name: 'config/text',
+      version: '0.0.1',
+      extend: {
+        name: 'config/base',
+        version: '0.0.1'
+      },
+      dependencies: [],
+      i18n: {
+        "zh-TW": {
+          "text for comparison": "比較用的文字"
+        }
+      }
+    },
+    init: function(arg$){
+      var root, context, data, pubsub, t, ldview, view;
+      root = arg$.root, context = arg$.context, data = arg$.data, pubsub = arg$.pubsub, t = arg$.t;
+      ldview = context.ldview;
+      pubsub.fire('init', {
+        get: function(){
+          return view.get('input').value || '';
+        },
+        set: function(it){
+          return view.get('input').value = it || '';
+        }
+      });
+      return view = new ldview({
+        root: root,
+        init: {
+          input: function(arg$){
+            var node;
+            node = arg$.node;
+            node.value = data['default'] || '';
+            return node.setAttribute('placeholder', t(data.hint || 'text for comparison'));
+          }
+        },
+        action: {
+          input: {
+            input: function(arg$){
+              var node;
+              node = arg$.node;
+              return pubsub.fire('event', 'change', node.value);
+            }
+          },
+          change: {
+            input: function(arg$){
+              var node;
+              node = arg$.node;
+              return pubsub.fire('event', 'change', node.value);
+            }
+          }
+        }
+      });
+    }
+  };
+  return blockFactory;
+});</script></div>

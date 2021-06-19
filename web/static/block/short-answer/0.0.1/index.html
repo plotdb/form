@@ -29,7 +29,7 @@
           'input-field': function(arg$){
             var node;
             node = arg$.node;
-            return parent.value(node.value, true);
+            return parent.value(node.value, !node.value, true);
           }
         }
       }

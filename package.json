@@ -58,8 +58,13 @@
       "ldcover",
       "@loadingio/ldquery",
       "@loadingio/debounce.js",
+      "@loadingio/ldcolorpicker",
       "ldview",
       "ldiconfont",
+      "ldslider",
+      "ldcolor",
+      "ldpalettepicker",
+      "choosefont.js",
       "curegex",
       "dompurify",
       "proxise",
@@ -73,6 +78,7 @@
       "@plotdb/datahub",
       "@plotdb/rescope",
       "@plotdb/suuid",
+      "@plotdb/config",
       "@plotdb/csscope"
     ]
   },
@@ -87,7 +93,7 @@
     ]
   },
   "peerDependencies": {
-    "@plotdb/block": "^1.4.5",
+    "@plotdb/block": "^1.4.6",
     "@plotdb/csscope": "^0.4.0",
     "@plotdb/datadom": "^0.1.1",
     "@plotdb/rescope": "^1.1.8",
@@ -96,12 +102,17 @@
     "proxise": "^0.1.2"
   },
   "dependencies": {
-    "@plotdb/block": "^1.4.5",
+    "@loadingio/ldcolorpicker": "^2.0.2",
+    "@plotdb/block": "^1.4.6",
     "@plotdb/csscope": "^0.4.0",
     "@plotdb/rescope": "^1.1.8",
     "@plotdb/suuid": "^0.4.0",
+    "choosefont.js": "^0.0.1",
     "curegex": "^0.0.3",
     "dompurify": "^2.2.6",
+    "ldcolor": "^0.0.4",
+    "ldpalettepicker": "^1.0.1",
+    "ldslider": "^2.0.6",
     "proxise": "^0.1.2"
   }
 }

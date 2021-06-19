@@ -17,4 +17,4 @@ init: ({root,parent,context,pubsub}) ->
   view = new ldview do
     root: parent.node!
     action: input: 'input-field': ({node}) ->
-      parent.value node.value, true
+      parent.value node.value, !node.value, true
