@@ -18,7 +18,6 @@ i18next.init({
   return i18next.changeLanguage('zh-TW');
 }).then(function(){
   block.i18n.use(i18next);
-  console.log(i18next.t('hi'));
   return manager.init();
 }).then(function(){
   return manager.get({

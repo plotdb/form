@@ -10,12 +10,10 @@ i18next
   .init do
     fallbackLng: \zh-TW
     defaultLng: \zh-TW
-
   .then ->
     i18next.changeLanguage \zh-TW
   .then ->
     block.i18n.use i18next
-    console.log i18next.t('hi')
     manager.init!
   .then ->
     manager.get {name: "short-answer", version: "0.0.1"}

@@ -162,18 +162,6 @@
         }
       },
       handler: {
-        t: function(arg$){
-          var node, v;
-          node = arg$.node;
-          if (!(v = node.getAttribute('t'))) {
-            return;
-          }
-          if (node.hasAttribute('t-attr')) {
-            return node.setAttribute(node.getAttribute('t-attr'), t(v));
-          } else {
-            return node.textContent = t(v);
-          }
-        },
         "error-hint": function(arg$){
           var node;
           node = arg$.node;
@@ -272,18 +260,6 @@
               }
             },
             handler: {
-              t: function(arg$){
-                var node, v;
-                node = arg$.node;
-                if (!(v = node.getAttribute('t'))) {
-                  return;
-                }
-                if (node.hasAttribute('t-attr')) {
-                  return node.setAttribute(node.getAttribute('t-attr'), t(v));
-                } else {
-                  return node.textContent = t(v);
-                }
-              },
               enabled: function(arg$){
                 var node, ctx;
                 node = arg$.node, ctx = arg$.ctx;

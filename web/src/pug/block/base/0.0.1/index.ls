@@ -81,10 +81,6 @@ init: (opt = {}) ->
     text:
       "shortname": -> data.alias or '設定代稱..'
     handler:
-      t: ({node}) ->
-        if !(v = node.getAttribute(\t)) => return
-        if node.hasAttribute \t-attr => node.setAttribute node.getAttribute(\t-attr), t(v)
-        else node.textContent = t(v)
       "error-hint": ({node}) ~> node.classList.toggle \d-none, ((@mode == \edit) or !@has-error)
       "edit-only": ({node}) ~> node.classList.toggle \d-none, @mode != \edit
       "set-shortname": ({node}) ->
@@ -121,10 +117,6 @@ init: (opt = {}) ->
             opset: ({ctx}) -> t(if !ctx.opset => "" else (ctx.opset.name or ctx.opset.id))
             op: ({ctx}) -> t(if !ctx.op => "" else (ctx.op.name or ctx.op.id))
           handler:
-            t: ({node}) ->
-              if !(v = node.getAttribute(\t)) => return
-              if node.hasAttribute \t-attr => node.setAttribute node.getAttribute(\t-attr), t(v)
-              else node.textContent = t(v)
             enabled: ({node, ctx}) ->
               node.classList.toggle \on, !!ctx.enabled
             "set-op":
