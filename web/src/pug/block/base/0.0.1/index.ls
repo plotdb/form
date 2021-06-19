@@ -13,6 +13,8 @@ pkg:
       exclude: "排除"
       email: "電子郵件"
       required: "必填"
+      copy: "複製"
+      delete: "刪除"
       "show description": "顯示描述"
       public: "公開"
       "add criteria": "增加條件"

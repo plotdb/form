@@ -1,4 +1,4 @@
-<div><div class="form-short-answer" ld-scope="ld-scope" plug="view"><div class="position-relative"><input class="form-control" ld="input-field edit-panel" placeholder="輸入數值 ... "/></div></div><script type="@plotdb/block">({
+<div><div class="form-short-answer" ld-scope="ld-scope" plug="view"><div class="position-relative"><input class="form-control" ld="input-field edit-panel" t="input value" t-attr="placeholder"/></div></div><script type="@plotdb/block">({
   pkg: {
     name: "short-answer",
     version: "0.0.1",
@@ -8,7 +8,12 @@
     },
     license: "MIT",
     description: "",
-    dependencies: ["https://cdnjs.cloudflare.com/ajax/libs/marked/1.2.7/marked.min.js", "https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.2.6/purify.min.js"]
+    dependencies: ["https://cdnjs.cloudflare.com/ajax/libs/marked/1.2.7/marked.min.js", "https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.2.6/purify.min.js"],
+    i18n: {
+      "zh-TW": {
+        "input value": "輸入數值 ..."
+      }
+    }
   },
   init: function(arg$){
     var root, parent, context, pubsub, dompurify, marked, ldview, view;
