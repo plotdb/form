@@ -87,7 +87,7 @@
     ]
   },
   "peerDependencies": {
-    "@plotdb/block": "^1.4.4",
+    "@plotdb/block": "^1.4.5",
     "@plotdb/csscope": "^0.4.0",
     "@plotdb/datadom": "^0.1.1",
     "@plotdb/rescope": "^1.1.8",
@@ -96,7 +96,7 @@
     "proxise": "^0.1.2"
   },
   "dependencies": {
-    "@plotdb/block": "^1.4.4",
+    "@plotdb/block": "^1.4.5",
     "@plotdb/csscope": "^0.4.0",
     "@plotdb/rescope": "^1.1.8",
     "@plotdb/suuid": "^0.4.0",
