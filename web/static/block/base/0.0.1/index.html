@@ -22,7 +22,8 @@
         required: "必填",
         "show description": "顯示描述",
         'public': "公開",
-        "add criteria": "增加條件"
+        "add criteria": "增加條件",
+        "error message": "錯誤訊息"
       }
     }
   },
@@ -84,10 +85,10 @@
       id: 'string',
       ops: {
         include: function(v, c){
-          return ~(v || '').indexOf('test');
+          return ~("" + (v || '')).indexOf('test');
         },
         exclude: function(v, c){
-          return !~(v || '').indexOf('test');
+          return !~("" + (v || '')).indexOf('test');
         },
         email: function(v){
           return /^[^@]+@[^@]+$/.exec(v);
@@ -271,6 +272,18 @@
               }
             },
             handler: {
+              t: function(arg$){
+                var node, v;
+                node = arg$.node;
+                if (!(v = node.getAttribute('t'))) {
+                  return;
+                }
+                if (node.hasAttribute('t-attr')) {
+                  return node.setAttribute(node.getAttribute('t-attr'), t(v));
+                } else {
+                  return node.textContent = t(v);
+                }
+              },
               enabled: function(arg$){
                 var node, ctx;
                 node = arg$.node, ctx = arg$.ctx;

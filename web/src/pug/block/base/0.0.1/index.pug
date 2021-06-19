@@ -34,7 +34,8 @@
             .dropdown-item = 等於
         .mr-2: input.form-control.simple(placeholder="值 1")
         .mr-2: input.form-control.simple(placeholder="值 2")
-        .mr-2.flex-grow-1: input.form-control.simple(ld="t",t="error message",t-attr="placeholder")
+        .mr-2.flex-grow-1
+          input.form-control.simple(ld="t",t="error message",t-attr="placeholder")
         i.i-close.text-danger.clickable(ld="delete")
       .mt-4: .btn.btn-link.p-0(ld="add-term") #[span(ld="t",t="add criteria")] ...
   .p-4(ld="edit-only")

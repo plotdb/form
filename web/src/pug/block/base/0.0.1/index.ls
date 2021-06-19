@@ -16,6 +16,7 @@ pkg:
       "show description": "顯示描述"
       public: "公開"
       "add criteria": "增加條件"
+      "error message": "錯誤訊息"
     }
 
 interface: -> @
@@ -49,8 +50,8 @@ init: (opt = {}) ->
   opset = new form.opset do
     id: 'string'
     ops:
-      include: (v, c) -> ~(v or '').indexOf('test')
-      exclude: (v, c) -> !~(v or '').indexOf('test')
+      include: (v, c) -> ~("" + (v or '')).indexOf('test')
+      exclude: (v, c) -> !~("" + (v or '')).indexOf('test')
       email: (v) -> /^[^@]+@[^@]+$/.exec(v)
 
   @view = view = new ldview do
@@ -120,6 +121,10 @@ init: (opt = {}) ->
             opset: ({ctx}) -> t(if !ctx.opset => "" else (ctx.opset.name or ctx.opset.id))
             op: ({ctx}) -> t(if !ctx.op => "" else (ctx.op.name or ctx.op.id))
           handler:
+            t: ({node}) ->
+              if !(v = node.getAttribute(\t)) => return
+              if node.hasAttribute \t-attr => node.setAttribute node.getAttribute(\t-attr), t(v)
+              else node.textContent = t(v)
             enabled: ({node, ctx}) ->
               node.classList.toggle \on, !!ctx.enabled
             "set-op":

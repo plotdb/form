@@ -8,7 +8,7 @@ manager = new block.manager registry: ({name,version}) -> "/block/#name/#version
 
 i18next
   .init do
-    fallbackLng: \en
+    fallbackLng: \zh-TW
     defaultLng: \zh-TW
 
   .then ->
