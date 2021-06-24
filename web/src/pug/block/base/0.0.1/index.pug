@@ -2,7 +2,11 @@
   .p-4
     .d-flex
       .flex-grow-1
-        h3(ld="title",contenteditable="true") 問題的標題
+        .d-flex.align-items-end.mb-1
+          h3.mb-0(ld="title",contenteditable="true") 問題的標題
+          .flex-grow-1.d-flex
+            .text-danger.pl-2(ld="required") #[span *]
+            .text-success.d-none.pl-2(ld="ok-hint"): i.i-check
         p(contenteditable="true") 關於問題的簡單描述 ...
       div(ld="edit-only")
         .ml-4: .dropdown(ld="dropdown")
@@ -17,7 +21,6 @@
             .dropdown-item.px-3: input.form-control(ld="custom-shortname",placeholder="自訂 ...")
     plug(name="view")
     .text-danger.py-2.d-none(ld="error-hint")
-    .text-success.py-2.d-none.pl-2(ld="ok-hint"): i.i-check
   .border-top.border-bottom(ld="edit-only")
     .m-4
       .d-flex.mb-1.align-items-center.justify-content-between(ld-each="term")
@@ -37,8 +40,9 @@
           input.form-control.simple(ld="errmsg",t="error message",t-attr="placeholder")
         i.i-close.text-danger.clickable(ld="delete")
       .mt-4: .btn.btn-link.p-0(ld="add-term") #[span(t="add criteria")] ...
-  .p-4(ld="edit-only")
-    .d-flex.align-items-center
+  .px-4.pb-4.mt-4(ld="edit-only")
+    plug(name="config")
+    .d-flex.align-items-center.mt-4
       .mr-2: .btn.btn-sm.btn-outline-danger(ld="delete") #[i.i-close] #[span(t="delete")]
       .mr-2: .btn.btn-sm.btn-outline-secondary(ld="clone") #[i.i-clone] #[span(t="copy")]
       .flex-grow-1.justify-content-end.d-flex

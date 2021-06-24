@@ -8,7 +8,7 @@ pug_html = pug_html + "\u003Cdiv" + (" class=\"form-short-answer\""+pug_attr("ld
 ;pug_debug_line = 3;pug_debug_filename = "src\u002Fpug\u002Fblock\u002Fshort-answer\u002F0.0.1\u002Findex.pug";
 pug_html = pug_html + "\u003Cdiv class=\"position-relative\"\u003E";
 ;pug_debug_line = 4;pug_debug_filename = "src\u002Fpug\u002Fblock\u002Fshort-answer\u002F0.0.1\u002Findex.pug";
-pug_html = pug_html + "\u003Cinput class=\"form-control\" ld=\"input-field edit-panel\" t=\"input value\" t-attr=\"placeholder\"\u002F\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E";
+pug_html = pug_html + "\u003Cinput class=\"form-control\" ld=\"input-field\" t=\"input value\" t-attr=\"placeholder\"\u002F\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E";
 ;pug_debug_line = 5;pug_debug_filename = "src\u002Fpug\u002Fblock\u002Fshort-answer\u002F0.0.1\u002Findex.pug";
 pug_html = pug_html + "\u003Cscript type=\"@plotdb\u002Fblock\"\u003E";
 ;pug_debug_line = 5;pug_debug_filename = "src\u002Fpug\u002Fblock\u002Fshort-answer\u002F0.0.1\u002Findex.pug";

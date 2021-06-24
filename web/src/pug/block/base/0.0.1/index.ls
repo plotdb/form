@@ -34,8 +34,9 @@ pkg:
 interface: -> @
 init: (opt = {}) ->
   {BSN, ldview, suuid, form, config} = opt.context
+  {pubsub} = opt
   t = opt.t
-  opt.pubsub.on \init, ->
+  pubsub.on \init, ->
   @data = data = {config: {}, key: suuid!}
   @mode = opt.data.mode
   @node = -> opt.root.querySelector('[ld-scope][plug=view]')
@@ -45,7 +46,7 @@ init: (opt = {}) ->
     if v? =>
       @ <<< _value: v, _empty: is-empty
       @verify!
-    if !source => opt.pubsub.fire \change, @_value
+    if !source => pubsub.fire \change, @_value
     return @_value
   @verify = ->
     if @_empty and data.config.is-required =>
@@ -118,13 +119,14 @@ init: (opt = {}) ->
           views.0.render \term
         switch: ({node}) ~>
           n = node.getAttribute(\data-name)
-          if !(n in <[isPublic isRequired showDesc]>) => return
           data.{}config[n] = !data.config[n]
+          pubsub.fire \update
           view.render!
     init: dropdown: ({node}) -> new BSN.Dropdown(node)
     text:
       "shortname": -> data.alias or '設定代稱..'
     handler:
+      required: ({node}) -> node.classList.toggle \d-none, !data.config.is-required
       "ok-hint": ({node}) ~>
         node.classList.toggle \d-none, ((@mode == \edit) or @errors.length)
       "error-hint": ({node}) ~>
@@ -139,7 +141,6 @@ init: (opt = {}) ->
       desc: ({node}) ~> node.value = data.desc or ''
       switch: ({node}) ~>
         n = node.getAttribute(\data-name)
-        if !(n in <[isPublic isRequired showDesc]>) => return
         node.classList.toggle \on, !!data.{}config[n]
       term:
         list: ~> data.[]term

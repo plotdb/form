@@ -1,0 +1,111 @@
+<div><div class="form-long-answer" ld-scope="ld-scope" plug="view"><div class="mb-2" ld="if-markdown-enabled"><div class="d-flex align-items-center"><div class="d-flex align-items-center text-sm text-muted mr-4" style="line-height:1em"><input class="mr-1" type="checkbox" ld="use-markdown"/><div><span class="mr-2" t="enable markdown"></span><span>(</span><a class="mx-2" href="https://markdown.tw/" target="_blank" rel="noopener noreferrer" t="syntax"></a><span>)</span></div></div><div class="d-none" ld="if-markdown"><div class="d-flex align-items-center text-sm text-muted mr-4" style="line-height:1em"><input class="mr-1" type="checkbox" ld="toggle-preview"/><div t="preview"></div></div></div></div></div><div class="position-relative"><textarea class="form-control" rows="5" ld="input-field edit-panel"></textarea><div class="w-100 bg-light rounded p-3 text-break d-none" ld="preview-panel" style="min-height:150px"></div></div></div><div plug="config"><div class="d-none flex-grow-1" ld="edit-only"><div class="text-nowrap d-flex align-items-center"><div class="mr-2" t="provide markdown option"></div><div><div class="switch ml-2" ld="switch" data-name="markdownEnabled"></div></div></div></div></div><script type="@plotdb/block">({
+  pkg: {
+    name: "long-answer",
+    version: "0.0.1",
+    extend: {
+      name: "base",
+      version: "0.0.1"
+    },
+    license: "MIT",
+    description: "",
+    dependencies: ["https://cdnjs.cloudflare.com/ajax/libs/marked/1.2.7/marked.min.js", "https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.2.6/purify.min.js"],
+    i18n: {
+      "zh-TW": {
+        "input text": "輸入文字 ...",
+        "provide markdown option": "提供 Markdown 選項",
+        "preview": "預覽",
+        "enable markdown": "啟用 Markdown 語法",
+        "syntax": "語法說明"
+      }
+    }
+  },
+  init: function(arg$){
+    var root, parent, context, pubsub, DOMPurify, marked, ldview, data, value, local, view;
+    root = arg$.root, parent = arg$.parent, context = arg$.context, pubsub = arg$.pubsub;
+    DOMPurify = context.DOMPurify, marked = context.marked, ldview = context.ldview;
+    data = parent.data;
+    data.config || (data.config = {});
+    value = {
+      value: '',
+      useMarkdown: false
+    };
+    local = {};
+    pubsub.on('change', function(it){
+      import$(value, it || {});
+      return view.get('input-field').value = value.value || '';
+    });
+    pubsub.on('update', function(){
+      if (!data.config.markdownEnabled) {
+        value.useMarkdown = false;
+      }
+      return view.render();
+    });
+    return view = new ldview({
+      root: parent.node(),
+      action: {
+        input: {
+          'input-field': function(arg$){
+            var node;
+            node = arg$.node;
+            parent.value(node.value, !node.value, true);
+            return value.value = node.value;
+          }
+        },
+        click: {
+          "use-markdown": function(arg$){
+            var node;
+            node = arg$.node;
+            value.useMarkdown = data.config.markdownEnabled && node.checked;
+            return view.render();
+          },
+          "markdown-enabled": function(arg$){
+            var node, evt;
+            node = arg$.node, evt = arg$.evt;
+            return data.config.markdownEnabled = !data.config.markdownEnabled;
+          },
+          "toggle-preview": function(arg$){
+            var node;
+            node = arg$.node;
+            local.preview = node.checked;
+            return view.render();
+          }
+        }
+      },
+      handler: {
+        "if-markdown": function(arg$){
+          var node;
+          node = arg$.node;
+          return node.classList.toggle('d-none', !value.useMarkdown);
+        },
+        "if-markdown-enabled": function(arg$){
+          var node;
+          node = arg$.node;
+          return node.classList.toggle('d-none', !data.config.markdownEnabled);
+        },
+        "use-markdown": function(arg$){
+          var node;
+          node = arg$.node;
+          return node.checked = value.useMarkdown;
+        },
+        "preview-panel": function(arg$){
+          var node;
+          node = arg$.node;
+          node.classList.toggle('d-none', !local.preview);
+          if (local.preview) {
+            return node.innerHTML = DOMPurify.sanitize(marked(value.value || ''));
+          }
+        },
+        "edit-panel": function(arg$){
+          var node;
+          node = arg$.node;
+          return node.classList.toggle('d-none', !!local.preview);
+        }
+      }
+    });
+  }
+});
+function import$(obj, src){
+  var own = {}.hasOwnProperty;
+  for (var key in src) if (own.call(src, key)) obj[key] = src[key];
+  return obj;
+}</script></div>
