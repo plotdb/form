@@ -70,7 +70,7 @@ init: (opt = {}) ->
     ret.term = @data.term.map -> it.serialize!
     ret
 
-  opsets = []
+  @opsets = opsets = []
   opsets.push new form.opset do
     id: 'string'
     ops:

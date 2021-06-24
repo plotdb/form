@@ -1,0 +1,139 @@
+<div><div class="form-sheet" ld-scope="ld-scope" plug="view"></div><script type="@plotdb/block">({
+  pkg: {
+    name: "sheet",
+    version: "0.0.1",
+    extend: {
+      name: "base",
+      version: "0.0.1"
+    },
+    license: "MIT",
+    description: "",
+    dependencies: [
+      {
+        url: "/assets/lib/@plotdb/sheet/main/index.min.css"
+      }, {
+        url: "/assets/lib/@plotdb/sheet/main/index.min.js"
+      }
+    ],
+    i18n: {
+      en: {
+        rowCount: "row count",
+        colCount: "column count"
+      },
+      "zh-TW": {
+        sheet: "試算表",
+        rowCount: "列數",
+        colCount: "行數"
+      }
+    }
+  },
+  init: function(arg$){
+    var root, parent, context, pubsub, form, sheet, node, s;
+    root = arg$.root, parent = arg$.parent, context = arg$.context, pubsub = arg$.pubsub;
+    form = context.form, sheet = context.sheet;
+    pubsub.on('change', function(){});
+    pubsub.on('update', function(){});
+    node = parent.node();
+    s = new sheet({
+      root: node
+    });
+    s.on('update', function(){
+      return parent.value(s.data, false, true);
+    });
+    return parent.opsets.push(new form.opset({
+      id: 'sheet',
+      ops: {
+        rowCount: {
+          func: function(v, c){
+            var max, i$, to$, i;
+            v == null && (v = []);
+            c == null && (c = {});
+            if (!Array.isArray(v) || isNaN(c.min) || isNaN(c.max)) {
+              return false;
+            }
+            max = 0;
+            for (i$ = 0, to$ = v.length; i$ < to$; ++i$) {
+              i = i$;
+              if (Array.isArray(v[i]) && v[i].length && v[i].filter(fn$).length) {
+                max = i + 1;
+              }
+            }
+            return max >= +c.min && max <= +c.max;
+            function fn$(it){
+              return it != null && it !== "";
+            }
+          },
+          config: {
+            min: {
+              type: 'text',
+              name: "min",
+              hint: "minimal value"
+            },
+            max: {
+              type: 'text',
+              name: "max",
+              hint: "maximal value"
+            }
+          }
+        },
+        colCount: {
+          func: function(v, c){
+            var matched, i$, to$, i, u, max, j$, to1$, j;
+            v == null && (v = []);
+            c == null && (c = {});
+            if (!Array.isArray(v) || isNaN(c.min) || isNaN(c.max)) {
+              return false;
+            }
+            matched = false;
+            for (i$ = 0, to$ = v.length; i$ < to$; ++i$) {
+              i = i$;
+              u = v[i] || [];
+              if (!(Array.isArray(u) && u.length && u.filter(fn$).length)) {
+                continue;
+              }
+              max = 0;
+              matched = true;
+              if (Array.isArray(u)) {
+                for (j$ = 0, to1$ = u.length; j$ < to1$; ++j$) {
+                  j = j$;
+                  if (u[j] != null && u[j] !== "") {
+                    max = j + 1;
+                  }
+                }
+              }
+              if (max < +c.min || max > +c.max) {
+                return false;
+              }
+            }
+            return matched;
+            function fn$(it){
+              return it != null && it !== "";
+            }
+          },
+          config: {
+            min: {
+              type: 'text',
+              name: "min",
+              hint: "minimal value"
+            },
+            max: {
+              type: 'text',
+              name: "max",
+              hint: "maximal value"
+            }
+          }
+        }
+      }
+    }));
+  }
+});</script><style type="text/css">[plug=view] {
+  position: relative;
+  padding-top: 50%;
+  border: 1px solid #ccc;
+}
+[plug=view] .sheet {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+</style></div>

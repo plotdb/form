@@ -21,7 +21,7 @@ i18next
         mode: ({node}) ~> @fields.map -> it.set-mode node.getAttribute \data-name
         set: ({node}) ~> @fields.map -> it.value Math.random!
 
-    Promise.all <[short-answer long-answer]>.map ->
+    Promise.all <[sheet]>.map ->
       manager.get {name: it, version: \0.0.1}
         .then -> it.create {data: {data: 'hello world'}}
         .then ->

@@ -45,7 +45,7 @@
         }
       }
     });
-    return Promise.all(['short-answer', 'long-answer'].map(function(it){
+    return Promise.all(['sheet'].map(function(it){
       return manager.get({
         name: it,
         version: '0.0.1'
