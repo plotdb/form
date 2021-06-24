@@ -7,11 +7,14 @@
       div(ld="edit-only")
         .ml-4: .dropdown(ld="dropdown")
           .btn.btn-light.dropdown-toggle(ld="shortname",data-toggle="dropdown") 代稱
-          .dropdown-menu.dropdown-menu-right
+          .dropdown-menu.dropdown-menu-right.shadow-sm
+            .dropdown-header 常用範例
             .dropdown-item(ld="set-shortname",data-value="統一編號") 統一編號
             .dropdown-item(ld="set-shortname",data-value="電話") 電話
             .dropdown-item(ld="set-shortname",data-value="團隊名稱") 團隊名稱
-            .dropdown-item.px-2: input.form-control(ld="custom-shortname",placeholder="自訂 ...")
+            .dropdown-divider
+            .dropdown-header 自訂名稱
+            .dropdown-item.px-3: input.form-control(ld="custom-shortname",placeholder="自訂 ...")
     plug(name="view")
     .text-danger.py-2.d-none(ld="error-hint")
     .text-success.py-2.d-none.pl-2(ld="ok-hint"): i.i-check
