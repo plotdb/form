@@ -24,8 +24,8 @@
   },
   "devDependencies": {
     "@loadingio/debounce.js": "^0.0.1",
-    "@loadingio/ldquery": "^2.0.0",
-    "@plotdb/datadom": "0.1.1",
+    "@loadingio/ldquery": "^2.1.0",
+    "@plotdb/datadom": "^0.1.1",
     "@plotdb/datahub": "^0.1.1",
     "@plotdb/pug-browser": "^0.0.2",
     "bootstrap": "^4.5.3",
@@ -38,9 +38,9 @@
     "i18next-chained-backend": "^3.0.2",
     "i18next-resources-to-backend": "^1.0.0",
     "jsdoc": "^3.6.6",
-    "ldcover": "^1.3.1",
+    "ldcover": "^1.3.2",
     "ldiconfont": "^0.1.5",
-    "ldview": "0.1.1",
+    "ldview": "^0.2.0",
     "livescript": "^1.6.0",
     "mocha": "^8.2.1",
     "nyc": "^15.1.0",
@@ -79,7 +79,7 @@
       "@plotdb/datahub",
       "@plotdb/rescope",
       "@plotdb/suuid",
-      "@plotdb/config",
+      "@plotdb/konfig",
       "@plotdb/csscope"
     ]
   },
@@ -94,7 +94,7 @@
     ]
   },
   "peerDependencies": {
-    "@plotdb/block": "^1.4.6",
+    "@plotdb/block": "^1.5.2",
     "@plotdb/csscope": "^0.4.0",
     "@plotdb/datadom": "^0.1.1",
     "@plotdb/rescope": "^1.1.8",
@@ -104,16 +104,17 @@
   },
   "dependencies": {
     "@loadingio/ldcolorpicker": "^2.0.2",
-    "@plotdb/block": "^1.4.6",
+    "@plotdb/block": "^1.5.2",
     "@plotdb/csscope": "^0.4.0",
+    "@plotdb/konfig": "^0.0.1",
     "@plotdb/rescope": "^1.1.8",
-    "@plotdb/sheet": "^0.0.6",
+    "@plotdb/sheet": "^0.1.4",
     "@plotdb/suuid": "^0.4.0",
     "choosefont.js": "^0.0.1",
     "curegex": "^0.0.3",
     "dompurify": "^2.2.6",
     "ldcolor": "^0.0.4",
-    "ldpalettepicker": "^1.0.1",
+    "ldpalettepicker": "^1.0.2",
     "ldslider": "^2.0.6",
     "proxise": "^0.1.2"
   }
