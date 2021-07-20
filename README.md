@@ -1,25 +1,26 @@
-# form ( tentative )
+# @plotdb/form
 
-表單設計. 希望涵蓋的部份有：
+Form related modules for interactive form design throught GUI, with following (expected, TODO) features:
 
- * 互動式表單設計, 透過 GUI
- * GUI 設計出表單的同時, 生成表單/資料規格定義
- * 利用表單規格定義繪製表單, 供終端用戶填表.
- * 透過資料規格做資料驗證. 前、後端均可用.
-
-# example
-
-    term = new form.term {opset: \string, op: \email}
-    str = form.type.get \string
-    ret = str.cast 'test@test.com'
-    ret = term.verify ret
-    console.log ret
+ - design a form through GUI.
+ - designed form serializable and renderable in frontend for end users to fill.
+ - end user filled result of a form is also serializable.
+ - Aware of OT for collaborative editing.
+ - Works in both frontend and backend.
 
 
+`@plotdb/form` includes following modules:
 
-## form.block
+ - `form.manager`: manage a set of form widgets.
+ - `form.widget`: interface between form manager and UI.
+ - `form.opset`: a set of op for validating given input from user.
+ - `form.op`: a specific operation for validating given input from user.
+ - `form.term`: a rule ( a op, opset and config based on the specified op ) for validating given input from user.
 
-### attribute
+
+## Draft
+
+### form.block attrubite
 
 An attribute is an aspect of data from a form.block. For example, a File form.block could contains following attributes:
 
