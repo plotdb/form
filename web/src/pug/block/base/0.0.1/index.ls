@@ -4,7 +4,7 @@ pkg:
     {url: "/assets/lib/bootstrap.native/main/bootstrap-native-v4.min.js"}
     {url: "/assets/lib/@plotdb/suuid/main/suuid.bundle.min.js"}
     {url: "/assets/lib/@plotdb/config/main/config.min.js"}
-    {url: "/assets/lib/form/dev/op.js"}
+    {url: "/assets/lib/@Plotdb/form/dev/form.js"}
     {url: "/assets/lib/ldview/main/index.min.js"}
   ]
   i18n:
@@ -27,8 +27,6 @@ pkg:
       gte: "≧ 大於或等於"
       ne: "≠ 不等於"
       eq: "= 等於"
-        
-
     }
 
 interface: -> @

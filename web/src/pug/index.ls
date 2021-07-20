@@ -3,6 +3,8 @@
 manager = new block.manager registry: ({name,version}) -> "/block/#name/#version/index.html"
 @fields = []
 
+fmgr = new form.manager!
+
 i18next
   .init do
     fallbackLng: \zh-TW
@@ -17,15 +19,19 @@ i18next
     @view = new ldview do
       root: document
       action: click:
-        serialize: ~> console.log @fields.map -> it.serialize!
-        mode: ({node}) ~> @fields.map -> it.set-mode node.getAttribute \data-name
-        set: ({node}) ~> @fields.map -> it.value Math.random!
+        serialize: ~> console.log fmgr.serialize!
+        mode: ({node}) ~> fmgr.mode node.getAttribute \data-name
+        set: ({node}) ~>
+          console.log 123
+          obj = fmgr.value!
+          for k,v of obj => obj[k] = Math.random!
+          fmgr.value obj
 
-    Promise.all <[sheet]>.map ->
-      manager.get {name: it, version: \0.0.1}
+    Promise.all <[sheet short-answer long-answer]>.map (name) ->
+      manager.get {name: name, version: \0.0.1}
         .then -> it.create {data: {data: 'hello world'}}
         .then ->
           it.attach {root}
           it.interface!
         .then -> it
-  .then ~> @fields = it
+  .then ~> fmgr.add it

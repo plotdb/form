@@ -400,6 +400,8 @@ pug_mixins["script"]("assets/lib/@plotdb/rescope/main/rescope.min.js");
 ;pug_debug_line = 33;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
 pug_mixins["script"]("assets/lib/@plotdb/block/main/block.min.js");
 ;pug_debug_line = 34;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
+pug_mixins["script"]("assets/lib/@plotdb/form/dev/form.min.js");
+;pug_debug_line = 35;pug_debug_filename = "\u002FUsers\u002Ftkirby\u002Fworkspace\u002Fzbryikt\u002Fplotdb\u002Fprojects\u002Fform\u002Fweb\u002Fsrc\u002Fpug\u002Fbase.pug";
 ;pug_debug_line = 63;pug_debug_filename = "src\u002Fpug\u002Fdev\u002Findex.pug";
 pug_mixins["script"]("/assets/lib/bootstrap.native/main/bootstrap-native.min.js");
 ;pug_debug_line = 64;pug_debug_filename = "src\u002Fpug\u002Fdev\u002Findex.pug";

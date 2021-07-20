@@ -6,7 +6,13 @@ rm -rf dist
 mkdir -p dist
 
 echo "building livescript files ..."
-npx lsc -cpb src/op.ls > dist/op.js
+cat src/form.ls src/manager.ls src/op.ls src/widget.ls src/module.ls > dist/form.ls
+./node_modules/.bin/lsc -cp dist/form.ls > dist/form.js
+echo "minifying ldcv.js ..."
+./node_modules/.bin/uglifyjs dist/form.js > dist/form.min.js
+#npx lsc -cpb src/op.ls > dist/op.js
+#npx lsc -cpb src/widget.ls > dist/widget.js
+#npx lsc -cpb src/manager.ls > dist/manager.js
 #npx lsc -cp src/form.def.ls > dist/form.def.js
 #npx lsc -cp src/form.imp.ls > dist/form.imp.js
 #npx lsc -cp src/rulesets/index.ls > dist/ruleset/index.js
@@ -14,7 +20,7 @@ npx lsc -cpb src/op.ls > dist/op.js
 #npx lsc -cp src/criteria.ls > dist/criteria.js
 
 echo "copy dist to web ..."
-rm -rf web/static/assets/lib/form/dev/
-mkdir -p web/static/assets/lib/form/dev/
-cp -R dist/* web/static/assets/lib/form/dev/
+rm -rf web/static/assets/lib/@plotdb/form/dev/
+mkdir -p web/static/assets/lib/@plotdb/form/dev/
+cp -R dist/* web/static/assets/lib/@plotdb/form/dev/
 
