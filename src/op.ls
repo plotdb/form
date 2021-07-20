@@ -1,12 +1,14 @@
 # 規則運算子
 form.op = (opt = {}) ->
   @ <<< opt{id, name, config, func}
+  @ <<< opt{i18n} # TODO
   @
 
 form.op.prototype = Object.create(Object.prototype) <<< do
-  verify: (val, cfg = {}) ->
+  validate: (val, cfg = {}) ->
     if (ret = @func val, cfg) instanceof Promise => ret else Promise.resolve(!!ret)
-  get-config-default: ->
+
+  config-default: ->
     cfg = {}
     for k,v of @config => cfg[k] = v.default
     return cfg
@@ -14,14 +16,14 @@ form.op.prototype = Object.create(Object.prototype) <<< do
 
 # 資料驗證的規則集
 form.opset = (opt={}) ->
-  @ <<< opt{name, id}
+  @ <<< opt{name, id, i18n}
   @ <<< {ops: {}}
   ops = if Array.isArray(opt.ops) => opt.ops.map -> {v: it, k: it.id}
   else [{k,v} for k,v of opt.ops]
   ops.map ({k,v}) ~>
     @ops[k] = if v instanceof form.op => v
     else if k => new form.op((if typeof(v) == \function => {func: v} else v) <<< {id: k})
-    else throw new Error('invalid op when initializing opset.')
+    else throw new Error('[@plotdb/form/opset] invalid op when initializing opset.')
     for k,v of opt.ops => @ops[k] = new form.op((if typeof(v) == \function => {func: v} else v) <<< {name: k, id: k})
   @default-op = if @ops[opt.default-op] => opt.default-op else [k for k,v of @ops].0
   @
@@ -96,15 +98,16 @@ form.term.prototype = Object.create(Object.prototype) <<< do
 
   set-config: (cfg) ->
     if !@op => throw new Error("op not set")
-    @config = if !cfg => @op.get-config-default! else cfg
+    @config = if !cfg => @op.config-default! else cfg
 
-  verify: (v) ->
+  validate: (v) ->
     if !@op => Promis.reject(new Error("op not set"))
-    @op.verify(v, @config)
+    @op.validate(v, @config)
 
   serialize: ->
     return {enabled: @enabled, opset: @opset.id, op: @op.id, config: @config}
 
+  # TBD - do we need this? ( we already can deserialize directly from new form.term(serializedObject) )
   deserialize: (v) ->
     @toggle v.enabled
     @set-opset v.opset, v.op, v.config
