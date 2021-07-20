@@ -22,16 +22,18 @@ i18next
         serialize: ~> console.log fmgr.serialize!
         mode: ({node}) ~> fmgr.mode node.getAttribute \data-name
         set: ({node}) ~>
-          console.log 123
           obj = fmgr.value!
           for k,v of obj => obj[k] = Math.random!
           fmgr.value obj
 
-    Promise.all <[sheet short-answer long-answer]>.map (name) ->
+    #Promise.all <[sheet short-answer long-answer]>.map (name) ->
+    Promise.all <[short-answer]>.map (name) ->
       manager.get {name: name, version: \0.0.1}
         .then -> it.create {data: {data: 'hello world'}}
         .then ->
           it.attach {root}
           it.interface!
         .then -> it
-  .then ~> fmgr.add it
+  .then ~>
+    console.log it
+    fmgr.add it

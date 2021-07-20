@@ -8,22 +8,24 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
   fields: -> @_fields
   serialize: -> @_fields.map -> it.serialize!
   value: (vs) ->
-    if !vs => return Object.fromEntries(@_fields.map -> [it.data.alias or it.data.key, it.value!])
+    if !vs => return Object.fromEntries(@_fields.map -> [it._meta.alias or it._meta.key, it.value!])
     for k,v of vs =>
-      f = @_fields.filter(-> (it.data.alias == k or it.data.key == k)).0
+      f = @_fields.filter(-> (it._meta.alias == k or it._meta.key == k)).0
       if !f => continue
       f.value v
-  mode: (m) -> @_fields.map -> it.set-mode m
+  mode: (m) -> @_fields.map -> it.mode m
 
 # 規則運算子
 form.op = (opt = {}) ->
   @ <<< opt{id, name, config, func}
+  @ <<< opt{i18n} # TODO
   @
 
 form.op.prototype = Object.create(Object.prototype) <<< do
-  verify: (val, cfg = {}) ->
+  validate: (val, cfg = {}) ->
     if (ret = @func val, cfg) instanceof Promise => ret else Promise.resolve(!!ret)
-  get-config-default: ->
+
+  config-default: ->
     cfg = {}
     for k,v of @config => cfg[k] = v.default
     return cfg
@@ -31,14 +33,14 @@ form.op.prototype = Object.create(Object.prototype) <<< do
 
 # 資料驗證的規則集
 form.opset = (opt={}) ->
-  @ <<< opt{name, id}
+  @ <<< opt{name, id, i18n}
   @ <<< {ops: {}}
   ops = if Array.isArray(opt.ops) => opt.ops.map -> {v: it, k: it.id}
   else [{k,v} for k,v of opt.ops]
   ops.map ({k,v}) ~>
     @ops[k] = if v instanceof form.op => v
     else if k => new form.op((if typeof(v) == \function => {func: v} else v) <<< {id: k})
-    else throw new Error('invalid op when initializing opset.')
+    else throw new Error('[@plotdb/form/opset] invalid op when initializing opset.')
     for k,v of opt.ops => @ops[k] = new form.op((if typeof(v) == \function => {func: v} else v) <<< {name: k, id: k})
   @default-op = if @ops[opt.default-op] => opt.default-op else [k for k,v of @ops].0
   @
@@ -113,68 +115,85 @@ form.term.prototype = Object.create(Object.prototype) <<< do
 
   set-config: (cfg) ->
     if !@op => throw new Error("op not set")
-    @config = if !cfg => @op.get-config-default! else cfg
+    @config = if !cfg => @op.config-default! else cfg
 
-  verify: (v) ->
+  validate: (v) ->
     if !@op => Promis.reject(new Error("op not set"))
-    @op.verify(v, @config)
+    @op.validate(v, @config)
 
   serialize: ->
     return {enabled: @enabled, opset: @opset.id, op: @op.id, config: @config}
 
+  # TBD - do we need this? ( we already can deserialize directly from new form.term(serializedObject) )
   deserialize: (v) ->
     @toggle v.enabled
     @set-opset v.opset, v.op, v.config
 form.widget = (opt = {}) ->
   @root = if typeof(opt.root) == \string => document.querySelector(opt.root) else opt.root
   @evt-handler = {}
-  @data = {config: {}, key: suuid!}
+  @mod = opt.mod or null
+  @_custom = {}
+  @_meta = {config: {}, key: Math.random!toString(36)substring(2)}
   @ <<< _value: null, _empty: true
   @_mode = opt.mode or \view
-  @opsets = opt.opsets or []
-  @errors = []
+  @_opsets = (opt.opsets or []).map (opset) ->
+    if typeof(opset) == \string => form.opset.get opset
+    else if typeof(opset) == form.opset => opset
+    else new form.opset(opset)
+  @_errors = []
+  @init!
   @
 
 form.widget.prototype = Object.create(Object.prototype) <<< do
   on: (n, cb) -> (if Array.isArray(n) => n else [n]).map (n) ~> @evt-handler.[][n].push cb
   fire: (n, ...v) -> for cb in (@evt-handler[n] or []) => cb.apply @, v
+  init: -> if @mod => @mod.init.apply @
+  key: -> return @_meta.alias or @_meta.key
   serialize: ->
-    ret = {} <<< @data{key, title, desc}
-    ret.config = JSON.parse(JSON.stringify(@data.config or {}))
-    ret.term = @data.term.map -> it.serialize!
+    ret = {} <<< @_meta{key, title, desc}
+    ret.config = JSON.parse(JSON.stringify(@_meta.config or {}))
+    ret.term = @_meta.term.map -> it.serialize!
     ret
   deserialize: (v) ->
-    @data <<< v{key, title, desc}
-    @data.config = JSON.parse(JSON.stringify(v.config or {}))
-    # TODO
-    @data.term = v.term.map -> new form.term!deserialize it
+    @_meta <<< v{key, title, desc}
+    @_meta.config = JSON.parse(JSON.stringify(v.config or {}))
+    @_meta.term = v.term.map -> new form.term it
+    @validate!
+    @render!
 
   mode: ->
     if !(it?) => return @_mode
-    @mode = it
-    @verify!
+    @_mode = it
+    @validate!
     @render!
-  value: (v, is-empty = false, from-source = false) ->
-    if v? =>
-      @ <<< _value: v, _empty: is-empty
-      @verify!
-    if !source => @fire \change, @_value
-    return @_value
 
-  verify: ->
-    if @_empty and @data.config.is-required =>
-      @errors = ["required"]
-      return view.render!
+  errors: -> @_errors
+  opsets: -> @_opsets
+  meta: (meta) -> if !(meta?) => return @_meta else @deserialize meta
+
+  value: (v, is-empty = false, from-source = false) ->
+    if !(v?) => return @_value
+    @ <<< _value: v, _empty: is-empty
+    @validate!
+    if !from-source => @fire \change, @_value
+
+  validate: ->
+    if @_empty and @_meta.config.is-required =>
+      @_errors = ["required"]
+      return @render!
     Promise.all(
-      @data.term
+      @_meta.term
         .filter (t) -> t.enabled
-        .map (t) ~> t.verify(@_value).then (v) ~> [t,v]
+        .map (t) ~> t.validate(@_value).then (v) ~> [t,v]
     )
       .then ~>
-        @errors = it.filter(-> !it.1).map -> it.0.msg
-        view.render!
+        @_errors = it.filter(-> !it.1).map -> it.0.msg
+        @render!
+      .then ~> @_errors
 
   render: ->
+    @fire \render
+    if @mod => @mod.render.apply @
 
 if (module?) => module.exports = form
 else if window? => window.form = form

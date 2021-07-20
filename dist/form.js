@@ -24,7 +24,7 @@
       var k, v, f, results$ = [];
       if (!vs) {
         return Object.fromEntries(this._fields.map(function(it){
-          return [it.data.alias || it.data.key, it.value()];
+          return [it._meta.alias || it._meta.key, it.value()];
         }));
       }
       for (k in vs) {
@@ -37,12 +37,12 @@
       }
       return results$;
       function fn$(it){
-        return it.data.alias === k || it.data.key === k;
+        return it._meta.alias === k || it._meta.key === k;
       }
     },
     mode: function(m){
       return this._fields.map(function(it){
-        return it.setMode(m);
+        return it.mode(m);
       });
     }
   });
@@ -52,10 +52,11 @@
     this.name = opt.name;
     this.config = opt.config;
     this.func = opt.func;
+    this.i18n = opt.i18n;
     return this;
   };
   form.op.prototype = import$(Object.create(Object.prototype), {
-    verify: function(val, cfg){
+    validate: function(val, cfg){
       var ret;
       cfg == null && (cfg = {});
       if ((ret = this.func(val, cfg)) instanceof Promise) {
@@ -64,7 +65,7 @@
         return Promise.resolve(!!ret);
       }
     },
-    getConfigDefault: function(){
+    configDefault: function(){
       var cfg, k, ref$, v;
       cfg = {};
       for (k in ref$ = this.config) {
@@ -79,6 +80,7 @@
     opt == null && (opt = {});
     this.name = opt.name;
     this.id = opt.id;
+    this.i18n = opt.i18n;
     this.ops = {};
     ops = Array.isArray(opt.ops)
       ? opt.ops.map(function(it){
@@ -108,7 +110,7 @@
             func: v
           } : v, ref$.id = k, ref$))
           : (function(){
-            throw new Error('invalid op when initializing opset.');
+            throw new Error('[@plotdb/form/opset] invalid op when initializing opset.');
           }());
       for (k in ref$ = opt.ops) {
         v = ref$[k];
@@ -304,13 +306,13 @@
       if (!this.op) {
         throw new Error("op not set");
       }
-      return this.config = !cfg ? this.op.getConfigDefault() : cfg;
+      return this.config = !cfg ? this.op.configDefault() : cfg;
     },
-    verify: function(v){
+    validate: function(v){
       if (!this.op) {
         Promis.reject(new Error("op not set"));
       }
-      return this.op.verify(v, this.config);
+      return this.op.validate(v, this.config);
     },
     serialize: function(){
       return {
@@ -331,15 +333,26 @@
       ? document.querySelector(opt.root)
       : opt.root;
     this.evtHandler = {};
-    this.data = {
+    this.mod = opt.mod || null;
+    this._custom = {};
+    this._meta = {
       config: {},
-      key: suuid()
+      key: Math.random().toString(36).substring(2)
     };
     this._value = null;
     this._empty = true;
     this._mode = opt.mode || 'view';
-    this.opsets = opt.opsets || [];
-    this.errors = [];
+    this._opsets = (opt.opsets || []).map(function(opset){
+      if (typeof opset === 'string') {
+        return form.opset.get(opset);
+      } else if (typeof opset === form.opset) {
+        return opset;
+      } else {
+        return new form.opset(opset);
+      }
+    });
+    this._errors = [];
+    this.init();
     return this;
   };
   form.widget.prototype = import$(Object.create(Object.prototype), {
@@ -361,69 +374,99 @@
       }
       return results$;
     },
+    init: function(){
+      if (this.mod) {
+        return this.mod.init.apply(this);
+      }
+    },
+    key: function(){
+      return this._meta.alias || this._meta.key;
+    },
     serialize: function(){
       var ret, ref$, ref1$;
-      ret = (ref1$ = {}, ref1$.key = (ref$ = this.data).key, ref1$.title = ref$.title, ref1$.desc = ref$.desc, ref1$);
-      ret.config = JSON.parse(JSON.stringify(this.data.config || {}));
-      ret.term = this.data.term.map(function(it){
+      ret = (ref1$ = {}, ref1$.key = (ref$ = this._meta).key, ref1$.title = ref$.title, ref1$.desc = ref$.desc, ref1$);
+      ret.config = JSON.parse(JSON.stringify(this._meta.config || {}));
+      ret.term = this._meta.term.map(function(it){
         return it.serialize();
       });
       return ret;
     },
     deserialize: function(v){
       var ref$;
-      ref$ = this.data;
+      ref$ = this._meta;
       ref$.key = v.key;
       ref$.title = v.title;
       ref$.desc = v.desc;
-      this.data.config = JSON.parse(JSON.stringify(v.config || {}));
-      return this.data.term = v.term.map(function(it){
-        return new form.term().deserialize(it);
+      this._meta.config = JSON.parse(JSON.stringify(v.config || {}));
+      this._meta.term = v.term.map(function(it){
+        return new form.term(it);
       });
+      this.validate();
+      return this.render();
     },
     mode: function(it){
       if (!(it != null)) {
         return this._mode;
       }
-      this.mode = it;
-      this.verify();
+      this._mode = it;
+      this.validate();
       return this.render();
+    },
+    errors: function(){
+      return this._errors;
+    },
+    opsets: function(){
+      return this._opsets;
+    },
+    meta: function(meta){
+      if (!(meta != null)) {
+        return this._meta;
+      } else {
+        return this.deserialize(meta);
+      }
     },
     value: function(v, isEmpty, fromSource){
       isEmpty == null && (isEmpty = false);
       fromSource == null && (fromSource = false);
-      if (v != null) {
-        this._value = v;
-        this._empty = isEmpty;
-        this.verify();
+      if (!(v != null)) {
+        return this._value;
       }
-      if (!source) {
-        this.fire('change', this._value);
+      this._value = v;
+      this._empty = isEmpty;
+      this.validate();
+      if (!fromSource) {
+        return this.fire('change', this._value);
       }
-      return this._value;
     },
-    verify: function(){
+    validate: function(){
       var this$ = this;
-      if (this._empty && this.data.config.isRequired) {
-        this.errors = ["required"];
-        return view.render();
+      if (this._empty && this._meta.config.isRequired) {
+        this._errors = ["required"];
+        return this.render();
       }
-      return Promise.all(this.data.term.filter(function(t){
+      return Promise.all(this._meta.term.filter(function(t){
         return t.enabled;
       }).map(function(t){
-        return t.verify(this$._value).then(function(v){
+        return t.validate(this$._value).then(function(v){
           return [t, v];
         });
       })).then(function(it){
-        this$.errors = it.filter(function(it){
+        this$._errors = it.filter(function(it){
           return !it[1];
         }).map(function(it){
           return it[0].msg;
         });
-        return view.render();
+        return this$.render();
+      }).then(function(){
+        return this$._errors;
       });
     },
-    render: function(){}
+    render: function(){
+      this.fire('render');
+      if (this.mod) {
+        return this.mod.render.apply(this);
+      }
+    }
   });
   if (typeof module != 'undefined' && module !== null) {
     module.exports = form;

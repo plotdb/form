@@ -8,7 +8,7 @@
     },
     license: "MIT",
     description: "",
-    dependencies: ["https://cdnjs.cloudflare.com/ajax/libs/marked/1.2.7/marked.min.js", "https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.2.6/purify.min.js"],
+    dependencies: [],
     i18n: {
       "zh-TW": {
         "input value": "輸入數值 ..."
@@ -16,23 +16,31 @@
     }
   },
   init: function(arg$){
-    var root, parent, context, pubsub, dompurify, marked, ldview, view;
+    var root, parent, context, pubsub, ldview;
     root = arg$.root, parent = arg$.parent, context = arg$.context, pubsub = arg$.pubsub;
-    dompurify = context.dompurify, marked = context.marked, ldview = context.ldview;
-    pubsub.on('change', function(it){
-      return view.get('input-field').value = it;
-    });
-    return view = new ldview({
-      root: parent.node(),
-      action: {
-        input: {
-          'input-field': function(arg$){
-            var node;
-            node = arg$.node;
-            return parent.value(node.value, !node.value, true);
+    ldview = context.ldview;
+    return pubsub.fire('init', {
+      opsets: ['string', 'number']
+    }).then(function(opt){
+      var ref$, widget, node, view;
+      opt == null && (opt = []);
+      ref$ = opt[0], widget = ref$.widget, node = ref$.node;
+      widget.on('change', function(it){
+        console.log(123, it);
+        return view.get('input-field').value = it;
+      });
+      return view = new ldview({
+        root: node.view,
+        action: {
+          input: {
+            'input-field': function(arg$){
+              var node;
+              node = arg$.node;
+              return widget.value(node.value, !node.value, true);
+            }
           }
         }
-      }
+      });
     });
   }
 });</script></div>

@@ -1,487 +1,366 @@
-<div class="rounded-lg shadow mb-4"><div class="p-4"><div class="d-flex"><div class="flex-grow-1"><div class="d-flex align-items-end mb-1"><h3 class="mb-0" ld="title" contenteditable="true">問題的標題</h3><div class="flex-grow-1 d-flex"><div class="text-danger pl-2" ld="required"><span>*</span></div><div class="text-success d-none pl-2" ld="ok-hint"><i class="i-check"></i></div></div></div><p contenteditable="true">關於問題的簡單描述 ...</p></div><div ld="edit-only"><div class="ml-4"><div class="dropdown" ld="dropdown"><div class="btn btn-light dropdown-toggle" ld="shortname" data-toggle="dropdown">代稱</div><div class="dropdown-menu dropdown-menu-right shadow-sm"><div class="dropdown-header">常用範例</div><div class="dropdown-item" ld="set-shortname" data-value="統一編號">統一編號</div><div class="dropdown-item" ld="set-shortname" data-value="電話">電話</div><div class="dropdown-item" ld="set-shortname" data-value="團隊名稱">團隊名稱</div><div class="dropdown-divider"></div><div class="dropdown-header">自訂名稱</div><div class="dropdown-item px-3"><input class="form-control" ld="custom-shortname" placeholder="自訂 ..."/></div></div></div></div></div></div><plug name="view"></plug><div class="text-danger py-2 d-none" ld="error-hint"></div></div><div class="border-top border-bottom" ld="edit-only"><div class="m-4"><div class="d-flex mb-1 align-items-center justify-content-between" ld-each="term"><div class="mr-2"><div class="switch switch-lg" ld="enabled"></div></div><div class="mr-2"><div class="dropdown" ld="dropdown"><div class="btn btn-light dropdown-toggle" ld="opset" data-toggle="dropdown">...</div><div class="dropdown-menu"><div class="dropdown-item" ld-each="set-opset">...</div></div></div></div><div class="mr-2"><div class="dropdown" ld="dropdown"><div class="btn btn-light dropdown-toggle" ld="op" data-toggle="dropdown">...</div><div class="dropdown-menu"><div class="dropdown-item" ld-each="set-op">...</div></div></div></div><div class="d-flex flex-grow-1" ld-scope="ld-scope" ld="config-root"><div class="mr-2 flex-grow-1" ld-each="config"></div></div><div class="mr-2 flex-grow-1"><input class="form-control simple" ld="errmsg" t="error message" t-attr="placeholder"/></div><i class="i-close text-danger clickable" ld="delete"></i></div><div class="mt-4"><div class="btn btn-link p-0" ld="add-term"><span t="add criteria"></span> ...</div></div></div></div><div class="px-4 pb-4 mt-4" ld="edit-only"><plug name="config"></plug><div class="d-flex align-items-center mt-4"><div class="mr-2"><div class="btn btn-sm btn-outline-danger" ld="delete"><i class="i-close"></i> <span t="delete"></span></div></div><div class="mr-2"><div class="btn btn-sm btn-outline-secondary" ld="clone"><i class="i-clone"></i> <span t="copy"></span></div></div><div class="flex-grow-1 justify-content-end d-flex"><div class="ml-4 d-flex align-items-center line-height-1em"><span t="public"></span><div class="switch ml-2" ld="switch" data-name="isPublic"></div></div><div class="ml-4 d-flex align-items-center line-height-1em"><span t="required"></span><div class="switch ml-2 on" ld="switch" data-name="isRequired"></div></div></div></div></div><script type="@plotdb/block">({
-  pkg: {
-    name: "base",
-    version: "0.0.1",
-    dependencies: [
-      {
-        url: "/assets/lib/bootstrap.native/main/bootstrap-native-v4.min.js"
-      }, {
-        url: "/assets/lib/@plotdb/suuid/main/suuid.bundle.min.js"
-      }, {
-        url: "/assets/lib/@plotdb/config/main/config.min.js"
-      }, {
-        url: "/assets/lib/@Plotdb/form/dev/form.js"
-      }, {
-        url: "/assets/lib/ldview/main/index.min.js"
+<div class="rounded-lg shadow mb-4"><div class="p-4"><div class="d-flex"><div class="flex-grow-1"><div class="d-flex align-items-end mb-1"><h3 class="mb-0" ld="title" contenteditable="true">問題的標題</h3><div class="flex-grow-1 d-flex"><div class="text-danger pl-2" ld="required"><span>*</span></div><div class="text-success d-none pl-2" ld="ok-hint"><i class="i-check"></i></div></div></div><p contenteditable="true">關於問題的簡單描述 ...</p></div><div ld="edit-only"><div class="ml-4"><div class="dropdown" ld="dropdown"><div class="btn btn-light dropdown-toggle" ld="shortname" data-toggle="dropdown">代稱</div><div class="dropdown-menu dropdown-menu-right shadow-sm"><div class="dropdown-header">常用範例</div><div class="dropdown-item" ld="set-shortname" data-value="統一編號">統一編號</div><div class="dropdown-item" ld="set-shortname" data-value="電話">電話</div><div class="dropdown-item" ld="set-shortname" data-value="團隊名稱">團隊名稱</div><div class="dropdown-divider"></div><div class="dropdown-header">自訂名稱</div><div class="dropdown-item px-3"><input class="form-control" ld="custom-shortname" placeholder="自訂 ..."/></div></div></div></div></div></div><plug name="view"></plug><div class="text-danger py-2 d-none" ld="error-hint"></div></div><div class="border-top border-bottom" ld="edit-only"><div class="m-4"><div class="d-flex mb-1 align-items-center justify-content-between" ld-each="term"><div class="mr-2"><div class="switch switch-lg" ld="enabled"></div></div><div class="mr-2"><div class="dropdown" ld="dropdown"><div class="btn btn-light dropdown-toggle" ld="opset" data-toggle="dropdown">...</div><div class="dropdown-menu"><div class="dropdown-item" ld-each="set-opset">...</div></div></div></div><div class="mr-2"><div class="dropdown" ld="dropdown"><div class="btn btn-light dropdown-toggle" ld="op" data-toggle="dropdown">...</div><div class="dropdown-menu"><div class="dropdown-item" ld-each="set-op">...</div></div></div></div><div class="d-flex flex-grow-1" ld-scope="ld-scope" ld="config-root"><div class="mr-2 flex-grow-1" ld-each="config"></div></div><div class="mr-2 flex-grow-1"><input class="form-control simple" ld="errmsg" t="error message" t-attr="placeholder"/></div><i class="i-close text-danger clickable" ld="delete"></i></div><div class="mt-4"><div class="btn btn-link p-0" ld="add-term"><span t="add criteria"></span> ...</div></div></div></div><div class="px-4 pb-4 mt-4" ld="edit-only"><plug name="config"></plug><div class="d-flex align-items-center mt-4"><div class="mr-2"><div class="btn btn-sm btn-outline-danger" ld="delete"><i class="i-close"></i> <span t="delete"></span></div></div><div class="mr-2"><div class="btn btn-sm btn-outline-secondary" ld="clone"><i class="i-clone"></i> <span t="copy"></span></div></div><div class="flex-grow-1 justify-content-end d-flex"><div class="ml-4 d-flex align-items-center line-height-1em"><span t="public"></span><div class="switch ml-2" ld="switch" data-name="isPublic"></div></div><div class="ml-4 d-flex align-items-center line-height-1em"><span t="required"></span><div class="switch ml-2 on" ld="switch" data-name="isRequired"></div></div></div></div></div><script type="@plotdb/block">(function(it){
+  return it();
+})(function(){
+  var blockFactory, mod;
+  blockFactory = {
+    pkg: {
+      name: "base",
+      version: "0.0.1",
+      dependencies: [
+        {
+          url: "/assets/lib/bootstrap.native/main/bootstrap-native-v4.min.js"
+        }, {
+          url: "/assets/lib/@plotdb/suuid/main/suuid.bundle.min.js"
+        }, {
+          url: "/assets/lib/@plotdb/config/main/config.min.js"
+        }, {
+          url: "/assets/lib/@Plotdb/form/dev/form.js"
+        }, {
+          url: "/assets/lib/ldview/main/index.min.js"
+        }
+      ],
+      i18n: {
+        "zh-TW": {
+          string: "文字",
+          number: "數字",
+          include: "包含",
+          exclude: "排除",
+          email: "電子郵件",
+          required: "必填",
+          copy: "複製",
+          'delete': "刪除",
+          "show description": "顯示描述",
+          "number for comparison": "比較用的數字",
+          'public': "公開",
+          "add criteria": "增加條件",
+          "error message": "錯誤訊息",
+          "invalid input": "輸入不符合要求",
+          lte: "≦ 小於或等於",
+          gte: "≧ 大於或等於",
+          ne: "≠ 不等於",
+          eq: "= 等於"
+        }
       }
-    ],
-    i18n: {
-      "zh-TW": {
-        string: "文字",
-        number: "數字",
-        include: "包含",
-        exclude: "排除",
-        email: "電子郵件",
-        required: "必填",
-        copy: "複製",
-        'delete': "刪除",
-        "show description": "顯示描述",
-        "number for comparison": "比較用的數字",
-        'public': "公開",
-        "add criteria": "增加條件",
-        "error message": "錯誤訊息",
-        "invalid input": "輸入不符合要求",
-        lte: "≦ 小於或等於",
-        gte: "≧ 大於或等於",
-        ne: "≠ 不等於",
-        eq: "= 等於"
-      }
+    },
+    'interface': function(){
+      return this.widget;
+    },
+    init: function(opt){
+      var form, pubsub, this$ = this;
+      opt == null && (opt = {});
+      form = opt.context.form;
+      pubsub = opt.pubsub;
+      return pubsub.on('init', function(initOpt){
+        var widget, node;
+        initOpt == null && (initOpt = {});
+        this$.widget = widget = new form.widget({
+          root: root,
+          opsets: initOpt.opsets,
+          mod: mod(opt, initOpt)
+        });
+        node = {
+          view: root.querySelector('[ld-scope][plug=view]')
+        };
+        return {
+          widget: widget,
+          node: node
+        };
+      });
     }
-  },
-  'interface': function(){
-    return this;
-  },
-  init: function(opt){
-    var ref$, BSN, ldview, suuid, form, config, pubsub, t, data, opsets, view, this$ = this;
+  };
+  mod = function(opt, initOpt){
+    var ref$, BSN, ldview, suuid, form, config, pubsub, t, root;
     opt == null && (opt = {});
+    initOpt == null && (initOpt = {});
     ref$ = opt.context, BSN = ref$.BSN, ldview = ref$.ldview, suuid = ref$.suuid, form = ref$.form, config = ref$.config;
-    pubsub = opt.pubsub;
-    t = opt.t;
-    pubsub.on('init', function(){});
-    this.data = data = {
-      config: {},
-      key: suuid()
-    };
-    this.mode = opt.data.mode;
-    this.node = function(){
-      return opt.root.querySelector('[ld-scope][plug=view]');
-    };
-    this.errors = [];
-    this._value = null;
-    this._empty = true;
-    this.value = function(v, isEmpty, source){
-      isEmpty == null && (isEmpty = false);
-      source == null && (source = false);
-      if (v != null) {
-        this._value = v;
-        this._empty = isEmpty;
-        this.verify();
-      }
-      if (!source) {
-        pubsub.fire('change', this._value);
-      }
-      return this._value;
-    };
-    this.verify = function(){
-      var this$ = this;
-      if (this._empty && data.config.isRequired) {
-        this.errors = ["required"];
-        return view.render();
-      }
-      return Promise.all(this.data.term.filter(function(t){
-        return t.enabled;
-      }).map(function(t){
-        return t.verify(this$._value).then(function(v){
-          return [t, v];
-        });
-      })).then(function(it){
-        this$.errors = it.filter(function(it){
-          return !it[1];
-        }).map(function(it){
-          return it[0].msg;
-        });
-        return view.render();
-      });
-    };
-    this.setMode = function(it){
-      this$.mode = it;
-      this$.verify();
-      return this$.view.render();
-    };
-    this.serialize = function(){
-      var ref$, ret, ref1$;
-      ret = (ref1$ = {}, ref1$.key = (ref$ = this$.data).key, ref1$.title = ref$.title, ref1$.desc = ref$.desc, ref1$);
-      ret.config = JSON.parse(JSON.stringify(this$.data.config || {}));
-      ret.term = this$.data.term.map(function(it){
-        return it.serialize();
-      });
-      return ret;
-    };
-    this.opsets = opsets = [];
-    opsets.push(new form.opset({
-      id: 'string',
-      ops: {
-        include: {
-          func: function(v, c){
-            c == null && (c = {});
-            return ~("" + (v || '')).indexOf(c.str || '');
-          },
-          config: {
-            str: {
-              type: 'text'
-            }
-          }
-        },
-        exclude: {
-          func: function(v, c){
-            c == null && (c = {});
-            return !~("" + (v || '')).indexOf(c.str || '');
-          },
-          config: {
-            str: {
-              type: 'text'
-            }
-          }
-        },
-        email: {
-          func: function(v){
-            return /^[^@]+@[^@]+$/.exec(v);
-          },
-          config: {}
-        }
-      }
-    }));
-    opsets.push(new form.opset({
-      id: 'number',
-      ops: {
-        lte: {
-          func: function(v, c){
-            c == null && (c = {});
-            if (isNaN(v) || isNaN(c.val)) {
-              return false;
-            } else {
-              return +v <= +c.val;
-            }
-          },
-          config: {
-            val: {
-              type: 'text',
-              hint: "number for comparison"
-            }
-          }
-        },
-        gte: {
-          func: function(v, c){
-            c == null && (c = {});
-            if (isNaN(v) || isNaN(c.val)) {
-              return false;
-            } else {
-              return +v >= +c.val;
-            }
-          },
-          config: {
-            val: {
-              type: 'text',
-              hint: "number for comparison"
-            }
-          }
-        },
-        ne: {
-          func: function(v, c){
-            c == null && (c = {});
-            if (isNaN(v) || isNaN(c.val)) {
-              return false;
-            } else {
-              return +v !== +c.val;
-            }
-          },
-          config: {
-            val: {
-              type: 'text',
-              hint: "number for comparison"
-            }
-          }
-        },
-        eq: {
-          func: function(v, c){
-            c == null && (c = {});
-            if (isNaN(v) || isNaN(c.val)) {
-              return false;
-            } else {
-              return +v === +c.val;
-            }
-          },
-          config: {
-            val: {
-              type: 'text',
-              hint: "number for comparison"
-            }
-          }
-        }
-      }
-    }));
-    return this.view = view = new ldview({
-      root: opt.root,
-      action: {
-        input: {
-          title: function(arg$){
-            var node, ctx;
-            node = arg$.node, ctx = arg$.ctx;
-            return data.title = node.value || '';
-          },
-          desc: function(arg$){
-            var node, ctx;
-            node = arg$.node, ctx = arg$.ctx;
-            return data.desc = node.value || '';
-          },
-          "custom-shortname": function(arg$){
-            var node, views;
-            node = arg$.node, views = arg$.views;
-            data.alias = node.value || '';
-            return views[0].render();
-          }
-        },
-        click: {
-          "set-shortname": function(arg$){
-            var node, views;
-            node = arg$.node, views = arg$.views;
-            data.alias = node.getAttribute('data-value') || '';
-            return views[0].render();
-          },
-          "custom-shortname": function(arg$){
-            var evt;
-            evt = arg$.evt;
-            return evt.stopPropagation();
-          },
-          "add-term": function(arg$){
-            var views;
-            views = arg$.views;
-            (data.term || (data.term = [])).push(new form.term({
-              opset: opsets[0]
-            }));
-            this$.verify();
-            return views[0].render('term');
-          },
-          'switch': function(arg$){
-            var node, n;
-            node = arg$.node;
-            n = node.getAttribute('data-name');
-            (data.config || (data.config = {}))[n] = !data.config[n];
-            pubsub.fire('update');
-            return view.render();
-          }
-        }
+    pubsub = opt.pubsub, t = opt.t, root = opt.root;
+    return {
+      render: function(){
+        return this._custom.view.render();
       },
-      init: {
-        dropdown: function(arg$){
-          var node;
-          node = arg$.node;
-          return new BSN.Dropdown(node);
-        }
-      },
-      text: {
-        "shortname": function(){
-          return data.alias || '設定代稱..';
-        }
-      },
-      handler: {
-        required: function(arg$){
-          var node;
-          node = arg$.node;
-          return node.classList.toggle('d-none', !data.config.isRequired);
-        },
-        "ok-hint": function(arg$){
-          var node;
-          node = arg$.node;
-          return node.classList.toggle('d-none', this$.mode === 'edit' || this$.errors.length);
-        },
-        "error-hint": function(arg$){
-          var node;
-          node = arg$.node;
-          node.classList.toggle('d-none', this$.mode === 'edit' || !this$.errors.length);
-          return node.textContent = this$.errors.length ? t(this$.errors[0] || "invalid input") : '';
-        },
-        "edit-only": function(arg$){
-          var node;
-          node = arg$.node;
-          return node.classList.toggle('d-none', this$.mode !== 'edit');
-        },
-        "set-shortname": function(arg$){
-          var node;
-          node = arg$.node;
-          return node.classList.toggle('active', node.getAttribute('data-value') === data.alias);
-        },
-        "custom-shortname": function(arg$){
-          var node;
-          node = arg$.node;
-          return node.value = data.alias || '';
-        },
-        title: function(arg$){
-          var node;
-          node = arg$.node;
-          return node.value = data.title || '';
-        },
-        desc: function(arg$){
-          var node;
-          node = arg$.node;
-          return node.value = data.desc || '';
-        },
-        'switch': function(arg$){
-          var node, n;
-          node = arg$.node;
-          n = node.getAttribute('data-name');
-          return node.classList.toggle('on', !!(data.config || (data.config = {}))[n]);
-        },
-        term: {
-          list: function(){
-            return data.term || (data.term = []);
-          },
-          view: {
-            action: {
-              input: {
-                "errmsg": function(arg$){
-                  var node, ctx;
-                  node = arg$.node, ctx = arg$.ctx;
-                  return ctx.msg = node.value || '';
-                }
-              },
-              click: {
-                enabled: function(arg$){
-                  var ctx, views;
-                  ctx = arg$.ctx, views = arg$.views;
-                  ctx.enabled = !ctx.enabled;
-                  return views[0].render();
-                },
-                'delete': function(arg$){
-                  var ctx, views;
-                  ctx = arg$.ctx, views = arg$.views;
-                  data.term.splice(data.term.indexOf(ctx), 1);
-                  return views[1].render('term');
-                }
-              },
-              change: {
-                attr: function(arg$){
-                  var node, ctx, views;
-                  node = arg$.node, ctx = arg$.ctx, views = arg$.views;
-                  ctx.opset = data.attr[node.value].opset;
-                  return views[0].render();
-                },
-                op: function(arg$){
-                  var node, views, ctx;
-                  node = arg$.node, views = arg$.views, ctx = arg$.ctx;
-                  ctx.op = form.opset.get(ctx.opset || 'number').getOp(node.value);
-                  return views[0].render();
-                }
-              }
-            },
-            init: {
-              dropdown: function(arg$){
-                var node;
-                node = arg$.node;
-                return new BSN.Dropdown(node);
-              },
-              "config-root": function(arg$){
-                var node, ctx, local, cfg;
-                node = arg$.node, ctx = arg$.ctx, local = arg$.local;
-                local.cfg = cfg = new config({
-                  root: node,
-                  config: ctx.op.config,
-                  name: function(it){
-                    return "config/" + it;
-                  }
-                });
-                cfg.init();
-                return cfg.on('change', function(it){
-                  return ctx.config = it;
-                });
-              }
-            },
-            text: {
-              opset: function(arg$){
-                var ctx;
-                ctx = arg$.ctx;
-                return t(!ctx.opset
-                  ? ""
-                  : ctx.opset.name || ctx.opset.id);
-              },
-              op: function(arg$){
-                var ctx;
-                ctx = arg$.ctx;
-                return t(!ctx.op
-                  ? ""
-                  : ctx.op.name || ctx.op.id);
-              }
-            },
-            handler: {
-              "config-root": function(arg$){
-                var node, ctx, local, cfg, k, v, show;
-                node = arg$.node, ctx = arg$.ctx, local = arg$.local;
-                cfg = ctx.op.config || {};
-                for (k in cfg) {
-                  v = cfg[k];
-                  if (v.hint) {
-                    v.hint = t(v.hint);
-                  }
-                }
-                local.cfg.config(cfg);
-                if (local.cfg.view) {
-                  local.cfg.view.render();
-                }
-                show = !!(function(){
-                  var results$ = [];
-                  for (k in cfg) {
-                    results$.push(k);
-                  }
-                  return results$;
-                }()).length;
-                node.classList.toggle('d-none', !show);
-                return node.classList.toggle('d-flex', show);
-              },
-              enabled: function(arg$){
+      init: function(){
+        var meta, view, this$ = this;
+        meta = this._meta;
+        return this._custom.view = view = new ldview({
+          root: root,
+          action: {
+            input: {
+              title: function(arg$){
                 var node, ctx;
                 node = arg$.node, ctx = arg$.ctx;
-                return node.classList.toggle('on', !!ctx.enabled);
+                return meta.title = node.value || '';
               },
-              "set-op": {
-                list: function(arg$){
-                  var ctx;
-                  ctx = arg$.ctx;
-                  return ctx.opset.getOps();
-                },
-                action: {
-                  click: function(arg$){
-                    var data, ctx, views;
-                    data = arg$.data, ctx = arg$.ctx, views = arg$.views;
-                    ctx.setOp(data.id);
-                    return views[0].render();
-                  }
-                },
-                handler: function(arg$){
-                  var node, data;
-                  node = arg$.node, data = arg$.data;
-                  node.textContent = t(data.name || data.id);
-                  return node.setAttribute('data-id', data.id);
-                }
+              desc: function(arg$){
+                var node, ctx;
+                node = arg$.node, ctx = arg$.ctx;
+                return meta.desc = node.value || '';
               },
-              "set-opset": {
-                list: function(){
-                  return opsets;
-                },
-                key: function(it){
-                  return it.id;
-                },
+              "custom-shortname": function(arg$){
+                var node, views;
+                node = arg$.node, views = arg$.views;
+                meta.alias = node.value || '';
+                return views[0].render();
+              }
+            },
+            click: {
+              "set-shortname": function(arg$){
+                var node, views;
+                node = arg$.node, views = arg$.views;
+                meta.alias = node.getAttribute('data-value') || '';
+                return views[0].render();
+              },
+              "custom-shortname": function(arg$){
+                var evt;
+                evt = arg$.evt;
+                return evt.stopPropagation();
+              },
+              "add-term": function(arg$){
+                var views;
+                views = arg$.views;
+                (meta.term || (meta.term = [])).push(new form.term({
+                  opset: this$._opsets[0]
+                }));
+                this$.validate();
+                return views[0].render('term');
+              },
+              'switch': function(arg$){
+                var node, n;
+                node = arg$.node;
+                n = node.getAttribute('data-name');
+                (meta.config || (meta.config = {}))[n] = !meta.config[n];
+                pubsub.fire('update');
+                return view.render();
+              }
+            }
+          },
+          init: {
+            dropdown: function(arg$){
+              var node;
+              node = arg$.node;
+              return new BSN.Dropdown(node);
+            }
+          },
+          text: {
+            "shortname": function(){
+              return meta.alias || '設定代稱..';
+            }
+          },
+          handler: {
+            required: function(arg$){
+              var node;
+              node = arg$.node;
+              return node.classList.toggle('d-none', !meta.config.isRequired);
+            },
+            "add-term": function(arg$){
+              var node;
+              node = arg$.node;
+              return node.classList.toggle('d-none', !this$._opsets.length);
+            },
+            "ok-hint": function(arg$){
+              var node;
+              node = arg$.node;
+              return node.classList.toggle('d-none', this$._mode === 'edit' || this$._errors.length);
+            },
+            "error-hint": function(arg$){
+              var node;
+              node = arg$.node;
+              node.classList.toggle('d-none', this$._mode === 'edit' || !this$._errors.length);
+              return node.textContent = this$._errors.length ? t(this$._errors[0] || "invalid input") : '';
+            },
+            "edit-only": function(arg$){
+              var node;
+              node = arg$.node;
+              return node.classList.toggle('d-none', this$._mode !== 'edit');
+            },
+            "set-shortname": function(arg$){
+              var node;
+              node = arg$.node;
+              return node.classList.toggle('active', node.getAttribute('data-value') === meta.alias);
+            },
+            "custom-shortname": function(arg$){
+              var node;
+              node = arg$.node;
+              return node.value = meta.alias || '';
+            },
+            title: function(arg$){
+              var node;
+              node = arg$.node;
+              return node.value = meta.title || '';
+            },
+            desc: function(arg$){
+              var node;
+              node = arg$.node;
+              return node.value = meta.desc || '';
+            },
+            'switch': function(arg$){
+              var node, n;
+              node = arg$.node;
+              n = node.getAttribute('data-name');
+              return node.classList.toggle('on', !!(meta.config || (meta.config = {}))[n]);
+            },
+            term: {
+              list: function(){
+                return meta.term || (meta.term = []);
+              },
+              view: {
                 action: {
-                  click: function(arg$){
-                    var data, ctx, views;
-                    data = arg$.data, ctx = arg$.ctx, views = arg$.views;
-                    if (ctx.opset.id === data.id) {
-                      return;
+                  input: {
+                    "errmsg": function(arg$){
+                      var node, ctx;
+                      node = arg$.node, ctx = arg$.ctx;
+                      return ctx.msg = node.value || '';
                     }
-                    ctx.setOpset(data);
-                    return views[0].render();
+                  },
+                  click: {
+                    enabled: function(arg$){
+                      var ctx, views;
+                      ctx = arg$.ctx, views = arg$.views;
+                      ctx.enabled = !ctx.enabled;
+                      return views[0].render();
+                    },
+                    'delete': function(arg$){
+                      var ctx, views;
+                      ctx = arg$.ctx, views = arg$.views;
+                      meta.term.splice(meta.term.indexOf(ctx), 1);
+                      return views[1].render('term');
+                    }
+                  },
+                  change: {
+                    attr: function(arg$){
+                      var node, ctx, views;
+                      node = arg$.node, ctx = arg$.ctx, views = arg$.views;
+                      ctx.opset = meta.attr[node.value].opset;
+                      return views[0].render();
+                    },
+                    op: function(arg$){
+                      var node, views, ctx;
+                      node = arg$.node, views = arg$.views, ctx = arg$.ctx;
+                      ctx.op = form.opset.get(ctx.opset || 'number').getOp(node.value);
+                      return views[0].render();
+                    }
                   }
                 },
-                handler: function(arg$){
-                  var node, data;
-                  node = arg$.node, data = arg$.data;
-                  node.textContent = t(data.name || data.id);
-                  return node.setAttribute('data-id', data.id);
+                init: {
+                  dropdown: function(arg$){
+                    var node;
+                    node = arg$.node;
+                    return new BSN.Dropdown(node);
+                  },
+                  "config-root": function(arg$){
+                    var node, ctx, local, cfg;
+                    node = arg$.node, ctx = arg$.ctx, local = arg$.local;
+                    local.cfg = cfg = new config({
+                      root: node,
+                      config: ctx.op.config,
+                      name: function(it){
+                        return "config/" + it;
+                      }
+                    });
+                    cfg.init();
+                    return cfg.on('change', function(it){
+                      return ctx.config = it;
+                    });
+                  }
+                },
+                text: {
+                  opset: function(arg$){
+                    var ctx;
+                    ctx = arg$.ctx;
+                    return t(!ctx.opset
+                      ? ""
+                      : ctx.opset.name || ctx.opset.id);
+                  },
+                  op: function(arg$){
+                    var ctx;
+                    ctx = arg$.ctx;
+                    return t(!ctx.op
+                      ? ""
+                      : ctx.op.name || ctx.op.id);
+                  }
+                },
+                handler: {
+                  "config-root": function(arg$){
+                    var node, ctx, local, cfg, k, v, show;
+                    node = arg$.node, ctx = arg$.ctx, local = arg$.local;
+                    cfg = ctx.op.config || {};
+                    for (k in cfg) {
+                      v = cfg[k];
+                      if (v.hint) {
+                        v.hint = t(v.hint);
+                      }
+                    }
+                    local.cfg.config(cfg);
+                    if (local.cfg.view) {
+                      local.cfg.view.render();
+                    }
+                    show = !!(function(){
+                      var results$ = [];
+                      for (k in cfg) {
+                        results$.push(k);
+                      }
+                      return results$;
+                    }()).length;
+                    node.classList.toggle('d-none', !show);
+                    return node.classList.toggle('d-flex', show);
+                  },
+                  enabled: function(arg$){
+                    var node, ctx;
+                    node = arg$.node, ctx = arg$.ctx;
+                    return node.classList.toggle('on', !!ctx.enabled);
+                  },
+                  "set-op": {
+                    list: function(arg$){
+                      var ctx;
+                      ctx = arg$.ctx;
+                      return ctx.opset.getOps();
+                    },
+                    action: {
+                      click: function(arg$){
+                        var data, ctx, views;
+                        data = arg$.data, ctx = arg$.ctx, views = arg$.views;
+                        ctx.setOp(data.id);
+                        return views[0].render();
+                      }
+                    },
+                    handler: function(arg$){
+                      var node, data;
+                      node = arg$.node, data = arg$.data;
+                      node.textContent = t(data.name || data.id);
+                      return node.setAttribute('data-id', data.id);
+                    }
+                  },
+                  "set-opset": {
+                    list: function(){
+                      return this$._opsets;
+                    },
+                    key: function(it){
+                      return it.id;
+                    },
+                    action: {
+                      click: function(arg$){
+                        var data, ctx, views;
+                        data = arg$.data, ctx = arg$.ctx, views = arg$.views;
+                        if (ctx.opset.id === data.id) {
+                          return;
+                        }
+                        ctx.setOpset(data);
+                        return views[0].render();
+                      }
+                    },
+                    handler: function(arg$){
+                      var node, data;
+                      node = arg$.node, data = arg$.data;
+                      node.textContent = t(data.name || data.id);
+                      return node.setAttribute('data-id', data.id);
+                    }
+                  }
                 }
               }
             }
           }
-        }
+        });
       }
-    });
-  }
+    };
+  };
+  return blockFactory;
 });</script></div>

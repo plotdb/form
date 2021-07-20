@@ -35,7 +35,6 @@
           set: function(arg$){
             var node, obj, k, v;
             node = arg$.node;
-            console.log(123);
             obj = fmgr.value();
             for (k in obj) {
               v = obj[k];
@@ -46,7 +45,7 @@
         }
       }
     });
-    return Promise.all(['sheet', 'short-answer', 'long-answer'].map(function(name){
+    return Promise.all(['short-answer'].map(function(name){
       return manager.get({
         name: name,
         version: '0.0.1'
@@ -66,6 +65,7 @@
       });
     }));
   }).then(function(it){
+    console.log(it);
     return fmgr.add(it);
   });
 });</script></body></html>
