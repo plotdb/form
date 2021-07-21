@@ -5,7 +5,7 @@ block-factory =
     dependencies: [
       {url: "/assets/lib/bootstrap.native/main/bootstrap-native-v4.min.js"}
       {url: "/assets/lib/@plotdb/suuid/main/suuid.bundle.min.js"}
-      {url: "/assets/lib/@plotdb/config/main/config.min.js"}
+      {url: "/assets/lib/@plotdb/konfig/main/konfig.min.js"}
       {url: "/assets/lib/@Plotdb/form/dev/form.js"}
       {url: "/assets/lib/ldview/main/index.min.js"}
     ]
@@ -33,7 +33,7 @@ block-factory =
 
 
 mod = (opt = {}, init-opt = {}) ->
-  {BSN, ldview, suuid, form, config} = opt.context
+  {BSN, ldview, suuid, form, konfig} = opt.context
   {pubsub, t, root} = opt
   mod = init-opt.mod
   render: ->
@@ -110,7 +110,7 @@ mod = (opt = {}, init-opt = {}) ->
             init:
               dropdown: ({node}) -> new BSN.Dropdown(node)
               "config-root": ({node, ctx, local}) ->
-                local.cfg = cfg = new config root: node, config: ctx.op.config, name: -> "config/#it"
+                local.cfg = cfg = new konfig root: node, config: ctx.op.config, name: -> "config/#it"
                 cfg.init!
                 cfg.on \change, -> ctx.config = it
 
