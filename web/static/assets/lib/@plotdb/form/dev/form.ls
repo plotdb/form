@@ -8,9 +8,9 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
   fields: -> @_fields
   serialize: -> @_fields.map -> it.serialize!
   value: (vs) ->
-    if !vs => return Object.fromEntries(@_fields.map -> [it._meta.alias or it._meta.key, it.value!])
+    if !vs => return Object.fromEntries(@_fields.map -> [it.key!, it.value!])
     for k,v of vs =>
-      f = @_fields.filter(-> (it._meta.alias == k or it._meta.key == k)).0
+      f = @_fields.filter(-> (it.key! == k)).0
       if !f => continue
       f.value v
   mode: (m) -> @_fields.map -> it.mode m
@@ -55,6 +55,12 @@ form.opset.get = (id) -> @[]list.filter(->(it.id or it.name) == id).0
 form.opset.default = [
   {
     id: 'string'
+    i18n:
+      "zh-TW":
+        string: "文字"
+        include: "包含"
+        exclude: "排除"
+        email: "電子郵件"
     ops:
       include:
         func: (v, c = {}) -> ~("" + (v or '')).indexOf(c.str or '')
@@ -67,6 +73,13 @@ form.opset.default = [
         config: {}
   }, {
     id: 'number'
+    i18n:
+      "zh-TW":
+        number: "數字"
+        lte: "≦ 小於或等於"
+        gte: "≧ 大於或等於"
+        ne: "≠ 不等於"
+        eq: "= 等於"
     ops:
       lte:
         func: (v, c = {}) -> if isNaN(v) or isNaN(c.val) => false else +v <= +c.val
@@ -132,6 +145,7 @@ form.widget = (opt = {}) ->
   @root = if typeof(opt.root) == \string => document.querySelector(opt.root) else opt.root
   @evt-handler = {}
   @mod = opt.mod or null
+  @i18n = {}
   @_custom = {}
   @_meta = {config: {}, key: Math.random!toString(36)substring(2)}
   @ <<< _value: null, _empty: true
@@ -140,6 +154,9 @@ form.widget = (opt = {}) ->
     if typeof(opset) == \string => form.opset.get opset
     else if typeof(opset) == form.opset => opset
     else new form.opset(opset)
+  @_opsets
+    .filter -> it.i18n
+    .map ~> for k,v of it.i18n => @i18n{}[k] <<< v
   @_errors = []
   @init!
   @
@@ -148,7 +165,9 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
   on: (n, cb) -> (if Array.isArray(n) => n else [n]).map (n) ~> @evt-handler.[][n].push cb
   fire: (n, ...v) -> for cb in (@evt-handler[n] or []) => cb.apply @, v
   init: -> if @mod => @mod.init.apply @
-  key: -> return @_meta.alias or @_meta.key
+  key: (keyonly = false) ->
+    return if keyonly => @_meta.key
+    else @_meta.alias or @_meta.key
   serialize: ->
     ret = {} <<< @_meta{key, title, desc}
     ret.config = JSON.parse(JSON.stringify(@_meta.config or {}))
@@ -168,12 +187,10 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
     @render!
 
   errors: -> @_errors
-  opsets: -> @_opsets
-  meta: (meta) -> if !(meta?) => return @_meta else @deserialize meta
 
-  value: (v, is-empty = false, from-source = false) ->
+  value: (v, from-source = false) ->
     if !(v?) => return @_value
-    @ <<< _value: v, _empty: is-empty
+    @ <<< _value: v, _empty: (if @mod and @mod.is-empty => @mod.is-empty(v) else !!v)
     @validate!
     if !from-source => @fire \change, @_value
 

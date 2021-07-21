@@ -2,6 +2,7 @@ form.widget = (opt = {}) ->
   @root = if typeof(opt.root) == \string => document.querySelector(opt.root) else opt.root
   @evt-handler = {}
   @mod = opt.mod or null
+  @i18n = {}
   @_custom = {}
   @_meta = {config: {}, key: Math.random!toString(36)substring(2)}
   @ <<< _value: null, _empty: true
@@ -10,6 +11,9 @@ form.widget = (opt = {}) ->
     if typeof(opset) == \string => form.opset.get opset
     else if typeof(opset) == form.opset => opset
     else new form.opset(opset)
+  @_opsets
+    .filter -> it.i18n
+    .map ~> for k,v of it.i18n => @i18n{}[k] <<< v
   @_errors = []
   @init!
   @
@@ -18,7 +22,9 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
   on: (n, cb) -> (if Array.isArray(n) => n else [n]).map (n) ~> @evt-handler.[][n].push cb
   fire: (n, ...v) -> for cb in (@evt-handler[n] or []) => cb.apply @, v
   init: -> if @mod => @mod.init.apply @
-  key: -> return @_meta.alias or @_meta.key
+  key: (keyonly = false) ->
+    return if keyonly => @_meta.key
+    else @_meta.alias or @_meta.key
   serialize: ->
     ret = {} <<< @_meta{key, title, desc}
     ret.config = JSON.parse(JSON.stringify(@_meta.config or {}))
@@ -38,12 +44,10 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
     @render!
 
   errors: -> @_errors
-  opsets: -> @_opsets
-  meta: (meta) -> if !(meta?) => return @_meta else @deserialize meta
 
-  value: (v, is-empty = false, from-source = false) ->
+  value: (v, from-source = false) ->
     if !(v?) => return @_value
-    @ <<< _value: v, _empty: is-empty
+    @ <<< _value: v, _empty: (if @mod and @mod.is-empty => @mod.is-empty(v) else !!v)
     @validate!
     if !from-source => @fire \change, @_value
 

@@ -73,3 +73,11 @@ meta should be only editable by administrator. value is inputed by expected end 
    - `isPublic`
  - `term`: Array of `op.term` objects. should be serialized when stored as data.
 
+### value
+
+value ( user input ) can be anything ( string, number or object ) and is defined by implementation of specific widget. 
+
+
+## base widget
+
+TODO

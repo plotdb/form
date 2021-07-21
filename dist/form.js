@@ -24,7 +24,7 @@
       var k, v, f, results$ = [];
       if (!vs) {
         return Object.fromEntries(this._fields.map(function(it){
-          return [it._meta.alias || it._meta.key, it.value()];
+          return [it.key(), it.value()];
         }));
       }
       for (k in vs) {
@@ -37,7 +37,7 @@
       }
       return results$;
       function fn$(it){
-        return it._meta.alias === k || it._meta.key === k;
+        return it.key() === k;
       }
     },
     mode: function(m){
@@ -158,6 +158,14 @@
   form.opset['default'] = [
     {
       id: 'string',
+      i18n: {
+        "zh-TW": {
+          string: "文字",
+          include: "包含",
+          exclude: "排除",
+          email: "電子郵件"
+        }
+      },
       ops: {
         include: {
           func: function(v, c){
@@ -190,6 +198,15 @@
       }
     }, {
       id: 'number',
+      i18n: {
+        "zh-TW": {
+          number: "數字",
+          lte: "≦ 小於或等於",
+          gte: "≧ 大於或等於",
+          ne: "≠ 不等於",
+          eq: "= 等於"
+        }
+      },
       ops: {
         lte: {
           func: function(v, c){
@@ -328,12 +345,14 @@
     }
   });
   form.widget = function(opt){
+    var this$ = this;
     opt == null && (opt = {});
     this.root = typeof opt.root === 'string'
       ? document.querySelector(opt.root)
       : opt.root;
     this.evtHandler = {};
     this.mod = opt.mod || null;
+    this.i18n = {};
     this._custom = {};
     this._meta = {
       config: {},
@@ -350,6 +369,16 @@
       } else {
         return new form.opset(opset);
       }
+    });
+    this._opsets.filter(function(it){
+      return it.i18n;
+    }).map(function(it){
+      var k, ref$, v, ref1$, results$ = [];
+      for (k in ref$ = it.i18n) {
+        v = ref$[k];
+        results$.push(import$((ref1$ = this$.i18n)[k] || (ref1$[k] = {}), v));
+      }
+      return results$;
     });
     this._errors = [];
     this.init();
@@ -379,8 +408,11 @@
         return this.mod.init.apply(this);
       }
     },
-    key: function(){
-      return this._meta.alias || this._meta.key;
+    key: function(keyonly){
+      keyonly == null && (keyonly = false);
+      return keyonly
+        ? this._meta.key
+        : this._meta.alias || this._meta.key;
     },
     serialize: function(){
       var ret, ref$, ref1$;
@@ -415,24 +447,15 @@
     errors: function(){
       return this._errors;
     },
-    opsets: function(){
-      return this._opsets;
-    },
-    meta: function(meta){
-      if (!(meta != null)) {
-        return this._meta;
-      } else {
-        return this.deserialize(meta);
-      }
-    },
-    value: function(v, isEmpty, fromSource){
-      isEmpty == null && (isEmpty = false);
+    value: function(v, fromSource){
       fromSource == null && (fromSource = false);
       if (!(v != null)) {
         return this._value;
       }
       this._value = v;
-      this._empty = isEmpty;
+      this._empty = this.mod && this.mod.isEmpty
+        ? this.mod.isEmpty(v)
+        : !!v;
       this.validate();
       if (!fromSource) {
         return this.fire('change', this._value);

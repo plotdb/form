@@ -94,7 +94,7 @@
     ]
   },
   "peerDependencies": {
-    "@plotdb/block": "^1.5.2",
+    "@plotdb/block": "^1.5.3",
     "@plotdb/csscope": "^0.4.0",
     "@plotdb/datadom": "^0.1.1",
     "@plotdb/rescope": "^1.1.8",
@@ -104,7 +104,7 @@
   },
   "dependencies": {
     "@loadingio/ldcolorpicker": "^2.0.2",
-    "@plotdb/block": "^1.5.2",
+    "@plotdb/block": "^1.5.3",
     "@plotdb/csscope": "^0.4.0",
     "@plotdb/konfig": "^0.0.1",
     "@plotdb/rescope": "^1.1.8",

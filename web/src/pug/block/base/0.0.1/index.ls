@@ -11,31 +11,23 @@ block-factory =
     ]
     i18n:
       "zh-TW": {
-        string: "文字"
-        number: "數字"
-        include: "包含"
-        exclude: "排除"
-        email: "電子郵件"
         required: "必填"
         copy: "複製"
         delete: "刪除"
+        public: "公開"
         "show description": "顯示描述"
         "number for comparison": "比較用的數字"
-        public: "公開"
         "add criteria": "增加條件"
         "error message": "錯誤訊息"
         "invalid input": "輸入不符合要求"
-        lte: "≦ 小於或等於"
-        gte: "≧ 大於或等於"
-        ne: "≠ 不等於"
-        eq: "= 等於"
       }
   interface: -> @widget
   init: (opt = {}) ->
+    {root, pubsub, i18n} = opt
     form = opt.context.form
-    pubsub = opt.pubsub
     pubsub.on \init, (init-opt = {}) ~>
       @widget = widget = new form.widget {root, opsets: init-opt.opsets, mod: mod(opt, init-opt)}
+      i18n.add-resource-bundles @widget.i18n
       node = view: root.querySelector('[ld-scope][plug=view]')
       return {widget, node}
 
@@ -43,10 +35,14 @@ block-factory =
 mod = (opt = {}, init-opt = {}) ->
   {BSN, ldview, suuid, form, config} = opt.context
   {pubsub, t, root} = opt
-  render: -> @_custom.view.render!
+  mod = init-opt.mod
+  render: ->
+    @_custom.view.render!
+    if mod and mod.render => mod.render.apply @, args
+  is-empty: (...args) ->
+    if mod and mod.is-empty => return mod.is-empty.apply @, args
   init: ->
     meta = @._meta
-
     @_custom.view = view = new ldview do
       root: root
       action:
@@ -150,5 +146,6 @@ mod = (opt = {}, init-opt = {}) ->
                 handler: ({node, data}) ->
                   node.textContent = t(data.name or data.id)
                   node.setAttribute \data-id, data.id
+    if mod and mod.init => mod.init.apply @, args
 
 return block-factory

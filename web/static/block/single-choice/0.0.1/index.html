@@ -1,0 +1,85 @@
+<div><div class="form-single-choice" ld-scope="ld-scope" plug="view"><div class="form-check" ld-each="item"><label class="form-check-label clickable"><input class="form-check-input" type="radio" ld="input"/><span ld="name"></span></label></div></div><script type="@plotdb/block">({
+  pkg: {
+    name: "single-choice",
+    version: "0.0.1",
+    extend: {
+      name: "base",
+      version: "0.0.1"
+    },
+    license: "MIT",
+    description: "",
+    dependencies: [],
+    i18n: {}
+  },
+  init: function(arg$){
+    var root, parent, context, pubsub, ldview;
+    root = arg$.root, parent = arg$.parent, context = arg$.context, pubsub = arg$.pubsub;
+    ldview = context.ldview;
+    return pubsub.fire('init', {
+      opsets: ['string', 'number'],
+      mod: {
+        isEmpty: function(it){
+          return !(it + "").trim().length;
+        }
+      }
+    }).then(function(opt){
+      var ref$, widget, node, items, view;
+      opt == null && (opt = []);
+      ref$ = opt[0], widget = ref$.widget, node = ref$.node;
+      items = [
+        {
+          name: 'option 1'
+        }, {
+          name: 'option 2'
+        }, {
+          name: 'option 3'
+        }, {
+          name: 'option 4'
+        }
+      ];
+      view = new ldview({
+        root: node.view,
+        handler: {
+          item: {
+            list: function(){
+              return items;
+            },
+            view: {
+              action: {
+                input: {
+                  input: function(arg$){
+                    var node;
+                    node = arg$.node;
+                    return widget.value(node.value, true);
+                  }
+                }
+              },
+              text: {
+                name: function(arg$){
+                  var ctx;
+                  ctx = arg$.ctx;
+                  return ctx.name;
+                }
+              },
+              handler: {
+                input: function(arg$){
+                  var node, ctx;
+                  node = arg$.node, ctx = arg$.ctx;
+                  node.setAttribute('name', widget.key());
+                  node.setAttribute('value', ctx.name);
+                  return node.checked = ctx.name === widget.value();
+                }
+              }
+            }
+          }
+        }
+      });
+      widget.on('change', function(){
+        return view.render();
+      });
+      return widget.on('render', function(){
+        return view.render();
+      });
+    });
+  }
+});</script></div>

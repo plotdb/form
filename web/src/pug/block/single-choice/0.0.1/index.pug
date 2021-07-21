@@ -1,0 +1,7 @@
+div
+  .form-single-choice(ld-scope,plug="view")
+    .form-check(ld-each="item")
+      label.form-check-label.clickable
+        input.form-check-input(type="radio",ld="input")
+        span(ld="name")
+  script(type="@plotdb/block"): include:lsc index.ls

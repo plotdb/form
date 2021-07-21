@@ -10,14 +10,12 @@ pkg: do
     }
 init: ({root,parent,context,pubsub}) ->
   {ldview} = context
-  pubsub.fire \init, {opsets: <[string number]>}
+  pubsub.fire \init, {opsets: <[string number]>, mod: is-empty: -> !("#{it}".trim!length)}
     .then (opt = []) ->
       {widget, node} = opt.0
-      #pubsub.on \change, -> view.get(\input-field).value = it
-      widget.on \change, ->
-        console.log 123, it
-        view.get(\input-field).value = it
       view = new ldview do
         root: node.view
         action: input: 'input-field': ({node}) ->
-          widget.value node.value, !node.value, true
+          widget.value node.value, true
+      widget.on \change, -> view.get(\input-field).value = it
+      widget.on \render, -> view.render!

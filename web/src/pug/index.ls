@@ -21,13 +21,17 @@ i18next
       action: click:
         serialize: ~> console.log fmgr.serialize!
         mode: ({node}) ~> fmgr.mode node.getAttribute \data-name
+        value: ({node}) ~> console.log fmgr.value!
         set: ({node}) ~>
           obj = fmgr.value!
-          for k,v of obj => obj[k] = Math.random!
+          for k,v of obj =>
+            console.log k, v
+            if k == \choice => obj[k] = 'option 1'
+            else obj[k] = Math.random!
           fmgr.value obj
 
     #Promise.all <[sheet short-answer long-answer]>.map (name) ->
-    Promise.all <[short-answer]>.map (name) ->
+    Promise.all <[short-answer single-choice multi-choice]>.map (name) ->
       manager.get {name: name, version: \0.0.1}
         .then -> it.create {data: {data: 'hello world'}}
         .then ->

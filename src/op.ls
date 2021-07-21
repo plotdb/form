@@ -38,6 +38,12 @@ form.opset.get = (id) -> @[]list.filter(->(it.id or it.name) == id).0
 form.opset.default = [
   {
     id: 'string'
+    i18n:
+      "zh-TW":
+        string: "文字"
+        include: "包含"
+        exclude: "排除"
+        email: "電子郵件"
     ops:
       include:
         func: (v, c = {}) -> ~("" + (v or '')).indexOf(c.str or '')
@@ -50,6 +56,13 @@ form.opset.default = [
         config: {}
   }, {
     id: 'number'
+    i18n:
+      "zh-TW":
+        number: "數字"
+        lte: "≦ 小於或等於"
+        gte: "≧ 大於或等於"
+        ne: "≠ 不等於"
+        eq: "= 等於"
     ops:
       lte:
         func: (v, c = {}) -> if isNaN(v) or isNaN(c.val) => false else +v <= +c.val

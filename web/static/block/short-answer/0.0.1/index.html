@@ -20,26 +20,33 @@
     root = arg$.root, parent = arg$.parent, context = arg$.context, pubsub = arg$.pubsub;
     ldview = context.ldview;
     return pubsub.fire('init', {
-      opsets: ['string', 'number']
+      opsets: ['string', 'number'],
+      mod: {
+        isEmpty: function(it){
+          return !(it + "").trim().length;
+        }
+      }
     }).then(function(opt){
       var ref$, widget, node, view;
       opt == null && (opt = []);
       ref$ = opt[0], widget = ref$.widget, node = ref$.node;
-      widget.on('change', function(it){
-        console.log(123, it);
-        return view.get('input-field').value = it;
-      });
-      return view = new ldview({
+      view = new ldview({
         root: node.view,
         action: {
           input: {
             'input-field': function(arg$){
               var node;
               node = arg$.node;
-              return widget.value(node.value, !node.value, true);
+              return widget.value(node.value, true);
             }
           }
         }
+      });
+      widget.on('change', function(it){
+        return view.get('input-field').value = it;
+      });
+      return widget.on('render', function(){
+        return view.render();
       });
     });
   }
