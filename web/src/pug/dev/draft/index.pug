@@ -1,9 +1,10 @@
 doctype html
-include /../../static/assets/lib/ldui/pug/ldui.pug
 html
+  include @/@loadingio/bootstrap.ext/dist/index.pug
+  include @/ldview/dist/index.pug
   head
   +css("/assets/lib/bootstrap/4.3.1/css/bootstrap.min.css")
-  +css("/assets/lib/ldui/ldui.min.css")
+  +css("/assets/lib/@loadingio/bootstrap.ext/main/index.min.css")
   style(type="text/css"): :stylus
 
     @font-face
