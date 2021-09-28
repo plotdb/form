@@ -4,9 +4,12 @@
   var manager, fmgr, this$ = this;
   manager = new block.manager({
     registry: function(arg$){
-      var name, version;
-      name = arg$.name, version = arg$.version;
-      return "/block/" + name + "/" + version + "/index.html";
+      var name, version, path, type;
+      name = arg$.name, version = arg$.version, path = arg$.path, type = arg$.type;
+      if (type === 'block') {
+        return "/block/" + name + "/" + version + "/" + (path || 'index.html');
+      }
+      return "/assets/lib/" + name + "/" + version + "/" + (path || 'index.js');
     }
   });
   this.fields = [];

@@ -1,21 +1,21 @@
 <-(->it.apply {}) _
 
-manager = new block.manager registry: ({name,version}) -> "/block/#name/#version/index.html"
+manager = new block.manager registry: ({name,version,path,type}) ->
+  if type == \block => return "/block/#name/#version/#{path or \index.html}"
+  return "/assets/lib/#name/#version/#{path or \index.js}"
+
 @fields = []
 
 fmgr = new form.manager!
 
 i18next
-  .init do
-    fallbackLng: \zh-TW
-    defaultLng: \zh-TW
+  .init { fallbackLng: \zh-TW, defaultLng: \zh-TW }
   .then ~>
     i18next.changeLanguage \zh-TW
   .then ~>
     block.i18n.use i18next
     manager.init!
   .then ~>
-
     @view = new ldview do
       root: document
       action: click:
