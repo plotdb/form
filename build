@@ -7,9 +7,10 @@ mkdir -p dist
 
 echo "building livescript files ..."
 cat src/form.ls src/manager.ls src/op.ls src/widget.ls src/module.ls > dist/form.ls
-./node_modules/.bin/lsc -cp dist/form.ls > dist/form.js
+./node_modules/.bin/lsc -cp dist/form.ls > dist/index.js
 echo "minifying form.js ..."
-./node_modules/.bin/uglifyjs dist/form.js > dist/form.min.js
+./node_modules/.bin/uglifyjs dist/index.js > dist/index.min.js
+rm dist/form.ls
 
 echo "copy dist to web ..."
 rm -rf web/static/assets/lib/@plotdb/form/dev/

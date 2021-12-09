@@ -5,8 +5,8 @@ block-factory =
     dependencies: [
       {url: "/assets/lib/bootstrap.native/main/bootstrap-native-v4.min.js"}
       {url: "/assets/lib/@plotdb/suuid/main/suuid.bundle.min.js"}
-      {url: "/assets/lib/@plotdb/konfig/main/konfig.min.js"}
-      {url: "/assets/lib/@Plotdb/form/dev/form.js"}
+      {url: "/assets/lib/@plotdb/konfig/main/index.min.js"}
+      {url: "/assets/lib/@plotdb/form/dev/index.min.js"}
       {url: "/assets/lib/ldview/main/index.min.js"}
     ]
     i18n:
