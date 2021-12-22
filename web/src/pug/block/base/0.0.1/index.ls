@@ -1,5 +1,4 @@
-<-(->it!) _
-block-factory =
+module.exports =
   pkg:
     name: "base", version: "0.0.1"
     dependencies: [
@@ -147,5 +146,3 @@ mod = (opt = {}, init-opt = {}) ->
                   node.textContent = t(data.name or data.id)
                   node.setAttribute \data-id, data.id
     if mod and mod.init => mod.init.apply @, args
-
-return block-factory

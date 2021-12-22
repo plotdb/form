@@ -17,7 +17,7 @@ i18next
     manager.init!
   .then ~>
     @view = new ldview do
-      root: document
+      root: document.body
       action: click:
         serialize: ~> console.log fmgr.serialize!
         mode: ({node}) ~> fmgr.mode node.getAttribute \data-name

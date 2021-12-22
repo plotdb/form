@@ -42,7 +42,7 @@
     "mocha": "^8.2.1",
     "nyc": "^15.1.0",
     "stylus": "^0.55.0",
-    "@zbryikt/template": "^2.3.31",
+    "@zbryikt/template": "^2.3.32",
     "uglify-js": "^3.2.0",
     "uglifycss": "^0.0.29"
   },
@@ -86,26 +86,26 @@
     ]
   },
   "peerDependencies": {
-    "@plotdb/block": "^2.1.0",
-    "@plotdb/csscope": "^2.0.0",
+    "@plotdb/block": "^4.0.0",
+    "@plotdb/csscope": "^3.0.3",
+    "@plotdb/rescope": "^4.0.5",
     "@plotdb/datadom": "^0.1.1",
-    "@plotdb/rescope": "^3.0.0",
     "curegex": "^0.0.3",
     "dompurify": "^2.2.6",
-    "proxise": "^0.1.2"
+    "proxise": "^0.1.6"
   },
   "dependencies": {
-    "@loadingio/ldcolorpicker": "^2.0.2",
-    "@plotdb/block": "^3.0.0",
-    "@plotdb/csscope": "^3.0.1",
-    "@plotdb/konfig": "^2.0.2",
-    "@plotdb/rescope": "^4.0.1",
+    "@loadingio/ldcolorpicker": "^2.0.5",
+    "@plotdb/block": "^4.0.0",
+    "@plotdb/csscope": "^3.0.3",
+    "@plotdb/konfig": "^3.0.0",
+    "@plotdb/rescope": "^4.0.5",
     "@plotdb/sheet": "^0.1.8",
     "@plotdb/suuid": "^0.4.0",
     "curegex": "^0.0.3",
     "dompurify": "^2.2.6",
     "ldcolor": "^0.0.4",
-    "ldpalettepicker": "^3.1.1",
+    "ldpalettepicker": "^3.1.8",
     "ldslider": "^2.0.6",
     "proxise": "^0.1.6"
   }
