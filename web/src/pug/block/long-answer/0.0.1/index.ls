@@ -16,39 +16,42 @@ module.exports =
         "enable markdown": "啟用 Markdown 語法"
         "syntax": "語法說明"
       }
-  init: ({root,parent,context,pubsub}) ->
+  init: ({root,parent,context,pubsub,data}) ->
     {DOMPurify,marked,ldview} = context
-    data = parent.data
-    data.{}config
-    value = {value: '', use-markdown: false}
-    local = {}
-    pubsub.on \change, ->
-      value <<< (it or {})
-      view.get(\input-field).value = value.value or ''
-    pubsub.on \update, ->
-      if !data.config.markdown-enabled => value.use-markdown = false
-      view.render!
-    view = new ldview do
-      root: parent.node!
-      action:
-        input: 'input-field': ({node}) ->
-          parent.value node.value, !node.value, true
-          value.value = node.value
-        click:
-          "use-markdown": ({node}) ~>
-            value.use-markdown = data.config.markdown-enabled and node.checked
-            view.render!
-          "markdown-enabled": ({node, evt}) ~>
-            data.config.markdown-enabled = !data.config.markdown-enabled
-          "toggle-preview": ({node}) ->
-            local.preview = node.checked
-            view.render!
-      handler:
-        "if-markdown": ({node}) -> node.classList.toggle \d-none, !value.use-markdown
-        "if-markdown-enabled": ({node}) -> node.classList.toggle \d-none, !data.config.markdown-enabled
-        "use-markdown": ({node}) -> node.checked = value.use-markdown
-        "preview-panel": ({node}) ->
-          node.classList.toggle \d-none, !local.preview
-          if local.preview =>
-            node.innerHTML = DOMPurify.sanitize(marked(value.value or ''))
-        "edit-panel": ({node}) -> node.classList.toggle \d-none, !!local.preview
+    data = data or {}
+    pubsub.fire \init, {opsets: <[string number]>, mod: is-empty: -> !("#{it}".trim!length)}
+      .then (opt = []) ->
+        {widget, node} = opt.0
+        data.{}config
+        value = {value: '', use-markdown: false}
+        local = {}
+        pubsub.on \change, ->
+          value <<< (it or {})
+          view.get(\input-field).value = value.value or ''
+        pubsub.on \update, ->
+          if !data.config.markdown-enabled => value.use-markdown = false
+          view.render!
+        view = new ldview do
+          root: node.view #parent.node!
+          action:
+            input: 'input-field': ({node}) ->
+              widget.value node.value, !node.value, true
+              value.value = node.value
+            click:
+              "use-markdown": ({node}) ~>
+                value.use-markdown = data.config.markdown-enabled and node.checked
+                view.render!
+              "markdown-enabled": ({node, evt}) ~>
+                data.config.markdown-enabled = !data.config.markdown-enabled
+              "toggle-preview": ({node}) ->
+                local.preview = node.checked
+                view.render!
+          handler:
+            "if-markdown": ({node}) -> node.classList.toggle \d-none, !value.use-markdown
+            "if-markdown-enabled": ({node}) -> node.classList.toggle \d-none, !data.config.markdown-enabled
+            "use-markdown": ({node}) -> node.checked = value.use-markdown
+            "preview-panel": ({node}) ->
+              node.classList.toggle \d-none, !local.preview
+              if local.preview =>
+                node.innerHTML = DOMPurify.sanitize(marked(value.value or ''))
+            "edit-panel": ({node}) -> node.classList.toggle \d-none, !!local.preview
