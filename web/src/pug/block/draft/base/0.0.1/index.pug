@@ -1,0 +1,56 @@
+.rounded-lg.shadow.mb-4
+  .p-4
+    .d-flex
+      .flex-grow-1
+        .d-flex.align-items-end.mb-1
+          h3.mb-0(ld="title",contenteditable="true") 問題的標題
+          .flex-grow-1.d-flex
+            .text-danger.pl-2(ld="required") #[span *]
+            .text-success.d-none.pl-2(ld="ok-hint"): i.i-check
+        p(contenteditable="true") 關於問題的簡單描述 ...
+      div(ld="edit-only")
+        .ml-4: .dropdown(ld="dropdown")
+          .btn.btn-light.dropdown-toggle(ld="shortname",data-toggle="dropdown") 代稱
+          .dropdown-menu.dropdown-menu-right.shadow-sm
+            .dropdown-header 常用範例
+            .dropdown-item(ld="set-shortname",data-value="統一編號") 統一編號
+            .dropdown-item(ld="set-shortname",data-value="電話") 電話
+            .dropdown-item(ld="set-shortname",data-value="團隊名稱") 團隊名稱
+            .dropdown-divider
+            .dropdown-header 自訂名稱
+            .dropdown-item.px-3: input.form-control(ld="custom-shortname",placeholder="自訂 ...")
+    plug(name="view")
+    .text-danger.py-2.d-none(ld="error-hint")
+  .border-top.border-bottom(ld="edit-only")
+    .m-4
+      .d-flex.mb-1.align-items-center.justify-content-between(ld-each="term")
+        .mr-2: .switch.switch-lg(ld="enabled")
+        .mr-2
+          .dropdown(ld="dropdown")
+            .btn.btn-light.dropdown-toggle(ld="opset",data-toggle="dropdown") ...
+            .dropdown-menu
+              .dropdown-item(ld-each="set-opset") ...
+        .mr-2: .dropdown(ld="dropdown")
+          .btn.btn-light.dropdown-toggle(ld="op",data-toggle="dropdown") ...
+          .dropdown-menu
+            .dropdown-item(ld-each="set-op") ...
+        .d-flex.flex-grow-1(ld-scope,ld="config-root")
+          .mr-2.flex-grow-1(ld-each="config")
+        .mr-2.flex-grow-1
+          input.form-control.simple(ld="errmsg",t="error message",t-attr="placeholder")
+        i.i-close.text-danger.clickable(ld="delete")
+      .mt-4: .btn.btn-link.p-0(ld="add-term") #[span(t="add criteria")] ...
+  .px-4.pb-4.mt-4(ld="edit-only")
+    plug(name="config")
+    .d-flex.align-items-center.mt-4
+      .mr-2: .btn.btn-sm.btn-outline-danger(ld="delete") #[i.i-close] #[span(t="delete")]
+      .mr-2: .btn.btn-sm.btn-outline-secondary(ld="clone") #[i.i-clone] #[span(t="copy")]
+      .flex-grow-1.justify-content-end.d-flex
+        .ml-4.d-flex.align-items-center.line-height-1em
+          span(t="public")
+          .switch.ml-2(ld="switch",data-name="isPublic")
+        .ml-4.d-flex.align-items-center.line-height-1em
+          span(t="required")
+          .switch.ml-2.on(ld="switch",data-name="isRequired")
+
+  script(type="@plotdb/block"): include:lsc index.ls
