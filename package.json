@@ -85,23 +85,15 @@
       "src/**/*"
     ]
   },
-  "peerDependencies": {
-    "@plotdb/block": "^4.0.0",
+  "dependencies": {
+    "@loadingio/ldcolorpicker": "^2.0.5",
+    "@plotdb/konfig": "^3.0.0",
+    "@plotdb/sheet": "^0.1.8",
+    "@plotdb/suuid": "^0.4.0",
+    "@plotdb/block": "^4.0.1",
     "@plotdb/csscope": "^3.0.3",
     "@plotdb/rescope": "^4.0.5",
     "@plotdb/datadom": "^0.1.1",
-    "curegex": "^0.0.3",
-    "dompurify": "^2.2.6",
-    "proxise": "^0.1.6"
-  },
-  "dependencies": {
-    "@loadingio/ldcolorpicker": "^2.0.5",
-    "@plotdb/block": "^4.0.0",
-    "@plotdb/csscope": "^3.0.3",
-    "@plotdb/konfig": "^3.0.0",
-    "@plotdb/rescope": "^4.0.5",
-    "@plotdb/sheet": "^0.1.8",
-    "@plotdb/suuid": "^0.4.0",
     "curegex": "^0.0.3",
     "dompurify": "^2.2.6",
     "ldcolor": "^0.0.4",
