@@ -1,0 +1,66 @@
+extends /base.pug
+block prehead
+  base(href="/")
+block body
+  #container.w-640.rwd.mx-auto.my-4
+
+  .d-none.w-640.mx-auto.rwd.my-4
+    .mb-2
+      div value
+      input.form-control(ld="value")
+    .mb-2.d-flex
+      .flex-grow-1
+        div title
+        input.form-control(ld="title")
+      .ml-4
+        div alias
+        select.form-control(ld="alias")
+          option(value="uid") 統編
+          option(value="teamname") 單位名稱
+          option(value="teamname") 自訂..
+    .mb-2
+      div description
+      textarea.form-control(rows="5",ld="desc")
+    .d-flex.mb-2.align-items-center
+      each i in ["isRequired", "isPublic", "showDesc"]
+        .d-flex.align-items-center.mr-4 #[span= i]#[.switch.ml-1(ld="switch",data-name=i)]
+    .mb-2
+      div critera
+      .d-flex.mb-2
+        .mr-2
+          div attr
+          select.form-control.mr-2(ld="picked-attr")
+            option(ld-each="attr") number
+        .mr-2
+          div op
+          select.form-control.mr-2(ld="picked-op")
+            option(ld-each="op") between
+        .mr-2.flex-grow-1(ld-each="op-config")
+          div(ld="name") name
+          input.form-control.mr-2(ld="value",value="1")
+        div
+          div &nbsp;
+          .btn.btn-outline-primary(ld="add-criteria") #[i.i-plus]
+      hr
+      .d-flex.mb-2.align-items-center(ld-each="criteria")
+        .mr-2
+          div &nbsp;
+          .switch.switch-lg(ld="enabled")
+        .mr-2
+          div attr
+          select.form-control.mr-2(ld="attr")
+            option(ld-each="attr-option") number
+        .mr-2
+          div op
+          select.form-control.mr-2(ld="op")
+            option(ld-each="op-option") between
+        .mr-2.flex-grow-1(ld-each="op-config")
+          div(ld="name") name
+          input.form-control.mr-2(ld="value",value="1")
+        div
+          div &nbsp;
+          .btn.btn-outline-danger(ld="delete") #[i.i-close]
+
+block script
+  +script("/assets/lib/bootstrap.native/main/bootstrap-native.min.js")
+  +script("/js/index.js")
