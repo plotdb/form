@@ -1,0 +1,14 @@
+div
+  input
+  script(type="@plotdb/block"): :lsc
+    module.exports =
+      pkg: {}
+      init: ({root}) ->
+        @input = input = document.querySelector('input')
+        handler = -> console.log input.value
+        input.addEventListener \input, handler
+        input.addEventListener \change, handler
+      interface: -> @
+      value: -> @input.value
+      serialize: ->
+      deserialize: ->
