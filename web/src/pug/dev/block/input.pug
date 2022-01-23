@@ -1,14 +1,34 @@
 div
-  input
+  .form-group
+    label(ld="label") input
+    input.form-control(ld="input",type="input")
   script(type="@plotdb/block"): :lsc
     module.exports =
-      pkg: {}
-      init: ({root}) ->
-        @input = input = document.querySelector('input')
+      pkg:
+        dependencies: [
+          { name: "ldview", version: "main"}
+        ]
+      init: ({root, data, context}) ->
+        console.log data
+        {ldview} = context
+        @evt-handler = {}
+        @meta = data
+        @view = view = new ldview do
+          root: root
+          text: label: ~> (@meta or {}).name or 'untitled'
+        @input = input = view.get \input
         handler = -> console.log input.value
         input.addEventListener \input, handler
         input.addEventListener \change, handler
+        @deserialize(data or {})
+      render: ->
+        @view.render!
       interface: -> @
+      error: -> @_errors or []
       value: -> @input.value
       serialize: ->
       deserialize: ->
+        @meta = it
+        @render!
+      on: (n, cb) -> (if Array.isArray(n) => n else [n]).map (n) ~> @evt-handler.[][n].push cb
+      fire: (n, ...v) -> for cb in (@evt-handler[n] or []) => cb.apply @, v

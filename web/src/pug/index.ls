@@ -9,6 +9,6 @@
 Promise.all <[short-answer single-choice multi-choice]>.map (name) ->
 @mgr.get name: 'base'
   .then (bc) -> bc.create!
-  .then (bi) -> bi.attach {root: @root} .then -> bi.interface!
+  .then (bi) ~> bi.attach {root: @root} .then -> bi.interface!
   .then -> console.log "interface: ", it
 

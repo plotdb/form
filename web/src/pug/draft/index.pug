@@ -1,4 +1,6 @@
 extends /base.pug
+block prehead
+  base(href="/")
 block body
   #root.w-1024.rwd.mx-auto.my-4
     .d-flex.mb-4
@@ -9,4 +11,4 @@ block body
       .btn.btn-outline-secondary.mr-2(ld="set") random value
 
 block script
-  script: include:lsc index.ls
+  script(type="module"): include:lsc index.ls
