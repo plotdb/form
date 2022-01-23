@@ -24,7 +24,7 @@
     "@loadingio/debounce.js": "^1.0.1",
     "@loadingio/ldquery": "^3.0.2",
     "@plotdb/datadom": "^0.2.0",
-    "@plotdb/datahub": "^0.2.1",
+    "@plotdb/datahub": "^0.2.2",
     "bootstrap": "^4.5.3",
     "@loadingio/bootstrap.ext": "^0.0.4",
     "bootstrap.native": "^3.0.13",
