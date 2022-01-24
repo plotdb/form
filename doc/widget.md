@@ -18,6 +18,7 @@
 
 ## API
 
+ - `init()`: initialization
  - `fire(name,...args)`: for firing event.
  - `on(name, cb(...args))`: handle event `name` with `cb` callback function, providing `args` arguments.
  - `render()`: shorthand for firing `render` event when something needs to be updated.
@@ -63,7 +64,8 @@ meta should be only editable by administrator. value is inputed by expected end 
 
 ### meta
 
- - `title`, `desc`: as their name
+ - `title`: a short description about purpose of this widget
+ - `desc`: a longer description about purpose of this widget
  - `key`: unique key identifying this widegt
  - `alias`: alias of key, for semantic meaning. should also be unique.
    - for example, to locate a widget for phone number, we can search for widgets with `phone` alias.
@@ -73,11 +75,25 @@ meta should be only editable by administrator. value is inputed by expected end 
    - `isPublic`
  - `term`: Array of `op.term` objects. should be serialized when stored as data.
 
+additional fields ( TBD )
+
+ - `hint`: additional hint supposed to be shown after certain interaction
+ - `default`: default value
+ - `placeholder`: placeholder value
+ - `ext`: widget specific configuration
+
+
 ### value
 
 value ( user input ) can be anything ( string, number or object ) and is defined by implementation of specific widget. 
 
 
+## Mod
+
+ - init
+ - render
+ - is-empty
+ - validate
 ## base widget
 
 TODO

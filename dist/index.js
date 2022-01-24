@@ -361,6 +361,7 @@
     this._value = null;
     this._empty = true;
     this._mode = opt.mode || 'view';
+    this._validate = opt.validate || null;
     this._opsets = (opt.opsets || []).map(function(opset){
       if (typeof opset === 'string') {
         return form.opset.get(opset);
@@ -381,7 +382,9 @@
       return results$;
     });
     this._errors = [];
-    this.init();
+    this.init = proxise.once(function(){
+      return this$._init();
+    });
     return this;
   };
   form.widget.prototype = import$(Object.create(Object.prototype), {
@@ -407,10 +410,8 @@
       }
       return results$;
     },
-    init: function(){
-      if (this.mod) {
-        return this.mod.init.apply(this);
-      }
+    _init: function(){
+      return Promise.resolve(this.mod && this.mod.init ? this.mod.init.apply(this) : '');
     },
     key: function(keyonly){
       keyonly == null && (keyonly = false);
@@ -434,7 +435,7 @@
       ref$.title = v.title;
       ref$.desc = v.desc;
       this._meta.config = JSON.parse(JSON.stringify(v.config || {}));
-      this._meta.term = v.term.map(function(it){
+      this._meta.term = (v.term || []).map(function(it){
         return new form.term(it);
       });
       this.validate();
@@ -458,8 +459,8 @@
       }
       this._value = v;
       this._empty = this.mod && this.mod.isEmpty
-        ? this.mod.isEmpty(v)
-        : !!v;
+        ? this.mod.isEmpty.apply(this, v)
+        : !v;
       this.validate();
       if (!fromSource) {
         return this.fire('change', this._value);
@@ -467,6 +468,12 @@
     },
     validate: function(){
       var this$ = this;
+      if (this.mod && this.mod.validate) {
+        return this.mod.validate.apply(this, this._value);
+      }
+      if (this._validate) {
+        return Promise.resolve(this._validate(this._value));
+      }
       if (this._empty && this._meta.config.isRequired) {
         this._errors = ["required"];
         return this.render();
@@ -481,7 +488,7 @@
         this$._errors = it.filter(function(it){
           return !it[1];
         }).map(function(it){
-          return it[0].msg;
+          return it[0].msg || 'error';
         });
         return this$.render();
       }).then(function(){
@@ -490,7 +497,7 @@
     },
     render: function(){
       this.fire('render');
-      if (this.mod) {
+      if (this.mod && this.mod.render) {
         return this.mod.render.apply(this);
       }
     }

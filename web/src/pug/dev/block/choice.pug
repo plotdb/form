@@ -1,22 +1,22 @@
 div
   div(plug="widget")
     .form-group.d-inline-block.mb-0.has-tips.manual
-      //-label(ld="label") input
-      input.form-control.form-control-sm(ld="input",type="input")
+      select.form-control.form-control-sm(ld="input")
+        option(ld-each="option") ...
       .invalid-feedback.hover-tip.tip-sm please enter a better value
   script(type="@plotdb/block"): :lsc
     module.exports =
       pkg:
+        name: "choice"
         extend: name: 'base'
         dependencies: [
           { name: "ldview", version: "main"}
         ]
-      init: ({root, ctx, data, parent, pubsub, t})  ->
-        pubsub.fire \init, mod: mod({root, ctx, data, parent, t})
-    mod = ({root, ctx, data, parent, t}) ->
+      init: ({root, ctx, data, parent, pubsub, t, i18n})  ->
+        pubsub.fire \init, mod: mod({root, ctx, data, parent, t, i18n})
+    mod = ({root, ctx, data, parent, t, i18n}) ->
       {ldview} = ctx
       meta = data or {}
-
       init: ->
         @on \change, ~> @view.get(\input).value = it
         handler = ({node}) ~> @value node.value
@@ -27,6 +27,12 @@ div
             input: input: handler
             change: input: handler
           handler:
+            option:
+              list: -> meta.values or []
+              key: -> it
+              handler: ({node, data}) ->
+                node.setAttribute \value, data
+                node.innerText = t data
             input: ({node}) ~>
               readonly = !!meta.{}config.readonly
               if readonly => node.setAttribute \readonly, true

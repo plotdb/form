@@ -1,7 +1,18 @@
 div
-  input
+  plug(name="widget")
   script(type="@plotdb/block"): :lsc
-    module.exports = 
-      pkg: {}
-      init: ({root}) ->
+    module.exports =
+      pkg:
+        dependencies: [
+          { url: "/assets/lib/@plotdb/form/dev/index.js" }
+        ]
+      init: ({root, data, context, pubsub, i18n}) ->
+        {form} = context
+        if data.i18n => i18n.addResourceBundles data.i18n
+        pubsub.on \init, (opt = {}) ~>
+          @widget = new form.widget({root} <<< opt)
+          @widget.init!then ~>
+            @widget.deserialize(data or {})
+            @widget
 
+      interface: -> @widget
