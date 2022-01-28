@@ -500,6 +500,17 @@
       if (this.mod && this.mod.render) {
         return this.mod.render.apply(this);
       }
+    },
+    adapt: function(){
+      var args, res$, i$, to$;
+      res$ = [];
+      for (i$ = 0, to$ = arguments.length; i$ < to$; ++i$) {
+        res$.push(arguments[i$]);
+      }
+      args = res$;
+      if (this.mod && this.mod.adapt) {
+        return this.mod.adapt.apply(this, args);
+      }
     }
   });
   if (typeof module != 'undefined' && module !== null) {

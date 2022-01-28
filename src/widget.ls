@@ -73,3 +73,5 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
     @fire \render
     if @mod and @mod.render => @mod.render.apply @
 
+  adapt: (...args) ->
+    if @mod and @mod.adapt => @mod.adapt.apply @, args
