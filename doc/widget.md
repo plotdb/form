@@ -24,12 +24,13 @@
  - `render()`: shorthand for firing `render` event when something needs to be updated.
  - `validate()`: force re-validating user input. return Promise, which resolves to list of errors ( if any )
  - `mode(v)`: set widget mode, to `v`, which is either `edit` or `view`. return current mode if `v` is omitted.
- - `serialize()`
+ - `serialize()`: consider renaming to `config`, merge with `deserialize()`
  - `deserialize()`
  - `errors()`
  - `opsets()`
  - `data()`
  - `value()`
+ - `adapt()`: apply programmatic options such as uploadr?
 
 
 ## Events
