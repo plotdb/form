@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 echo "prepare..."
 rm -rf dist
 mkdir -p dist
