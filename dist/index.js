@@ -197,6 +197,31 @@
         }
       }
     }, {
+      id: 'length',
+      i18n: {
+        "zh-TW": {
+          length: "長度",
+          lte: "≦ 小於或等於",
+          number: "數字",
+          "maximal length": "長度上限"
+        }
+      },
+      ops: {
+        lte: {
+          func: function(v, c){
+            c == null && (c = {});
+            console.log((v + "").length <= +c.val);
+            return (v + "").length <= +c.val;
+          },
+          config: {
+            val: {
+              type: 'number',
+              hint: "maximal length"
+            }
+          }
+        }
+      }
+    }, {
       id: 'number',
       i18n: {
         "zh-TW": {
