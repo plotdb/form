@@ -210,7 +210,6 @@
         lte: {
           func: function(v, c){
             c == null && (c = {});
-            console.log((v + "").length <= +c.val);
             return (v + "").length <= +c.val;
           },
           config: {
