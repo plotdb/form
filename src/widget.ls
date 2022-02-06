@@ -4,6 +4,7 @@ form.widget = (opt = {}) ->
   @mod = opt.mod or null
   @i18n = {}
   @_custom = {}
+  @_status = 1
   @_meta = {config: {}, key: Math.random!toString(36)substring(2)}
   @ <<< _value: null, _empty: true
   @_mode = opt.mode or \view
@@ -21,12 +22,15 @@ form.widget = (opt = {}) ->
 
 form.widget.prototype = Object.create(Object.prototype) <<< do
   on: (n, cb) -> (if Array.isArray(n) => n else [n]).map (n) ~> @evt-handler.[][n].push cb
+  off: (n, cb) -> (if Array.isArray(n) => n else [n]).map (n) ~>
+    l = @evt-handler.[][n]
+    if l.indexOf(cb) >= 0 => l.splice l.indexOf(cb), 1
   fire: (n, ...v) -> for cb in (@evt-handler[n] or []) => cb.apply @, v
   _init: -> Promise.resolve(if @mod and @mod.init => @mod.init.apply @ else '')
   key: (keyonly = false) ->
     return if keyonly => @_meta.key
     else @_meta.alias or @_meta.key
-
+  status: (v) -> if v? => @_status = v else @_status
   serialize: ->
     ret = {} <<< @_meta{key, title, desc}
     ret.config = JSON.parse(JSON.stringify(@_meta.config or {}))
@@ -36,7 +40,7 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
     @_meta <<< v{key, title, desc}
     @_meta.config = JSON.parse(JSON.stringify(v.config or {}))
     @_meta.term = (v.term or []).map -> new form.term it
-    @validate!
+    @validate {init: true}
     @render!
 
   mode: ->
@@ -53,11 +57,12 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
     @validate!
     if !from-source => @fire \change, @_value
 
-  validate: ->
+  validate: (opt = {}) ->
     if @mod and @mod.validate => return @mod.validate.apply @, @_value
     if @_validate => return Promise.resolve(@_validate @_value)
     if @_empty and @_meta.config.is-required =>
       @_errors = ["required"]
+      @status(if opt.init and @status! == 1 => 1 else 2)
       return @render!
     Promise.all(
       @_meta.term
@@ -66,6 +71,7 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
     )
       .then ~>
         @_errors = it.filter(-> !it.1).map -> it.0.msg or 'error'
+        @status if @_errors.length => 2 else 0
         @render!
       .then ~> @_errors
 

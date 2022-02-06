@@ -3,48 +3,99 @@
   var form;
   form = {};
   form.manager = function(){
-    this._fields = [];
+    this._ws = {
+      w: {},
+      p: new WeakMap(),
+      l: {}
+    };
+    this._evthdr = {};
     return this;
   };
   form.manager.prototype = import$(Object.create(Object.prototype), {
-    add: function(it){
-      return this._fields = this._fields.concat(Array.isArray(it)
-        ? it
-        : [it]);
+    on: function(n, cb){
+      var ref$;
+      return ((ref$ = this.evtHandler)[n] || (ref$[n] = [])).push(cb);
     },
-    fields: function(){
-      return this._fields;
-    },
-    serialize: function(){
-      return this._fields.map(function(it){
-        return it.serialize();
-      });
-    },
-    value: function(vs){
-      var k, v, f, results$ = [];
-      if (!vs) {
-        return Object.fromEntries(this._fields.map(function(it){
-          return [it.key(), it.value()];
-        }));
+    fire: function(n){
+      var v, res$, i$, to$, ref$, len$, cb, results$ = [];
+      res$ = [];
+      for (i$ = 1, to$ = arguments.length; i$ < to$; ++i$) {
+        res$.push(arguments[i$]);
       }
-      for (k in vs) {
-        v = vs[k];
-        f = this._fields.filter(fn$)[0];
-        if (!f) {
-          continue;
-        }
-        results$.push(f.value(v));
+      v = res$;
+      for (i$ = 0, len$ = (ref$ = this.evtHandler[n] || []).length; i$ < len$; ++i$) {
+        cb = ref$[i$];
+        results$.push(cb.apply(this, v));
       }
       return results$;
-      function fn$(it){
-        return it.key() === k;
-      }
     },
-    mode: function(m){
-      return this._fields.map(function(it){
-        return it.mode(m);
+    add: function(o){
+      var w, p, this$ = this;
+      if (Array.isArray(o)) {
+        return o.map(function(it){
+          return this$.add(it);
+        });
+      }
+      w = o.w, p = o.p;
+      this._ws.w[p] = w;
+      this._ws.p.set(w, p);
+      return o.on('change', this._ws.l[p] = function(evt){
+        return this$.check({
+          widget: w,
+          path: p,
+          evt: evt
+        });
+      });
+    },
+    remove: function(o){
+      var ws, ref$, key$, ref1$, this$ = this;
+      if (Array.isArray(o)) {
+        return o.map(function(it){
+          return this$.remove(it);
+        });
+      }
+      if (!(ws = this._ws.w[o.path])) {
+        return;
+      }
+      o.off('change', this._ws.l[o.path]);
+      this._ws.p['delete'](ws);
+      delete this._ws.w[o.path];
+      return ref1$ = (ref$ = this._ws.l)[key$ = o.path], delete ref$[key$], ref1$;
+    },
+    widget: function(p){
+      return this._ws[p];
+    },
+    check: function(o){
+      var this$ = this;
+      o == null && (o = {});
+      if (Array.isArray(o)) {
+        return Promise.all(o.map(function(it){
+          return this$.check(it);
+        }));
+      }
+      return new Promise(function(res, rej){
+        var ref$, w, p, now;
+        ref$ = [o.widget, o.path(o.now)], w = ref$[0], p = ref$[1], now = ref$[2];
+        if (!(w && p)) {
+          return;
+        }
+        if (!w && !(w = this$._ws.w[p])) {
+          return;
+        }
+        return w.validate().then(function(){});
       });
     }
+    /*
+    field: (n) -> @_fields[n]
+    fields: -> @_fields
+    serialize: -> @_fields.map -> it.serialize!
+    value: (vs) ->
+      if !vs => return Object.fromEntries(@_fields.map -> [it.key!, it.value!])
+      for k,v of vs =>
+        f = @_fields.filter(-> (it.key! == k)).0
+        if !f => continue
+        f.value v
+    */
   });
   form.op = function(opt){
     opt == null && (opt = {});
@@ -378,6 +429,7 @@
     this.mod = opt.mod || null;
     this.i18n = {};
     this._custom = {};
+    this._status = 1;
     this._meta = {
       config: {},
       key: Math.random().toString(36).substring(2)
@@ -421,6 +473,18 @@
         return ((ref$ = this$.evtHandler)[n] || (ref$[n] = [])).push(cb);
       });
     },
+    off: function(n, cb){
+      var this$ = this;
+      return (Array.isArray(n)
+        ? n
+        : [n]).map(function(n){
+        var l, ref$;
+        l = (ref$ = this$.evtHandler)[n] || (ref$[n] = []);
+        if (l.indexOf(cb) >= 0) {
+          return l.splice(l.indexOf(cb), 1);
+        }
+      });
+    },
     fire: function(n){
       var v, res$, i$, to$, ref$, len$, cb, results$ = [];
       res$ = [];
@@ -443,6 +507,13 @@
         ? this._meta.key
         : this._meta.alias || this._meta.key;
     },
+    status: function(v){
+      if (v != null) {
+        return this._status = v;
+      } else {
+        return this._status;
+      }
+    },
     serialize: function(){
       var ref$, ret, ref1$;
       ret = (ref1$ = {}, ref1$.key = (ref$ = this._meta).key, ref1$.title = ref$.title, ref1$.desc = ref$.desc, ref1$);
@@ -462,7 +533,9 @@
       this._meta.term = (v.term || []).map(function(it){
         return new form.term(it);
       });
-      this.validate();
+      this.validate({
+        init: true
+      });
       return this.render();
     },
     mode: function(it){
@@ -490,8 +563,9 @@
         return this.fire('change', this._value);
       }
     },
-    validate: function(){
+    validate: function(opt){
       var this$ = this;
+      opt == null && (opt = {});
       if (this.mod && this.mod.validate) {
         return this.mod.validate.apply(this, this._value);
       }
@@ -500,6 +574,7 @@
       }
       if (this._empty && this._meta.config.isRequired) {
         this._errors = ["required"];
+        this.status(opt.init && this.status() === 1 ? 1 : 2);
         return this.render();
       }
       return Promise.all(this._meta.term.filter(function(t){
@@ -514,6 +589,7 @@
         }).map(function(it){
           return it[0].msg || 'error';
         });
+        this$.status(this$._errors.length ? 2 : 0);
         return this$.render();
       }).then(function(){
         return this$._errors;

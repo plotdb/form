@@ -22,8 +22,17 @@
  - `fire(name,...args)`: for firing event.
  - `on(name, cb(...args))`: handle event `name` with `cb` callback function, providing `args` arguments.
  - `render()`: shorthand for firing `render` event when something needs to be updated.
- - `validate()`: force re-validating user input. return Promise, which resolves to list of errors ( if any )
- - `mode(v)`: set widget mode, to `v`, which is either `edit` or `view`. return current mode if `v` is omitted.
+ - `status(v)`: get or set current status of this widget. value definition is the same with `ldform`:
+   - 0: valid
+   - 1: untouched ( not yet edit )
+   - 2: invalid
+   - 3: editing
+   - 4 ~ 9: preserved
+   - 10 and above: user defined.
+ - `validate(opt)`: force re-validating user input.
+   - return Promise, which resolves to list of errors ( if any )
+   - options in opt:
+     - `init`: true if this validation attempt is triggered by initial input ( e.g., deserialize ).
  - `serialize()`: consider renaming to `config`, merge with `deserialize()`
  - `deserialize()`
  - `errors()`
@@ -31,6 +40,8 @@
  - `data()`
  - `value()`
  - `adapt()`: apply programmatic options such as uploadr?
+ - `mode(v)`: TBD
+   - set widget mode, to `v`, which is either `edit` or `view`. return current mode if `v` is omitted.
 
 
 ## Events
