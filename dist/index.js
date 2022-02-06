@@ -25,7 +25,7 @@
       args = res$;
       return this$._afterCheck.apply(this$, args);
     });
-    this.check = debounce(10, function(){
+    this._checkDebounced = debounce(10, function(){
       var args, res$, i$, to$;
       res$ = [];
       for (i$ = 0, to$ = arguments.length; i$ < to$; ++i$) {
@@ -106,11 +106,9 @@
       return this._ws[p];
     },
     status: function(v){
-      if (v != null) {
-        return this._status = v;
-      } else {
-        return this._status;
-      }
+      return !(v != null)
+        ? this._status
+        : this._status = v;
     },
     progress: function(){
       var ret, k, s;
@@ -158,8 +156,9 @@
         return this.fire('readystatechange', this._status === 0);
       }
     },
-    _check: function(o){
-      var p, w, this$ = this;
+    check: function(o, now){
+      var p, w;
+      now == null && (now = false);
       if (!o) {
         return this.check((function(){
           var ref$, results$ = [];
@@ -173,9 +172,25 @@
           return results$;
         }.call(this)));
       }
+      this.checkList = (this.checkList || (this.checkList = [])).concat(Array.isArray(o)
+        ? o
+        : [o]);
+      if (now) {
+        return this._check();
+      } else {
+        return this._checkDebounced();
+      }
+    },
+    _check: function(o){
+      var list, this$ = this;
+      if (!o) {
+        list = this.checkList || [];
+        this.checkList = [];
+        return this._check(list);
+      }
       if (Array.isArray(o)) {
         return Promise.all(o.map(function(it){
-          return this$.check(it);
+          return this$._check(it);
         }));
       }
       return new Promise(function(res, rej){
@@ -228,14 +243,23 @@
       }
       return fd;
     },
-    value: function(){
-      var ret, p, ref$, w;
-      ret = {};
+    value: function(v){
+      var ret, p, ref$, w, results$ = [];
+      if (!v) {
+        ret = {};
+        for (p in ref$ = this._ws.w) {
+          w = ref$[p];
+          ret[p] = w.value();
+        }
+        return ret;
+      }
       for (p in ref$ = this._ws.w) {
         w = ref$[p];
-        ret[p] = w.value();
+        if (v[p]) {
+          results$.push(w.value(v[p]));
+        }
       }
-      return ret;
+      return results$;
     }
   });
   form.op = function(opt){
@@ -244,13 +268,16 @@
     this.name = opt.name;
     this.config = opt.config;
     this.func = opt.func;
-    this.i18n = opt.i18n;
+    this.opset = opt.opset;
     return this;
   };
   form.op.prototype = import$(Object.create(Object.prototype), {
     validate: function(val, cfg){
       var ret;
       cfg == null && (cfg = {});
+      if (this.opset.convert) {
+        val = this.opset.convert(val);
+      }
       if ((ret = this.func(val, cfg)) instanceof Promise) {
         return ret;
       } else {
@@ -273,6 +300,7 @@
     this.name = opt.name;
     this.id = opt.id;
     this.i18n = opt.i18n;
+    this.convert = opt.convert;
     this.ops = {};
     ops = Array.isArray(opt.ops)
       ? opt.ops.map(function(it){
@@ -300,7 +328,7 @@
         : k
           ? new form.op((ref$ = typeof v === 'function' ? {
             func: v
-          } : v, ref$.id = k, ref$))
+          } : v, ref$.id = k, ref$.opset = this$, ref$))
           : (function(){
             throw new Error('[@plotdb/form/opset] invalid op when initializing opset.');
           }());
@@ -308,7 +336,7 @@
         v = ref$[k];
         results$.push(this$.ops[k] = new form.op((ref1$ = typeof v === 'function' ? {
           func: v
-        } : v, ref1$.name = k, ref1$.id = k, ref1$)));
+        } : v, ref1$.name = k, ref1$.id = k, ref1$.opset = this$, ref1$)));
       }
       return results$;
     });
@@ -420,8 +448,12 @@
           lte: "≦ 小於或等於",
           gte: "≧ 大於或等於",
           ne: "≠ 不等於",
-          eq: "= 等於"
+          eq: "= 等於",
+          is: "任何數字"
         }
+      },
+      convert: function(v){
+        return +(v + "").replace(/,/g, '');
       },
       ops: {
         lte: {
@@ -487,6 +519,12 @@
               hint: "number for comparison"
             }
           }
+        },
+        is: {
+          func: function(v){
+            return !isNaN(v);
+          },
+          config: {}
         }
       }
     }

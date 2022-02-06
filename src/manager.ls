@@ -9,7 +9,7 @@ form.manager = (o = {}) ->
   @_status = 1
   @mod = o.mod{after-check} or {}
   @after-check = debounce 330, (...args) ~> @_after-check.apply @, args
-  @check = debounce 10, (...args) ~> @_check.apply @, args
+  @_check-debounced = debounce 10, (...args) ~> @_check.apply @, args
   @
 
 ## widget def
@@ -49,7 +49,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     delete @_ws.l[o.path]
 
   widget: (p) -> @_ws[p]
-  status: (v) -> if v? => @_status = v else @_status
+  status: (v) -> return if !(v?) => @_status else @_status = v
   progress: ->
     ret =
       total: [k for k of @_ws.w].length
@@ -72,10 +72,18 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
   #  - a list of below
   #  - a single object of { widget, path, now }
   #  - null: check all
-  _check: (o) ->
+  check: (o, now = false) ->
     if !o => return @check [{widget: w, path: p} for p,w of @_ws.w]
-    if Array.isArray(o) => return Promise.all o.map(~> @check it)
-    new Promise (res, rej) ~>
+    @[]check-list ++= (if Array.isArray(o) => o else [o])
+    if now => @_check! else @_check-debounced!
+
+  _check: (o) ->
+    if !o =>
+      list = (@check-list or [])
+      @check-list = []
+      return @_check(list)
+    if Array.isArray(o) => return Promise.all o.map(~> @_check it)
+    return new Promise (res, rej) ~>
       [w, p, now] = [o.widget, o.path, o.now]
       if !(w and p) => return res!
       if !w and !(w = @_ws.w[p]) => return res!
@@ -99,11 +107,11 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
       else fd.append p, val
     return fd
 
-  value: ->
-    ret = {}
+  value: (v) ->
     # TODO decompose p and fill ret with given hierarchy
-    for p,w of @_ws.w => ret[p] = w.value!
-    return ret
-
-
+    if !v =>
+      ret = {}
+      for p,w of @_ws.w => ret[p] = w.value!
+      return ret
+    for p,w of @_ws.w => if v[p] => w.value v[p]
 

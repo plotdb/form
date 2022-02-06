@@ -26,12 +26,15 @@ Instance API:
  - `widget(p)`: get `form.widget` from given path `p`. return null if nothing is found.
  - `afterCheck()`: check overall status after each `check` call.
    - It's a debounced function. Call it immediately by `afterCheck.now()`.
- - `check(o)`: validate widgets that match given `o`, which may be:
-   - a list of below object
-   - an object with following fields:
-     - `path`: path to the given widget
-     - `widget`: widget to check.
-     - `now`: default `false`. when `true`, force a post-check immediately.
+ - `check(o, now)`: validate widgets that match given `o`
+   - `now`: default `false`. `check` debounces without now, set now to true to enforce check immediately.
+     - this may also flush checks debounced earlier.
+   - o may be:
+     - a list of below object
+     - an object with following fields:
+       - `path`: path to the given widget
+       - `widget`: widget to check.
+       - `now`: default `false`. when `true`, force a post-check immediately.
  - `status()`: return current status of all widgets. status definition is the same with `ldform`:
    - 0: valid
    - 1: untouched ( not yet edit )

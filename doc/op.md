@@ -77,6 +77,7 @@ For example, a `string` opset may contain ops such as `include`, `exclude`, `ema
  - `name`: verbose name shown in interface. fallback to `id if omitted.
  - `i18n`: metadata for i18n. in `i18next` schema.
    - (TODO) `opset` should respect i18n config in `op`, if any.
+ - `convert`: convert input value to a new value that can be used in op, if possible.
  - `ops`: Array or hash of `op`s.
    - `op` can be either:
      - `form.op` object
@@ -85,6 +86,7 @@ For example, a `string` opset may contain ops such as `include`, `exclude`, `ema
    - key in hash will be used as op id if `op` is provided as constructor options.
  - `defaultOp`: id of the op in this opset that should be used as a default op.
    - if omitted, a random one will be picked ( usually the first one ).
+
 
 ### API
 

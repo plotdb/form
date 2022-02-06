@@ -1,11 +1,11 @@
 # 規則運算子
 form.op = (opt = {}) ->
-  @ <<< opt{id, name, config, func}
-  @ <<< opt{i18n} # TODO
+  @ <<< opt{id, name, config, func, opset}
   @
 
 form.op.prototype = Object.create(Object.prototype) <<< do
   validate: (val, cfg = {}) ->
+    if @opset.convert => val = @opset.convert val
     if (ret = @func val, cfg) instanceof Promise => ret else Promise.resolve(!!ret)
 
   config-default: ->
@@ -16,15 +16,16 @@ form.op.prototype = Object.create(Object.prototype) <<< do
 
 # 資料驗證的規則集
 form.opset = (opt={}) ->
-  @ <<< opt{name, id, i18n}
+  @ <<< opt{name, id, i18n, convert}
   @ <<< {ops: {}}
   ops = if Array.isArray(opt.ops) => opt.ops.map -> {v: it, k: it.id}
   else [{k,v} for k,v of opt.ops]
   ops.map ({k,v}) ~>
     @ops[k] = if v instanceof form.op => v
-    else if k => new form.op((if typeof(v) == \function => {func: v} else v) <<< {id: k})
+    else if k => new form.op((if typeof(v) == \function => {func: v} else v) <<< {id: k, opset: @})
     else throw new Error('[@plotdb/form/opset] invalid op when initializing opset.')
-    for k,v of opt.ops => @ops[k] = new form.op((if typeof(v) == \function => {func: v} else v) <<< {name: k, id: k})
+    for k,v of opt.ops =>
+      @ops[k] = new form.op((if typeof(v) == \function => {func: v} else v) <<< {name: k, id: k, opset: @})
   @default-op = if @ops[opt.default-op] => opt.default-op else [k for k,v of @ops].0
   @
 
@@ -76,6 +77,8 @@ form.opset.default = [
         gte: "≧ 大於或等於"
         ne: "≠ 不等於"
         eq: "= 等於"
+        is: "任何數字"
+    convert: (v) -> +"#v".replace(/,/g,'')
     ops:
       lte:
         func: (v, c = {}) -> if isNaN(v) or isNaN(c.val) => false else +v <= +c.val
@@ -89,6 +92,9 @@ form.opset.default = [
       eq:
         func: (v, c = {}) -> if isNaN(v) or isNaN(c.val) => false else +v == +c.val
         config: {val: {type: \text, hint: "number for comparison"}}
+      is:
+        func: (v) -> !isNaN(v)
+        config: {}
   }
 ]
 
