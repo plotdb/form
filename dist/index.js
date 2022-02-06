@@ -2,19 +2,44 @@
 (function(){
   var form;
   form = {};
-  form.manager = function(){
+  form.manager = function(o){
+    var this$ = this;
+    o == null && (o = {});
     this._ws = {
       w: {},
       p: new WeakMap(),
+      s: {},
       l: {}
     };
     this._evthdr = {};
+    this._status = 1;
+    this.mod = {
+      afterCheck: o.mod.afterCheck
+    } || {};
+    this.afterCheck = debounce(330, function(){
+      var args, res$, i$, to$;
+      res$ = [];
+      for (i$ = 0, to$ = arguments.length; i$ < to$; ++i$) {
+        res$.push(arguments[i$]);
+      }
+      args = res$;
+      return this$._afterCheck.apply(this$, args);
+    });
+    this.check = debounce(10, function(){
+      var args, res$, i$, to$;
+      res$ = [];
+      for (i$ = 0, to$ = arguments.length; i$ < to$; ++i$) {
+        res$.push(arguments[i$]);
+      }
+      args = res$;
+      return this$._check.apply(this$, args);
+    });
     return this;
   };
   form.manager.prototype = import$(Object.create(Object.prototype), {
     on: function(n, cb){
       var ref$;
-      return ((ref$ = this.evtHandler)[n] || (ref$[n] = [])).push(cb);
+      return ((ref$ = this._evthdr)[n] || (ref$[n] = [])).push(cb);
     },
     fire: function(n){
       var v, res$, i$, to$, ref$, len$, cb, results$ = [];
@@ -23,27 +48,41 @@
         res$.push(arguments[i$]);
       }
       v = res$;
-      for (i$ = 0, len$ = (ref$ = this.evtHandler[n] || []).length; i$ < len$; ++i$) {
+      for (i$ = 0, len$ = (ref$ = this._evthdr[n] || []).length; i$ < len$; ++i$) {
         cb = ref$[i$];
         results$.push(cb.apply(this, v));
       }
       return results$;
     },
     add: function(o){
-      var w, p, this$ = this;
+      var ref$, w, p, this$ = this;
       if (Array.isArray(o)) {
         return o.map(function(it){
           return this$.add(it);
         });
       }
-      w = o.w, p = o.p;
+      ref$ = [o.widget, o.path], w = ref$[0], p = ref$[1];
+      if (this._ws.p.get(w)) {
+        return;
+      }
       this._ws.w[p] = w;
       this._ws.p.set(w, p);
-      return o.on('change', this._ws.l[p] = function(evt){
-        return this$.check({
+      this._ws.l[p] = {};
+      w.on('change', this._ws.l[p].c = function(v){
+        this$.check({
+          widget: w,
+          path: p
+        });
+        return this$.fire('change', {
           widget: w,
           path: p,
-          evt: evt
+          value: v
+        });
+      });
+      return w.on('status', this._ws.l[p].s = function(s){
+        return this$.check({
+          widget: w,
+          path: p
         });
       });
     },
@@ -57,7 +96,8 @@
       if (!(ws = this._ws.w[o.path])) {
         return;
       }
-      o.off('change', this._ws.l[o.path]);
+      o.off('change', this._ws.l[o.path].c);
+      o.off('status', this._ws.l[o.path].s);
       this._ws.p['delete'](ws);
       delete this._ws.w[o.path];
       return ref1$ = (ref$ = this._ws.l)[key$ = o.path], delete ref$[key$], ref1$;
@@ -65,9 +105,74 @@
     widget: function(p){
       return this._ws[p];
     },
-    check: function(o){
-      var this$ = this;
-      o == null && (o = {});
+    status: function(v){
+      if (v != null) {
+        return this._status = v;
+      } else {
+        return this._status;
+      }
+    },
+    progress: function(){
+      var ret, k, s;
+      ret = {
+        total: (function(){
+          var results$ = [];
+          for (k in this._ws.w) {
+            results$.push(k);
+          }
+          return results$;
+        }.call(this)).length,
+        done: (function(){
+          var ref$, results$ = [];
+          for (k in ref$ = this._ws.s) {
+            s = ref$[k];
+            results$.push(s);
+          }
+          return results$;
+        }.call(this)).filter(function(s){
+          return s != null && s === 0;
+        }).length
+      };
+      ret.percent = ret.done / ret.total;
+      return ret;
+    },
+    _afterCheck: function(){
+      var os, ret, k, v;
+      os = this._status;
+      delete this._status;
+      this.mod.afterCheck.apply(this);
+      if (!(this._status != null)) {
+        ret = (function(){
+          var ref$, results$ = [];
+          for (k in ref$ = this._ws.w) {
+            v = ref$[k];
+            results$.push(this._ws.s[k]);
+          }
+          return results$;
+        }.call(this)).filter(function(s){
+          return !(s != null && s === 0);
+        }).length;
+        this._status = ret ? 1 : 0;
+      }
+      if (os !== this._status) {
+        return this.fire('readystatechange', this._status === 0);
+      }
+    },
+    _check: function(o){
+      var p, w, this$ = this;
+      if (!o) {
+        return this.check((function(){
+          var ref$, results$ = [];
+          for (p in ref$ = this._ws.w) {
+            w = ref$[p];
+            results$.push({
+              widget: w,
+              path: p
+            });
+          }
+          return results$;
+        }.call(this)));
+      }
       if (Array.isArray(o)) {
         return Promise.all(o.map(function(it){
           return this$.check(it);
@@ -75,27 +180,63 @@
       }
       return new Promise(function(res, rej){
         var ref$, w, p, now;
-        ref$ = [o.widget, o.path(o.now)], w = ref$[0], p = ref$[1], now = ref$[2];
+        ref$ = [o.widget, o.path, o.now], w = ref$[0], p = ref$[1], now = ref$[2];
         if (!(w && p)) {
-          return;
+          return res();
         }
         if (!w && !(w = this$._ws.w[p])) {
-          return;
+          return res();
         }
-        return w.validate().then(function(){});
+        if (!p) {
+          p = this$._ws.p[w];
+        }
+        return w.validate().then(function(){
+          var os;
+          os = this$._ws.s[p];
+          this$._ws.s[p] = w.status();
+          if (os !== this$._ws.s[p]) {
+            this$.fire('status', {
+              path: p,
+              widget: w,
+              status: this$._ws.s[p]
+            });
+          }
+          if (now) {
+            return this$.afterCheck.now();
+          } else {
+            return this$.afterCheck();
+          }
+        }).then(function(){
+          return res();
+        });
       });
+    },
+    formData: function(){
+      var fd, p, ref$, w, val, i$, to$, i;
+      fd = new FormData();
+      for (p in ref$ = this._ws.w) {
+        w = ref$[p];
+        val = w.value();
+        if (Array.isArray(v)) {
+          for (i$ = 0, to$ = v.length; i$ < to$; ++i$) {
+            i = i$;
+            fd.append(p + "[]", v[i]);
+          }
+        } else {
+          fd.append(p, val);
+        }
+      }
+      return fd;
+    },
+    value: function(){
+      var ret, p, ref$, w;
+      ret = {};
+      for (p in ref$ = this._ws.w) {
+        w = ref$[p];
+        ret[p] = w.value();
+      }
+      return ret;
     }
-    /*
-    field: (n) -> @_fields[n]
-    fields: -> @_fields
-    serialize: -> @_fields.map -> it.serialize!
-    value: (vs) ->
-      if !vs => return Object.fromEntries(@_fields.map -> [it.key!, it.value!])
-      for k,v of vs =>
-        f = @_fields.filter(-> (it.key! == k)).0
-        if !f => continue
-        f.value v
-    */
   });
   form.op = function(opt){
     opt == null && (opt = {});
@@ -508,10 +649,14 @@
         : this._meta.alias || this._meta.key;
     },
     status: function(v){
-      if (v != null) {
-        return this._status = v;
-      } else {
+      var ov;
+      if (!(v != null)) {
         return this._status;
+      }
+      ov = this._status;
+      this._status = v;
+      if (ov !== v) {
+        return this.fire('status', v);
       }
     },
     serialize: function(){

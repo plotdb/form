@@ -46,8 +46,10 @@
 
 ## Events
 
- - `change`
- - `render`
+ - `change`: fired when value is changed.
+ - `status`: fired when status is changed, with following argument:
+   - `status`: new status
+ - `render`: fired when widget is going to re-rendered.
 
 
 ## Internal members

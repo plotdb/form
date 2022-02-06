@@ -30,7 +30,11 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
   key: (keyonly = false) ->
     return if keyonly => @_meta.key
     else @_meta.alias or @_meta.key
-  status: (v) -> if v? => @_status = v else @_status
+  status: (v) ->
+    if !(v?) => return @_status
+    ov = @_status
+    @_status = v
+    if ov != v => @fire \status, v
   serialize: ->
     ret = {} <<< @_meta{key, title, desc}
     ret.config = JSON.parse(JSON.stringify(@_meta.config or {}))
