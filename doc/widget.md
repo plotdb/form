@@ -6,7 +6,7 @@
 ## Constructor Options
 
  - `root`: root element of this widget. either an instance of Element, or CSS selector string.
- - `mode`: mode, either `edit` or `view`. default `view`.
+ - `mode`: default `edit`. check the `mode` constructor option in `manager.md` for more information.
  - `opsets`: Array of opsets to use. Each opset can be one of:
    - `form.opset` object
    - opset config object.
@@ -40,8 +40,9 @@
  - `data()`
  - `value()`
  - `adapt()`: apply programmatic options such as uploadr?
- - `mode(v)`: TBD
-   - set widget mode, to `v`, which is either `edit` or `view`. return current mode if `v` is omitted.
+ - `mode(v)`:
+   - set widget mode to `v`, return current mode if `v` is omitted.
+   - check constructor options for possible values of mode.
 
 
 ## Events
@@ -50,6 +51,7 @@
  - `status`: fired when status is changed, with following argument:
    - `status`: new status
  - `render`: fired when widget is going to re-rendered.
+ - `mode`: fired when mode is changed.
 
 
 ## Internal members
@@ -75,6 +77,7 @@ There are 2 types of widget data:
  - `value`: user input.
 
 meta should be only editable by administrator. value is inputed by expected end users who are provided with this form.
+
 
 ### meta
 

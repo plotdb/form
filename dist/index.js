@@ -13,6 +13,7 @@
     };
     this._evthdr = {};
     this._status = 1;
+    this._mode = 'edit';
     this.mod = {
       afterCheck: o.mod.afterCheck
     } || {};
@@ -258,6 +259,25 @@
         if (v[p]) {
           results$.push(w.value(v[p]));
         }
+      }
+      return results$;
+    },
+    mode: function(m){
+      var ref$, p, w, results$ = [];
+      if (!(m != null)) {
+        return this._mode;
+      }
+      if (!(m === 'edit' || m === 'view' || m === 'config')) {
+        throw ref$ = new Error(), ref$.name = 'lderror', ref$.id = 1015, ref$;
+      }
+      if (this._mode === m) {
+        return;
+      }
+      this._mode = m;
+      this.fire('mode', m);
+      for (p in ref$ = this._ws.w) {
+        w = ref$[p];
+        results$.push(w.mode(m));
       }
       return results$;
     }
@@ -615,7 +635,7 @@
     };
     this._value = null;
     this._empty = true;
-    this._mode = opt.mode || 'view';
+    this._mode = opt.mode || 'edit';
     this._validate = opt.validate || null;
     this._opsets = (opt.opsets || []).map(function(opset){
       if (typeof opset === 'string') {
@@ -721,12 +741,22 @@
       });
       return this.render();
     },
-    mode: function(it){
-      if (!(it != null)) {
+    mode: function(m){
+      var ref$;
+      if (!(m != null)) {
         return this._mode;
       }
-      this._mode = it;
-      this.validate();
+      if (!(m === 'edit' || m === 'view' || m === 'config')) {
+        throw ref$ = new Error(), ref$.name = 'lderror', ref$.id = 1015, ref$;
+      }
+      if (this._mode === m) {
+        return;
+      }
+      this._mode = m;
+      this.fire('mode', m);
+      this.validate({
+        init: true
+      });
       return this.render();
     },
     errors: function(){

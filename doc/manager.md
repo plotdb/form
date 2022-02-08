@@ -9,6 +9,10 @@ A manager for oversee widget status.
 
 Constructor options:
 
+ - `mode`: default `edit`. Meaning of mode:
+   - `edit`: user can input values
+   - `view`: read-only mode for printing or browsing
+   - `config`: tweak,widget. for form design purpose. ( TBD )
  - `mod`: extension object with following fields:
    - `afterCheck()`: called by `afterCheck`. can use to overwrite overall status.
 
@@ -46,6 +50,10 @@ Instance API:
    - `total`: total number of widgets
    - `done`: how many widgets has to be filled
    - `percent`: `done/total`. 1 when this form completes.
+ - `mode(v)`:
+   - set widget mode to `v`, return current mode if `v` is omitted.
+   - check constructor options for possible values of mode.
+
 
 ## Events
 
@@ -56,3 +64,4 @@ Instance API:
      - `path`: path of the widget which has its status changed.
      - `widget`: widget which has its status changed.
      - `status`: the status after changed.
+ - `mode`: fired when mode is changed.

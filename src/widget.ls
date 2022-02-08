@@ -7,7 +7,7 @@ form.widget = (opt = {}) ->
   @_status = 1
   @_meta = {config: {}, key: Math.random!toString(36)substring(2)}
   @ <<< _value: null, _empty: true
-  @_mode = opt.mode or \view
+  @_mode = opt.mode or \edit
   @_validate = opt.validate or null
   @_opsets = (opt.opsets or []).map (opset) ->
     if typeof(opset) == \string => form.opset.get opset
@@ -47,10 +47,13 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
     @validate {init: true}
     @render!
 
-  mode: ->
-    if !(it?) => return @_mode
-    @_mode = it
-    @validate!
+  mode: (m) ->
+    if !(m?) => return @_mode
+    if !(m in <[edit view config]>) => throw (new Error! <<< {name: \lderror, id: 1015})
+    if @_mode == m => return
+    @_mode = m
+    @fire \mode, m
+    @validate {init: true}
     @render!
 
   errors: -> @_errors

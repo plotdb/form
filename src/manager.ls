@@ -7,6 +7,7 @@ form.manager = (o = {}) ->
     l: {} # path to widget change Listener function
   @_evthdr = {}
   @_status = 1
+  @_mode = \edit
   @mod = o.mod{after-check} or {}
   @after-check = debounce 330, (...args) ~> @_after-check.apply @, args
   @_check-debounced = debounce 10, (...args) ~> @_check.apply @, args
@@ -115,3 +116,10 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
       return ret
     for p,w of @_ws.w => if v[p] => w.value v[p]
 
+  mode: (m) ->
+    if !(m?) => return @_mode
+    if !(m in <[edit view config]>) => throw (new Error! <<< {name: \lderror, id: 1015})
+    if @_mode == m => return
+    @_mode = m
+    @fire \mode, m
+    for p,w of @_ws.w => w.mode m
