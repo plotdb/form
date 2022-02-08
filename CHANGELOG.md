@@ -1,5 +1,12 @@
 # Change Logs
 
+## v0.0.6
+
+ - bug fix: widget status change isn't logged in form manager.
+ - bug fix: widget init status isn't logged in form manager.
+ - bug fix: progress NaN when there is no widget.
+
+
 ## v0.0.5
 
  - bug fix: `check` is not finished immediately even if `now` is true
