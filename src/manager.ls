@@ -120,7 +120,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
       ret = {}
       for p,w of @_ws.w => ret[p] = w.value!
       return ret
-    for p,w of @_ws.w => if v[p] => w.value v[p]
+    for p,w of @_ws.w => w.value v[p]
 
   mode: (m) ->
     if !(m?) => return @_mode

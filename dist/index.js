@@ -266,9 +266,7 @@
       }
       for (p in ref$ = this._ws.w) {
         w = ref$[p];
-        if (v[p]) {
-          results$.push(w.value(v[p]));
-        }
+        results$.push(w.value(v[p]));
       }
       return results$;
     },
