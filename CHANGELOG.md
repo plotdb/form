@@ -1,5 +1,14 @@
 # Change Logs
 
+## v0.0.5
+
+ - bug fix: `check` is not finished immediately even if `now` is true
+ - bug fix: set value may fail due to empty value provided
+ - bug fix: `check` from `status` / `change` events of form.widget causes redundant validation.
+ - bug fix: `change` event of form.widget isn't forwarded to form.manager correctly.
+ - return invalid widgets from `check` call in ( if applicable, array of ) `{widget, path, status}` object.
+
+
 ## v0.0.4
 
  - add `root()` function to get root element of an widget
