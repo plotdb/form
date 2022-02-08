@@ -229,7 +229,8 @@
           if (this$._ws.s[p] === 2) {
             return res({
               widget: w,
-              path: p
+              path: p,
+              status: this$._ws.s[p]
             });
           } else {
             return res();

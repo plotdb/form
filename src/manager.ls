@@ -102,7 +102,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
           promise.then ~>
             if os != @_ws.s[p] => @fire \status, {path: p, widget: w, status: @_ws.s[p]}
             @_ws.s[p]
-        .then ~> if @_ws.s[p] == 2 => res {widget: w, path: p} else res!
+        .then ~> if @_ws.s[p] == 2 => res {widget: w, path: p, status: @_ws.s[p]} else res!
 
   # return a FormData with all fields flattened by its path as form data field name.
   form-data: ->
