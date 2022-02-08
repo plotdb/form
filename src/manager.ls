@@ -120,7 +120,11 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
       ret = {}
       for p,w of @_ws.w => ret[p] = w.value!
       return ret
-    for p,w of @_ws.w => if (v[p]?) => w.value v[p]
+    for p,w of @_ws.w =>
+      # even if v[p] is "", 0 or event undefined, we should still update them
+      # since user may explicitly enter this value in order to overwrite previous value.
+      # mechanism for status 1 by emptiness should be implemented in specific widgets.
+      w.value v[p]
 
   mode: (m) ->
     if !(m?) => return @_mode
