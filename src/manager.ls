@@ -97,7 +97,6 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
           if now => @after-check.now! else @after-check!
         .then -> res!
 
-
   # return a FormData with all fields flattened by its path as form data field name.
   form-data: ->
     fd = new FormData!
