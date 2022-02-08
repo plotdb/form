@@ -77,7 +77,6 @@ Instance API:
      - `path`: path of the widget which has its value changed.
      - `widget`: widget which has its value changed.
      - `value`: the value after changed.
- - `mode`: fired when mode is changed.
  - `status`: fired when there are status changes of any widget. callback function receives following parameters:
    - object with {path, widget, status} fields:
      - `path`: path of the widget which has its status changed.
