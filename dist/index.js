@@ -267,7 +267,9 @@
       }
       for (p in ref$ = this._ws.w) {
         w = ref$[p];
-        results$.push(w.value(v[p]));
+        if (v[p] != null) {
+          results$.push(w.value(v[p]));
+        }
       }
       return results$;
     },
