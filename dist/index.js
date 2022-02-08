@@ -255,8 +255,9 @@
       }
       return fd;
     },
-    value: function(v){
+    value: function(v, opt){
       var ret, p, ref$, w, results$ = [];
+      opt == null && (opt = {});
       if (!v) {
         ret = {};
         for (p in ref$ = this._ws.w) {
@@ -267,7 +268,7 @@
       }
       for (p in ref$ = this._ws.w) {
         w = ref$[p];
-        results$.push(w.value(v[p]));
+        results$.push(w.value(v[p], opt));
       }
       return results$;
     },
@@ -774,8 +775,8 @@
     errors: function(){
       return this._errors;
     },
-    value: function(v, fromSource){
-      fromSource == null && (fromSource = false);
+    value: function(v, opt){
+      opt == null && (opt = {});
       if (!(v != null)) {
         return this._value;
       }
@@ -783,8 +784,10 @@
       this._empty = this.mod && this.mod.isEmpty
         ? this.mod.isEmpty.apply(this, v)
         : !v;
-      this.validate();
-      if (!fromSource) {
+      this.validate({
+        init: opt.init
+      });
+      if (!opt.fromSource) {
         return this.fire('change', this._value);
       }
     },

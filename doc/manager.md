@@ -60,6 +60,12 @@ Instance API:
  - `mode(v)`:
    - set widget mode to `v`, return current mode if `v` is omitted.
    - check constructor options for possible values of mode.
+ - `value(v, opt)`: set value ( recursively into each widget, based on `v` )
+   - `v`: an object storing values for each widget managed by this manager.
+     - (TODO) currently we don't correctly support a arbitrary JSON object, but only a single level object.
+   - `opt`: additional options, including:
+     - `from-source`: called from source, should fire change event.
+     - `init`: this is for initialization. won't trigger status change ( leave it as `1` )
 
 
 ## Events

@@ -114,7 +114,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
       else fd.append p, val
     return fd
 
-  value: (v) ->
+  value: (v, opt = {}) ->
     # TODO decompose p and fill ret with given hierarchy
     if !v =>
       ret = {}
@@ -124,7 +124,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
       # even if v[p] is "", 0 or event undefined, we should still update them
       # since user may explicitly enter this value in order to overwrite previous value.
       # mechanism for status 1 by emptiness should be implemented in specific widgets.
-      w.value v[p]
+      w.value v[p], opt
 
   mode: (m) ->
     if !(m?) => return @_mode
