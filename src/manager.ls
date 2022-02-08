@@ -60,7 +60,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     ret =
       total: [k for k of @_ws.w].length
       done: [s for k,s of @_ws.s].filter((s) -> s? and s == 0).length
-    ret.percent = ret.done / ret.total
+    ret.percent = ret.done / ( ret.total or 1)
     return ret
 
   _after-check: ->

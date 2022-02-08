@@ -130,7 +130,7 @@
           return s != null && s === 0;
         }).length
       };
-      ret.percent = ret.done / ret.total;
+      ret.percent = ret.done / (ret.total || 1);
       return ret;
     },
     _afterCheck: function(){
