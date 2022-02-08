@@ -72,7 +72,13 @@ Instance API:
 
  - `readystatechange`: fired when ready state change. callback function receives following parameter:
    - readystate: `true` if ready, otherwise not ready.
- - `status`: fired when there are status changes of any widget. callback functino receives following parameter:
+ - `change`: fired when there are value changes of any widgets. callback function receives following parameters:
+   - object with {path, widget, value} fields:
+     - `path`: path of the widget which has its value changed.
+     - `widget`: widget which has its value changed.
+     - `value`: the value after changed.
+ - `mode`: fired when mode is changed.
+ - `status`: fired when there are status changes of any widget. callback function receives following parameters:
    - object with {path, widget, status} fields:
      - `path`: path of the widget which has its status changed.
      - `widget`: widget which has its status changed.

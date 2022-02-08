@@ -70,10 +70,6 @@
       this._ws.p.set(w, p);
       this._ws.l[p] = {};
       w.on('change', this._ws.l[p].c = function(v){
-        this$.check({
-          widget: w,
-          path: p
-        });
         return this$.fire('change', {
           widget: w,
           path: p,
@@ -81,9 +77,10 @@
         });
       });
       return w.on('status', this._ws.l[p].s = function(s){
-        return this$.check({
+        return this$.fire('status', {
           widget: w,
-          path: p
+          path: p,
+          status: s
         });
       });
     },
@@ -802,7 +799,7 @@
       }
       if (this._empty && this._meta.config.isRequired) {
         this._errors = ["required"];
-        this.status(opt.init && this.status() === 1 ? 1 : 2);
+        this.status(opt.init ? 1 : 2);
         return this.render();
       }
       return Promise.all(this._meta.term.filter(function(t){

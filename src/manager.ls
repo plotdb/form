@@ -32,10 +32,14 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     @_ws.l[p] = {}
     w.on \change, (
       @_ws.l[p].c = (v) ~>
-        @check {widget: w, path: p}
+        #@check {widget: w, path: p}
         @fire \change, {widget: w, path: p, value: v}
     )
-    w.on \status, (@_ws.l[p].s = (s) ~> @check {widget: w, path: p})
+    w.on \status, (
+      @_ws.l[p].s = (s) ~>
+        #@check {widget: w, path: p}
+        @fire \status, {widget: w, path: p, status: s}
+    )
 
   # add(o): remove an widget or a list of widgets. o:
   #  - list

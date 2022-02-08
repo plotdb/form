@@ -70,7 +70,7 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
     if @_validate => return Promise.resolve(@_validate @_value)
     if @_empty and @_meta.config.is-required =>
       @_errors = ["required"]
-      @status(if opt.init and @status! == 1 => 1 else 2)
+      @status (if opt.init => 1 else 2)
       return @render!
     Promise.all(
       @_meta.term
