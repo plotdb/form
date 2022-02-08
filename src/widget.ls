@@ -1,5 +1,5 @@
 form.widget = (opt = {}) ->
-  @root = if typeof(opt.root) == \string => document.querySelector(opt.root) else opt.root
+  @_root = if typeof(opt.root) == \string => document.querySelector(opt.root) else opt.root
   @evt-handler = {}
   @mod = opt.mod or null
   @i18n = {}
@@ -26,6 +26,7 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
     l = @evt-handler.[][n]
     if l.indexOf(cb) >= 0 => l.splice l.indexOf(cb), 1
   fire: (n, ...v) -> for cb in (@evt-handler[n] or []) => cb.apply @, v
+  root: -> @_root
   _init: -> Promise.resolve(if @mod and @mod.init => @mod.init.apply @ else '')
   key: (keyonly = false) ->
     return if keyonly => @_meta.key

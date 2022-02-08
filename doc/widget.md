@@ -19,6 +19,7 @@
 ## API
 
  - `init()`: initialization
+ - `root()`: get root element of this widget
  - `fire(name,...args)`: for firing event.
  - `on(name, cb(...args))`: handle event `name` with `cb` callback function, providing `args` arguments.
  - `render()`: shorthand for firing `render` event when something needs to be updated.

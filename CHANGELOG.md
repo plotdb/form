@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.4
+
+ - add `root()` function to get root element of an widget
+
+
 ## v0.0.3
 
  - changes about `mode`:

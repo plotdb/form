@@ -621,7 +621,7 @@
   form.widget = function(opt){
     var this$ = this;
     opt == null && (opt = {});
-    this.root = typeof opt.root === 'string'
+    this._root = typeof opt.root === 'string'
       ? document.querySelector(opt.root)
       : opt.root;
     this.evtHandler = {};
@@ -696,6 +696,9 @@
         results$.push(cb.apply(this, v));
       }
       return results$;
+    },
+    root: function(){
+      return this._root;
     },
     _init: function(){
       return Promise.resolve(this.mod && this.mod.init ? this.mod.init.apply(this) : '');
