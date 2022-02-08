@@ -29,12 +29,13 @@ Instance API:
    - `path`: path to remove.
  - `widget(p)`: get `form.widget` from given path `p`. return null if nothing is found.
  - `afterCheck()`: check overall status after each `check` call.
-   - It's a debounced function. Call it immediately by `afterCheck.now()`.
+   - It's a debounced function. Call it immediately by `afterCheck().now()`.
+     - check `@loadingio/debounce.js` for more information.
  - `check(o, now)`: validate widgets that match given `o`
    - return a Promise that resolves to following value:
      - `null` if check passed. otherwise:
      - return a list of below object, if this check is against multiple widgets.
-     - return object `{widget, path}` if only one object is checked.
+     - return object `{widget, path, status}` if only one object is checked.
    - `now`: default `false`. `check` debounces without now, set now to true to enforce check immediately.
      - this may also flush checks debounced earlier.
    - o may be:
@@ -43,13 +44,15 @@ Instance API:
        - `path`: path to the given widget
        - `widget`: widget to check.
        - `now`: default `false`. when `true`, force a post-check immediately.
- - `status()`: return current status of all widgets. status definition is the same with `ldform`:
-   - 0: valid
-   - 1: untouched ( not yet edit )
-   - 2: invalid
-   - 3: editing
-   - 4 ~ 9: preserved
-   - 10 and above: user defined.
+ - `status()`: return current status of manager ( all widgets combiined )
+   - this doesn't trigger validation so status may be outdated.
+   - status definition is the same with `ldform`:
+     - 0: valid
+     - 1: untouched ( not yet edit )
+     - 2: invalid
+     - 3: editing
+     - 4 ~ 9: preserved
+     - 10 and above: user defined.
  - `progress()`: return current progress of this form. Returned value is an object with following fields:
    - `total`: total number of widgets
    - `done`: how many widgets has to be filled
