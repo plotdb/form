@@ -69,6 +69,7 @@
       this._ws.w[p] = w;
       this._ws.p.set(w, p);
       this._ws.l[p] = {};
+      this._ws.s[p] = w.status();
       w.on('change', this._ws.l[p].c = function(v){
         return this$.fire('change', {
           widget: w,

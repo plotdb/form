@@ -30,6 +30,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     @_ws.w[p] = w
     @_ws.p.set w, p
     @_ws.l[p] = {}
+    @_ws.s[p] = w.status!
     w.on \change, (
       @_ws.l[p].c = (v) ~>
         #@check {widget: w, path: p}
