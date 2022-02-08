@@ -171,32 +171,34 @@
             });
           }
           return results$;
-        }.call(this)));
+        }.call(this)), now);
       }
       this.checkList = (this.checkList || (this.checkList = [])).concat(Array.isArray(o)
         ? o
         : [o]);
-      if (now) {
-        return this._check();
-      } else {
-        return this._checkDebounced();
-      }
+      return now
+        ? this._check(null, true)
+        : this._checkDebounced();
     },
-    _check: function(o){
+    _check: function(o, now){
       var list, this$ = this;
       if (!o) {
         list = this.checkList || [];
         this.checkList = [];
-        return this._check(list);
+        return this._check(list, now);
       }
       if (Array.isArray(o)) {
         return Promise.all(o.map(function(it){
-          return this$._check(it);
-        }));
+          return this$._check(it, now);
+        })).then(function(it){
+          return it.filter(function(it){
+            return it;
+          });
+        });
       }
       return new Promise(function(res, rej){
-        var ref$, w, p, now;
-        ref$ = [o.widget, o.path, o.now], w = ref$[0], p = ref$[1], now = ref$[2];
+        var ref$, w, p, _now;
+        ref$ = [o.widget, o.path, o.now], w = ref$[0], p = ref$[1], _now = ref$[2];
         if (!(w && p)) {
           return res();
         }
@@ -207,23 +209,31 @@
           p = this$._ws.p[w];
         }
         return w.validate().then(function(){
-          var os;
+          var os, promise;
           os = this$._ws.s[p];
           this$._ws.s[p] = w.status();
-          if (os !== this$._ws.s[p]) {
-            this$.fire('status', {
-              path: p,
-              widget: w,
-              status: this$._ws.s[p]
-            });
-          }
-          if (now) {
-            return this$.afterCheck.now();
-          } else {
-            return this$.afterCheck();
-          }
+          promise = now || _now
+            ? Promise.resolve(this$.afterCheck().now())
+            : this$.afterCheck();
+          return promise.then(function(){
+            if (os !== this$._ws.s[p]) {
+              this$.fire('status', {
+                path: p,
+                widget: w,
+                status: this$._ws.s[p]
+              });
+            }
+            return this$._ws.s[p];
+          });
         }).then(function(){
-          return res();
+          if (this$._ws.s[p] === 2) {
+            return res({
+              widget: w,
+              path: p
+            });
+          } else {
+            return res();
+          }
         });
       });
     },

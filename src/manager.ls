@@ -74,18 +74,21 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
   #  - a single object of { widget, path, now }
   #  - null: check all
   check: (o, now = false) ->
-    if !o => return @check [{widget: w, path: p} for p,w of @_ws.w]
+    if !o => return @check [{widget: w, path: p} for p,w of @_ws.w], now
     @[]check-list ++= (if Array.isArray(o) => o else [o])
-    if now => @_check! else @_check-debounced!
+    return if now => @_check(null, true) else @_check-debounced!
 
-  _check: (o) ->
+  _check: (o, now) ->
     if !o =>
       list = (@check-list or [])
       @check-list = []
-      return @_check(list)
-    if Array.isArray(o) => return Promise.all o.map(~> @_check it)
+      return @_check(list, now)
+    if Array.isArray(o) =>
+      return Promise
+        .all(o.map ~> @_check it, now)
+        .then -> it.filter(->it)
     return new Promise (res, rej) ~>
-      [w, p, now] = [o.widget, o.path, o.now]
+      [w, p, _now] = [o.widget, o.path, o.now]
       if !(w and p) => return res!
       if !w and !(w = @_ws.w[p]) => return res!
       if !p => p = @_ws.p[w]
@@ -93,9 +96,13 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
         .then ~>
           os = @_ws.s[p]
           @_ws.s[p] = w.status!
-          if os != @_ws.s[p] => @fire \status, {path: p, widget: w, status: @_ws.s[p]}
-          if now => @after-check.now! else @after-check!
-        .then -> res!
+          # TODO with @after-check!now!, we may trigger many after-check if we are checking a list of widgets.
+          # consider moving it out of check if it's a list checking.
+          promise = if now or _now => Promise.resolve(@after-check!now!) else @after-check!
+          promise.then ~>
+            if os != @_ws.s[p] => @fire \status, {path: p, widget: w, status: @_ws.s[p]}
+            @_ws.s[p]
+        .then ~> if @_ws.s[p] == 2 => res {widget: w, path: p} else res!
 
   # return a FormData with all fields flattened by its path as form data field name.
   form-data: ->

@@ -31,6 +31,10 @@ Instance API:
  - `afterCheck()`: check overall status after each `check` call.
    - It's a debounced function. Call it immediately by `afterCheck.now()`.
  - `check(o, now)`: validate widgets that match given `o`
+   - return a Promise that resolves to following value:
+     - `null` if check passed. otherwise:
+     - return a list of below object, if this check is against multiple widgets.
+     - return object `{widget, path}` if only one object is checked.
    - `now`: default `false`. `check` debounces without now, set now to true to enforce check immediately.
      - this may also flush checks debounced earlier.
    - o may be:
