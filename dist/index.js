@@ -77,6 +77,7 @@
         });
       });
       return w.on('status', this._ws.l[p].s = function(s){
+        this$._ws.s[p] = s;
         return this$.fire('status', {
           widget: w,
           path: p,

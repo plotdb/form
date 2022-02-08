@@ -38,6 +38,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     w.on \status, (
       @_ws.l[p].s = (s) ~>
         #@check {widget: w, path: p}
+        @_ws.s[p] = s
         @fire \status, {widget: w, path: p, status: s}
     )
 
