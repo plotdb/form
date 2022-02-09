@@ -126,11 +126,10 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
       ret = {}
       for p,w of @_ws.w => ret[p] = w.value!
       return ret
-    for p,w of @_ws.w =>
-      # even if v[p] is "", 0 or event undefined, we should still update them
-      # since user may explicitly enter this value in order to overwrite previous value.
-      # mechanism for status 1 by emptiness should be implemented in specific widgets.
-      w.value v[p], opt
+    # even if v[p] is "", 0 or event undefined, we should still update them
+    # since user may explicitly enter this value in order to overwrite previous value.
+    # mechanism for status 1 by emptiness should be implemented in specific widgets.
+    Promise.all [w.value(v[p], opt) for p, w of @_ws.w]
 
   mode: (m) ->
     if !(m?) => return @_mode
@@ -138,4 +137,4 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     if @_mode == m => return
     @_mode = m
     @fire \mode, m
-    for p,w of @_ws.w => w.mode m
+    Promise.all [w.mode m for p, w of @_ws.w]

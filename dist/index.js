@@ -255,7 +255,7 @@
       return fd;
     },
     value: function(v, opt){
-      var ret, p, ref$, w, results$ = [];
+      var ret, p, ref$, w;
       opt == null && (opt = {});
       if (!v) {
         ret = {};
@@ -265,14 +265,17 @@
         }
         return ret;
       }
-      for (p in ref$ = this._ws.w) {
-        w = ref$[p];
-        results$.push(w.value(v[p], opt));
-      }
-      return results$;
+      return Promise.all((function(){
+        var ref$, results$ = [];
+        for (p in ref$ = this._ws.w) {
+          w = ref$[p];
+          results$.push(w.value(v[p], opt));
+        }
+        return results$;
+      }.call(this)));
     },
     mode: function(m){
-      var ref$, p, w, results$ = [];
+      var ref$, p, w;
       if (!(m != null)) {
         return this._mode;
       }
@@ -284,11 +287,14 @@
       }
       this._mode = m;
       this.fire('mode', m);
-      for (p in ref$ = this._ws.w) {
-        w = ref$[p];
-        results$.push(w.mode(m));
-      }
-      return results$;
+      return Promise.all((function(){
+        var ref$, results$ = [];
+        for (p in ref$ = this._ws.w) {
+          w = ref$[p];
+          results$.push(w.mode(m));
+        }
+        return results$;
+      }.call(this)));
     }
   });
   form.op = function(opt){
@@ -739,7 +745,7 @@
       return ret;
     },
     deserialize: function(v){
-      var ref$;
+      var ref$, this$ = this;
       ref$ = this._meta;
       ref$.key = v.key;
       ref$.title = v.title;
@@ -748,33 +754,39 @@
       this._meta.term = (v.term || []).map(function(it){
         return new form.term(it);
       });
-      this.validate({
+      return this.validate({
         init: true
+      }).then(function(){
+        return this$.render();
       });
-      return this.render();
     },
     mode: function(m){
-      var ref$;
+      var this$ = this;
       if (!(m != null)) {
         return this._mode;
       }
-      if (!(m === 'edit' || m === 'view' || m === 'config')) {
-        throw ref$ = new Error(), ref$.name = 'lderror', ref$.id = 1015, ref$;
-      }
-      if (this._mode === m) {
-        return;
-      }
-      this._mode = m;
-      this.fire('mode', m);
-      this.validate({
-        init: true
+      return Promise.resolve().then(function(){
+        var ref$;
+        if (!(m === 'edit' || m === 'view' || m === 'config')) {
+          return Promise.reject((ref$ = new Error(), ref$.name = 'lderror', ref$.id = 1015, ref$));
+        }
+        if (this$._mode === m) {
+          return;
+        }
+        this$._mode = m;
+        this$.fire('mode', m);
+        return this$.validate({
+          init: true
+        }).then(function(){
+          return this$.render();
+        });
       });
-      return this.render();
     },
     errors: function(){
       return this._errors;
     },
     value: function(v, opt){
+      var this$ = this;
       opt == null && (opt = {});
       if (!(v != null)) {
         return this._value;
@@ -783,43 +795,51 @@
       this._empty = this.mod && this.mod.isEmpty
         ? this.mod.isEmpty.apply(this, v)
         : !v;
-      this.validate({
+      return this.validate({
         init: opt.init
+      }).then(function(){
+        if (!opt.fromSource) {
+          return this$.fire('change', this$._value);
+        }
       });
-      if (!opt.fromSource) {
-        return this.fire('change', this._value);
-      }
     },
     validate: function(opt){
-      var this$ = this;
+      var v, this$ = this;
       opt == null && (opt = {});
-      if (this.mod && this.mod.validate) {
-        return this.mod.validate.apply(this, this._value);
-      }
-      if (this._validate) {
-        return Promise.resolve(this._validate(this._value));
-      }
-      if (this._empty && this._meta.config.isRequired) {
-        this._errors = ["required"];
-        this.status(opt.init ? 1 : 2);
-        return this.render();
-      }
-      return Promise.all(this._meta.term.filter(function(t){
-        return t.enabled;
-      }).map(function(t){
-        return t.validate(this$._value).then(function(v){
-          return [t, v];
+      v = this._value;
+      return Promise.resolve().then(function(){
+        if (this$.mod && this$.mod.validate) {
+          return this$.mod.validate.apply(this$, this$._value);
+        }
+        if (this$._validate) {
+          return this$._validate(this$._value);
+        }
+        if (this$._empty && this$._meta.config.isRequired) {
+          this$._errors = ["required"];
+          this$.status(opt.init ? 1 : 2);
+          this$.render();
+          return this$._errors;
+        }
+        return Promise.all(this$._meta.term.filter(function(t){
+          return t.enabled;
+        }).map(function(t){
+          return t.validate(this$._value).then(function(v){
+            return [t, v];
+          });
+        })).then(function(it){
+          if (v !== this$._value) {
+            return;
+          }
+          this$._errors = it.filter(function(it){
+            return !it[1];
+          }).map(function(it){
+            return it[0].msg || 'error';
+          });
+          this$.status(this$._errors.length ? 2 : 0);
+          return this$.render();
+        }).then(function(){
+          return this$._errors;
         });
-      })).then(function(it){
-        this$._errors = it.filter(function(it){
-          return !it[1];
-        }).map(function(it){
-          return it[0].msg || 'error';
-        });
-        this$.status(this$._errors.length ? 2 : 0);
-        return this$.render();
-      }).then(function(){
-        return this$._errors;
       });
     },
     render: function(){

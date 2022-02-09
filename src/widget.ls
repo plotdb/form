@@ -45,43 +45,49 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
     @_meta <<< v{key, title, desc}
     @_meta.config = JSON.parse(JSON.stringify(v.config or {}))
     @_meta.term = (v.term or []).map -> new form.term it
-    @validate {init: true}
-    @render!
+    @validate {init: true} .then ~> @render!
 
   mode: (m) ->
     if !(m?) => return @_mode
-    if !(m in <[edit view config]>) => throw (new Error! <<< {name: \lderror, id: 1015})
+    <~ Promise.resolve!then _
+    if !(m in <[edit view config]>) => return Promise.reject(new Error! <<< {name: \lderror, id: 1015})
     if @_mode == m => return
     @_mode = m
     @fire \mode, m
-    @validate {init: true}
-    @render!
+    @validate {init: true} .then ~> @render!
 
   errors: -> @_errors
 
   value: (v, opt = {}) ->
     if !(v?) => return @_value
     @ <<< _value: v, _empty: (if @mod and @mod.is-empty => @mod.is-empty.apply(@,v) else !v)
-    @validate opt{init}
-    if !opt.from-source => @fire \change, @_value
+    @validate opt{init} .then ~> if !opt.from-source => @fire \change, @_value
 
   validate: (opt = {}) ->
-    if @mod and @mod.validate => return @mod.validate.apply @, @_value
-    if @_validate => return Promise.resolve(@_validate @_value)
-    if @_empty and @_meta.config.is-required =>
-      @_errors = ["required"]
-      @status (if opt.init => 1 else 2)
-      return @render!
-    Promise.all(
-      @_meta.term
-        .filter (t) -> t.enabled
-        .map (t) ~> t.validate(@_value).then (v) ~> [t,v]
-    )
+    v = @_value
+    Promise.resolve!
       .then ~>
-        @_errors = it.filter(-> !it.1).map -> it.0.msg or 'error'
-        @status if @_errors.length => 2 else 0
-        @render!
-      .then ~> @_errors
+        if @mod and @mod.validate => return @mod.validate.apply @, @_value
+        if @_validate => return @_validate @_value
+        if @_empty and @_meta.config.is-required =>
+          @_errors = ["required"]
+          @status (if opt.init => 1 else 2)
+          @render!
+          return @_errors
+        Promise.all(
+          @_meta.term
+            .filter (t) -> t.enabled
+            .map (t) ~> t.validate(@_value).then (v) ~> [t,v]
+        )
+          .then ~>
+            # since term is Promise-based,
+            # validation result may expire if between this a new value has been set.
+            # we may need a better way to check this. before that we simply check if value is different.
+            if v != @_value => return
+            @_errors = it.filter(->!it.1).map -> it.0.msg or 'error'
+            @status if @_errors.length => 2 else 0
+            @render!
+          .then ~> @_errors
 
   render: ->
     @fire \render

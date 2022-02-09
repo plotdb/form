@@ -36,12 +36,20 @@
      - `init`: true if this validation attempt is triggered by initial input ( e.g., deserialize ).
  - `serialize()`: consider renaming to `config`, merge with `deserialize()`
  - `deserialize()`
+   - return a Promise which resolves when validation completes.
  - `errors()`
  - `opsets()`
  - `data()`
- - `value()`
+ - `value(v, opt)`: set value
+   - return a Promise which resolves when validation completes.
+   - options:
+   - `v`: value to set.
+   - `opt`: additional options, including:
+     - `from-source`: called from source, should fire change event.
+     - `init`: this is for initialization. won't trigger status change ( leave it as `1` )
  - `adapt()`: apply programmatic options such as uploadr?
  - `mode(v)`:
+   - setting mode triggers validation. return a Promise which resolves when validation completes.
    - set widget mode to `v`, return current mode if `v` is omitted.
    - check constructor options for possible values of mode.
 

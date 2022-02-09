@@ -57,10 +57,13 @@ Instance API:
    - `total`: total number of widgets
    - `done`: how many widgets has to be filled
    - `percent`: `done/total`. 1 when this form completes.
- - `mode(v)`:
+ - `mode(v)`: set current mode.
+   - setting mode triggers validation. return Promise, resolved when validation completes.
    - set widget mode to `v`, return current mode if `v` is omitted.
    - check constructor options for possible values of mode.
  - `value(v, opt)`: set value ( recursively into each widget, based on `v` )
+   - return a Promise which resolves when validation completes.
+   - options:
    - `v`: an object storing values for each widget managed by this manager.
      - (TODO) currently we don't correctly support a arbitrary JSON object, but only a single level object.
    - `opt`: additional options, including:
