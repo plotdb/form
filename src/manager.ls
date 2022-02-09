@@ -8,9 +8,9 @@ form.manager = (o = {}) ->
   @_evthdr = {}
   @_status = 1
   @_mode = \edit
-  @mod = o.mod{after-check} or {}
-  @after-check = debounce 330, (...args) ~> @_after-check.apply @, args
+  @_mod = {}
   @_check-debounced = debounce 10, (...args) ~> @_check.apply @, args
+  @_restatus-debounced = debounce 10, (...args) ~> @_restatus.apply @, args
   @
 
 ## widget def
@@ -18,7 +18,7 @@ form.manager = (o = {}) ->
 # - on
 #   - change
 form.manager.prototype = Object.create(Object.prototype) <<< do
-  on: (n, cb) -> @_evthdr.[][n].push cb
+  on: (n, cb) -> (if Array.isArray(n) => n else [n]).map (n) ~> @_evthdr.[][n].push cb
   fire: (n, ...v) -> for cb in (@_evthdr[n] or []) => cb.apply @, v
   # add(o): add an widget or a list of widgets. o:
   #  - list
@@ -33,14 +33,13 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     @_ws.s[p] = w.status!
     w.on \change, (
       @_ws.l[p].c = (v) ~>
-        #@check {widget: w, path: p}
         @fire \change, {widget: w, path: p, value: v}
     )
     w.on \status, (
       @_ws.l[p].s = (s) ~>
-        #@check {widget: w, path: p}
         @_ws.s[p] = s
         @fire \status, {widget: w, path: p, status: s}
+        @_restatus-debounced!
     )
 
   # add(o): remove an widget or a list of widgets. o:
@@ -56,7 +55,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     delete @_ws.l[o.path]
 
   widget: (p) -> @_ws.w[p]
-  status: (v) -> return if !(v?) => @_status else @_status = v
+  status: -> @_status
   progress: ->
     ret =
       total: [k for k of @_ws.w].length
@@ -64,15 +63,11 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     ret.percent = ret.done / ( ret.total or 1)
     return ret
 
-  _after-check: ->
+  _restatus: ->
     os = @_status
     delete @_status
-    # user might not customize s.all in after-check.
-    # if it's not updated, we then calculate it for them.
-    @mod.after-check.apply @
-    if !(@_status?) =>
-      ret = [@_ws.s[k] for k,v of @_ws.w].filter((s) ~> !(s? and s == 0)).length
-      @_status = if ret => 1 else 0
+    ret = [@_ws.s[k] for k,v of @_ws.w].filter((s) ~> !(s? and s == 0)).length
+    @_status = if ret => 1 else 0
     if os != @_status => @fire \readystatechange, @_status == 0
 
   # o:
@@ -80,9 +75,12 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
   #  - a single object of { widget, path, now }
   #  - null: check all
   check: (o, now = false) ->
-    if !o => return @check [{widget: w, path: p} for p,w of @_ws.w], now
-    @[]check-list ++= (if Array.isArray(o) => o else [o])
-    return if now => @_check(null, true) else @_check-debounced!
+    Promise.resolve!
+      .then ~>
+        if !o => return @check [{widget: w, path: p} for p,w of @_ws.w], now
+        @[]check-list ++= (if Array.isArray(o) => o else [o])
+        return if now => @_check(null, true) else @_check-debounced!
+      .then ~> @_restatus!
 
   _check: (o, now) ->
     if !o =>
@@ -102,12 +100,8 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
         .then ~>
           os = @_ws.s[p]
           @_ws.s[p] = w.status!
-          # TODO with @after-check!now!, we may trigger many after-check if we are checking a list of widgets.
-          # consider moving it out of check if it's a list checking.
-          promise = if now or _now => Promise.resolve(@after-check!now!) else @after-check!
-          promise.then ~>
-            if os != @_ws.s[p] => @fire \status, {path: p, widget: w, status: @_ws.s[p]}
-            @_ws.s[p]
+          if os != @_ws.s[p] => @fire \status, {path: p, widget: w, status: @_ws.s[p]}
+          @_ws.s[p]
         .then ~> if @_ws.s[p] == 2 => res {widget: w, path: p, status: @_ws.s[p]} else res!
 
   # return a FormData with all fields flattened by its path as form data field name.

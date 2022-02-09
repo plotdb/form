@@ -14,18 +14,7 @@
     this._evthdr = {};
     this._status = 1;
     this._mode = 'edit';
-    this.mod = {
-      afterCheck: o.mod.afterCheck
-    } || {};
-    this.afterCheck = debounce(330, function(){
-      var args, res$, i$, to$;
-      res$ = [];
-      for (i$ = 0, to$ = arguments.length; i$ < to$; ++i$) {
-        res$.push(arguments[i$]);
-      }
-      args = res$;
-      return this$._afterCheck.apply(this$, args);
-    });
+    this._mod = {};
     this._checkDebounced = debounce(10, function(){
       var args, res$, i$, to$;
       res$ = [];
@@ -35,12 +24,26 @@
       args = res$;
       return this$._check.apply(this$, args);
     });
+    this._restatusDebounced = debounce(10, function(){
+      var args, res$, i$, to$;
+      res$ = [];
+      for (i$ = 0, to$ = arguments.length; i$ < to$; ++i$) {
+        res$.push(arguments[i$]);
+      }
+      args = res$;
+      return this$._restatus.apply(this$, args);
+    });
     return this;
   };
   form.manager.prototype = import$(Object.create(Object.prototype), {
     on: function(n, cb){
-      var ref$;
-      return ((ref$ = this._evthdr)[n] || (ref$[n] = [])).push(cb);
+      var this$ = this;
+      return (Array.isArray(n)
+        ? n
+        : [n]).map(function(n){
+        var ref$;
+        return ((ref$ = this$._evthdr)[n] || (ref$[n] = [])).push(cb);
+      });
     },
     fire: function(n){
       var v, res$, i$, to$, ref$, len$, cb, results$ = [];
@@ -79,11 +82,12 @@
       });
       return w.on('status', this._ws.l[p].s = function(s){
         this$._ws.s[p] = s;
-        return this$.fire('status', {
+        this$.fire('status', {
           widget: w,
           path: p,
           status: s
         });
+        return this$._restatusDebounced();
       });
     },
     remove: function(o){
@@ -105,10 +109,8 @@
     widget: function(p){
       return this._ws.w[p];
     },
-    status: function(v){
-      return !(v != null)
-        ? this._status
-        : this._status = v;
+    status: function(){
+      return this._status;
     },
     progress: function(){
       var ret, k, s;
@@ -134,50 +136,52 @@
       ret.percent = ret.done / (ret.total || 1);
       return ret;
     },
-    _afterCheck: function(){
+    _restatus: function(){
       var os, ret, k, v;
       os = this._status;
       delete this._status;
-      this.mod.afterCheck.apply(this);
-      if (!(this._status != null)) {
-        ret = (function(){
-          var ref$, results$ = [];
-          for (k in ref$ = this._ws.w) {
-            v = ref$[k];
-            results$.push(this._ws.s[k]);
-          }
-          return results$;
-        }.call(this)).filter(function(s){
-          return !(s != null && s === 0);
-        }).length;
-        this._status = ret ? 1 : 0;
-      }
+      ret = (function(){
+        var ref$, results$ = [];
+        for (k in ref$ = this._ws.w) {
+          v = ref$[k];
+          results$.push(this._ws.s[k]);
+        }
+        return results$;
+      }.call(this)).filter(function(s){
+        return !(s != null && s === 0);
+      }).length;
+      this._status = ret ? 1 : 0;
       if (os !== this._status) {
         return this.fire('readystatechange', this._status === 0);
       }
     },
     check: function(o, now){
-      var p, w;
+      var this$ = this;
       now == null && (now = false);
-      if (!o) {
-        return this.check((function(){
-          var ref$, results$ = [];
-          for (p in ref$ = this._ws.w) {
-            w = ref$[p];
-            results$.push({
-              widget: w,
-              path: p
-            });
-          }
-          return results$;
-        }.call(this)), now);
-      }
-      this.checkList = (this.checkList || (this.checkList = [])).concat(Array.isArray(o)
-        ? o
-        : [o]);
-      return now
-        ? this._check(null, true)
-        : this._checkDebounced();
+      return Promise.resolve().then(function(){
+        var p, w;
+        if (!o) {
+          return this$.check((function(){
+            var ref$, results$ = [];
+            for (p in ref$ = this._ws.w) {
+              w = ref$[p];
+              results$.push({
+                widget: w,
+                path: p
+              });
+            }
+            return results$;
+          }.call(this$)), now);
+        }
+        this$.checkList = (this$.checkList || (this$.checkList = [])).concat(Array.isArray(o)
+          ? o
+          : [o]);
+        return now
+          ? this$._check(null, true)
+          : this$._checkDebounced();
+      }).then(function(){
+        return this$._restatus();
+      });
     },
     _check: function(o, now){
       var list, this$ = this;
@@ -208,22 +212,17 @@
           p = this$._ws.p[w];
         }
         return w.validate().then(function(){
-          var os, promise;
+          var os;
           os = this$._ws.s[p];
           this$._ws.s[p] = w.status();
-          promise = now || _now
-            ? Promise.resolve(this$.afterCheck().now())
-            : this$.afterCheck();
-          return promise.then(function(){
-            if (os !== this$._ws.s[p]) {
-              this$.fire('status', {
-                path: p,
-                widget: w,
-                status: this$._ws.s[p]
-              });
-            }
-            return this$._ws.s[p];
-          });
+          if (os !== this$._ws.s[p]) {
+            this$.fire('status', {
+              path: p,
+              widget: w,
+              status: this$._ws.s[p]
+            });
+          }
+          return this$._ws.s[p];
         }).then(function(){
           if (this$._ws.s[p] === 2) {
             return res({
