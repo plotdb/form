@@ -103,7 +103,7 @@
       return ref1$ = (ref$ = this._ws.l)[key$ = o.path], delete ref$[key$], ref1$;
     },
     widget: function(p){
-      return this._ws[p];
+      return this._ws.w[p];
     },
     status: function(v){
       return !(v != null)
