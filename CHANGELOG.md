@@ -1,5 +1,11 @@
 # Change Logs
 
+## v0.0.8
+
+ - bug fix: race condition in value validation.
+ - spec changes: `mode`, `value`, `deserialize` now return Promise, resolves when validation is finished.
+
+
 ## v0.0.7
 
  - bug fix: `manager.widget` doesn't work
