@@ -787,7 +787,7 @@
     value: function(v, opt){
       var this$ = this;
       opt == null && (opt = {});
-      if (!(v != null)) {
+      if (typeof v === 'undefined') {
         return this._value;
       }
       this._value = v;

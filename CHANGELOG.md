@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.11
+
+ - bug fix: don't set value only if it's undefined
+
+
 ## v0.0.10
 
  - bug fix: `is-empty` of widget mod can't be executed correctly
