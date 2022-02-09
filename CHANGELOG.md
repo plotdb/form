@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.7
+
+ - bug fix: `manager.widget` doesn't work
+
+
 ## v0.0.6
 
  - bug fix: widget status change isn't logged in form manager.
