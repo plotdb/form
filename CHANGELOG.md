@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.9
+
+ - bug fix: manager status isn't updated correctly due to status update logic incorrect
+
+
 ## v0.0.8
 
  - bug fix: race condition in value validation.
