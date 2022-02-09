@@ -792,7 +792,7 @@
       }
       this._value = v;
       this._empty = this.mod && this.mod.isEmpty
-        ? this.mod.isEmpty.apply(this, v)
+        ? this.mod.isEmpty.call(this, v)
         : !v;
       return this.validate({
         init: opt.init

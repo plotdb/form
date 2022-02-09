@@ -60,7 +60,7 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
 
   value: (v, opt = {}) ->
     if !(v?) => return @_value
-    @ <<< _value: v, _empty: (if @mod and @mod.is-empty => @mod.is-empty.apply(@,v) else !v)
+    @ <<< _value: v, _empty: (if @mod and @mod.is-empty => @mod.is-empty.call(@,v) else !v)
     @validate opt{init} .then ~> if !opt.from-source => @fire \change, @_value
 
   validate: (opt = {}) ->

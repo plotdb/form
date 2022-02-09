@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.10
+
+ - bug fix: `is-empty` of widget mod can't be executed correctly
+
+
 ## v0.0.9
 
  - bug fix: manager status isn't updated correctly due to status update logic incorrect
