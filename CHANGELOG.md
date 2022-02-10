@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.14
+
+ - use `isRequired` instead of `config.isRequired` since it's mandatory
+
+
 ## v0.0.13
 
  - bug fix: set mode failed

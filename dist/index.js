@@ -739,7 +739,7 @@
     },
     serialize: function(){
       var ref$, ret, ref1$;
-      ret = (ref1$ = {}, ref1$.key = (ref$ = this._meta).key, ref1$.title = ref$.title, ref1$.desc = ref$.desc, ref1$);
+      ret = (ref1$ = {}, ref1$.key = (ref$ = this._meta).key, ref1$.title = ref$.title, ref1$.desc = ref$.desc, ref1$.isRequired = ref$.isRequired, ref1$.readonly = ref$.readonly, ref1$);
       ret.config = JSON.parse(JSON.stringify(this._meta.config || {}));
       ret.term = this._meta.term.map(function(it){
         return it.serialize();
@@ -752,6 +752,8 @@
       ref$.key = v.key;
       ref$.title = v.title;
       ref$.desc = v.desc;
+      ref$.isRequired = v.isRequired;
+      ref$.readonly = v.readonly;
       this._meta.config = JSON.parse(JSON.stringify(v.config || {}));
       this._meta.term = (v.term || []).map(function(it){
         return new form.term(it);
@@ -816,7 +818,7 @@
         if (this$._validate) {
           return this$._validate(this$._value);
         }
-        if (this$._empty && this$._meta.config.isRequired) {
+        if (this$._empty && this$._meta.isRequired) {
           this$._errors = ["required"];
           this$.status(opt.init ? 1 : 2);
           this$.render();
