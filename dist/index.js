@@ -274,6 +274,7 @@
       }.call(this)));
     },
     mode: function(m){
+      var this$ = this;
       if (!(m != null)) {
         return this._mode;
       }
@@ -282,11 +283,11 @@
         if (!(m === 'edit' || m === 'view' || m === 'config')) {
           return Promise.reject((ref$ = new Error(), ref$.name = 'lderror', ref$.id = 1015, ref$));
         }
-        if (this._mode === m) {
+        if (this$._mode === m) {
           return;
         }
-        this._mode = m;
-        this.fire('mode', m);
+        this$._mode = m;
+        this$.fire('mode', m);
         return Promise.all((function(){
           var ref$, results$ = [];
           for (p in ref$ = this._ws.w) {
@@ -294,7 +295,7 @@
             results$.push(w.mode(m));
           }
           return results$;
-        }.call(this)));
+        }.call(this$)));
       });
     }
   });
