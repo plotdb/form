@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.12
+
+ - bug fix: setting manager mode doesn't always return a Promise.
+
+
 ## v0.0.11
 
  - bug fix: don't set value only if it's undefined
