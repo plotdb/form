@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.13
+
+ - bug fix: set mode failed
+
+
 ## v0.0.12
 
  - bug fix: setting manager mode doesn't always return a Promise.
