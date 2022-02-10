@@ -128,7 +128,8 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
 
   mode: (m) ->
     if !(m?) => return @_mode
-    if !(m in <[edit view config]>) => throw (new Error! <<< {name: \lderror, id: 1015})
+    <- Promise.resolve!then _
+    if !(m in <[edit view config]>) => return Promise.reject(new Error! <<< {name: \lderror, id: 1015})
     if @_mode == m => return
     @_mode = m
     @fire \mode, m

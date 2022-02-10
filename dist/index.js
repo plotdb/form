@@ -274,26 +274,28 @@
       }.call(this)));
     },
     mode: function(m){
-      var ref$, p, w;
       if (!(m != null)) {
         return this._mode;
       }
-      if (!(m === 'edit' || m === 'view' || m === 'config')) {
-        throw ref$ = new Error(), ref$.name = 'lderror', ref$.id = 1015, ref$;
-      }
-      if (this._mode === m) {
-        return;
-      }
-      this._mode = m;
-      this.fire('mode', m);
-      return Promise.all((function(){
-        var ref$, results$ = [];
-        for (p in ref$ = this._ws.w) {
-          w = ref$[p];
-          results$.push(w.mode(m));
+      return Promise.resolve().then(function(){
+        var ref$, p, w;
+        if (!(m === 'edit' || m === 'view' || m === 'config')) {
+          return Promise.reject((ref$ = new Error(), ref$.name = 'lderror', ref$.id = 1015, ref$));
         }
-        return results$;
-      }.call(this)));
+        if (this._mode === m) {
+          return;
+        }
+        this._mode = m;
+        this.fire('mode', m);
+        return Promise.all((function(){
+          var ref$, results$ = [];
+          for (p in ref$ = this._ws.w) {
+            w = ref$[p];
+            results$.push(w.mode(m));
+          }
+          return results$;
+        }.call(this)));
+      });
     }
   });
   form.op = function(opt){
