@@ -1,5 +1,14 @@
 # Change Logs
 
+## v0.0.16
+
+ - check arguments.length instead of typeof(v) in widget.value to support setting undefined as value
+ - add `partial` option to support manager value partially update
+ - use `undefined` as initial value for widget
+ - support `mod.value` for value parsing
+ - change default check for emptiness from (!v) to either undefined or empty strgin ''
+
+
 ## v0.0.15
 
  - add file opset
