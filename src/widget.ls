@@ -60,15 +60,17 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
 
   value: (v, opt = {}) ->
     if arguments.length == 0 => return @_value
-    @ <<< _value: v, _empty: (if @mod and @mod.is-empty => @mod.is-empty.call(@,v) else !v)
+    @ <<<
+      _value: v
+      _empty: (if @mod and @mod.is-empty => @mod.is-empty.call(@,v) else (typeof(v) == \undefined or (v == '')))
     @validate opt{init} .then ~> if !opt.from-source => @fire \change, @_value
 
   validate: (opt = {}) ->
-    v = @_value
+    v = if @mod and @mod.value => @mod.value.call @, @_value else @_value
     Promise.resolve!
       .then ~>
-        if @mod and @mod.validate => return @mod.validate.apply @, @_value
-        if @_validate => return @_validate @_value
+        if @mod and @mod.validate => return @mod.validate.call @, @_value
+        if @_validate => return @_validate v
         if @_empty and @_meta.is-required =>
           @_errors = ["required"]
           @status (if opt.init => 1 else 2)
@@ -77,13 +79,14 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
         Promise.all(
           @_meta.term
             .filter (t) -> t.enabled
-            .map (t) ~> t.validate(@_value).then (v) ~> [t,v]
+            .map (t) ~> t.validate(v).then (v) ~> [t,v]
         )
           .then ~>
             # since term is Promise-based,
             # validation result may expire if between this a new value has been set.
             # we may need a better way to check this. before that we simply check if value is different.
-            if v != @_value => return
+            nv = if @mod and @mod.value => @mod.value.call @, @_value else @_value
+            if v != nv => return
             @_errors = it.filter(->!it.1).map -> it.0.msg or 'error'
             @status if @_errors.length => 2 else 0
             @render!

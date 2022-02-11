@@ -862,7 +862,7 @@
       this._value = v;
       this._empty = this.mod && this.mod.isEmpty
         ? this.mod.isEmpty.call(this, v)
-        : !v;
+        : typeof v === 'undefined' || v === '';
       return this.validate({
         init: opt.init
       }).then(function(){
@@ -874,13 +874,15 @@
     validate: function(opt){
       var v, this$ = this;
       opt == null && (opt = {});
-      v = this._value;
+      v = this.mod && this.mod.value
+        ? this.mod.value.call(this, this._value)
+        : this._value;
       return Promise.resolve().then(function(){
         if (this$.mod && this$.mod.validate) {
-          return this$.mod.validate.apply(this$, this$._value);
+          return this$.mod.validate.call(this$, this$._value);
         }
         if (this$._validate) {
-          return this$._validate(this$._value);
+          return this$._validate(v);
         }
         if (this$._empty && this$._meta.isRequired) {
           this$._errors = ["required"];
@@ -891,11 +893,15 @@
         return Promise.all(this$._meta.term.filter(function(t){
           return t.enabled;
         }).map(function(t){
-          return t.validate(this$._value).then(function(v){
+          return t.validate(v).then(function(v){
             return [t, v];
           });
         })).then(function(it){
-          if (v !== this$._value) {
+          var nv;
+          nv = this$.mod && this$.mod.value
+            ? this$.mod.value.call(this$, this$._value)
+            : this$._value;
+          if (v !== nv) {
             return;
           }
           this$._errors = it.filter(function(it){
