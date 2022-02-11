@@ -414,6 +414,65 @@
   };
   form.opset['default'] = [
     {
+      id: "file",
+      i18n: {
+        "size-limit": "檔案大小上限",
+        "count-limit": "檔案數量上限",
+        "extension": "副檔名限制"
+      },
+      convert: function(v){
+        if (Array.isArray(v)) {
+          return v;
+        } else {
+          return [v];
+        }
+      },
+      ops: {
+        "size-limit": {
+          func: function(v, c){
+            c == null && (c = {});
+            return !v.filter(function(it){
+              return it.size > c.val;
+            }).length;
+          },
+          config: {
+            val: {
+              type: 'number',
+              hint: "maximal size"
+            }
+          }
+        },
+        extension: {
+          func: function(v, c){
+            var exts;
+            c == null && (c = {});
+            exts = c.str.split(',') || [];
+            return !v.filter(function(it){
+              var ext, ref$;
+              return !in$((ext = (ref$ = it.filename.split('.'))[ref$.length - 1]) || '', exts);
+            }).length;
+          },
+          config: {
+            str: {
+              type: 'text',
+              hint: "extension, comma separated, without dot"
+            }
+          }
+        },
+        "count-limit": {
+          func: function(v, c){
+            c == null && (c = {});
+            return v.length < c.val;
+          },
+          config: {
+            val: {
+              type: 'number',
+              hint: "maximal file amount"
+            }
+          }
+        }
+      }
+    }, {
       id: 'string',
       i18n: {
         "zh-TW": {
@@ -873,5 +932,10 @@
     var own = {}.hasOwnProperty;
     for (var key in src) if (own.call(src, key)) obj[key] = src[key];
     return obj;
+  }
+  function in$(x, xs){
+    var i = -1, l = xs.length >>> 0;
+    while (++i < l) if (x === xs[i]) return true;
+    return false;
   }
 }).call(this);

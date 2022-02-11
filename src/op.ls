@@ -38,6 +38,25 @@ form.opset.get = (id) -> @[]list.filter(->(it.id or it.name) == id).0
 
 form.opset.default = [
   {
+    id: "file"
+    i18n:
+      "size-limit": "檔案大小上限"
+      "count-limit": "檔案數量上限"
+      "extension": "副檔名限制"
+    convert: (v) -> if Array.isArray(v) => v else [v]
+    ops:
+      "size-limit":
+        func: (v, c = {}) -> !v.filter(-> it.size > c.val).length
+        config: {val: {type: \number, hint: "maximal size"}}
+      extension:
+        func: (v, c = {}) ->
+          exts = c.str.split(',') or []
+          !v.filter(->!(((ext = it.filename.split('.')[* - 1]) or '') in exts)).length
+        config: {str: {type: \text, hint: "extension, comma separated, without dot"}}
+      "count-limit":
+        func: (v, c = {}) -> v.length < c.val
+        config: {val: {type: \number, hint: "maximal file amount"}}
+  }, {
     id: 'string'
     i18n:
       "zh-TW":
