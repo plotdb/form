@@ -13,7 +13,7 @@ form.opset.register opset
 opset = form.opset.get \random-set
 console.log opset.get-op \email
 console.log opset.ops
-opset.get-op \email .verify 'tkirby@gmail.com', len: 50
+opset.get-op \email .verify 'dummy@dummy.dummy', len: 50
   .then ->
     console.log it
     opset.get-op \between .verify 50, range: [20,60]
