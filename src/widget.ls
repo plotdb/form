@@ -6,7 +6,7 @@ form.widget = (opt = {}) ->
   @_custom = {}
   @_status = 1
   @_meta = {config: {}, key: Math.random!toString(36)substring(2)}
-  @ <<< _value: null, _empty: true
+  @ <<< _value: undefined, _empty: true
   @_mode = opt.mode or \edit
   @_validate = opt.validate or null
   @_opsets = (opt.opsets or []).map (opset) ->

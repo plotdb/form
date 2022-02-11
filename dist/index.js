@@ -714,7 +714,7 @@
       config: {},
       key: Math.random().toString(36).substring(2)
     };
-    this._value = null;
+    this._value = undefined;
     this._empty = true;
     this._mode = opt.mode || 'edit';
     this._validate = opt.validate || null;
