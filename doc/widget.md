@@ -116,10 +116,16 @@ value ( user input ) can be anything ( string, number or object ) and is defined
 
 ## Mod
 
- - init
- - render
- - is-empty
- - validate
+mod is a set of functions that can be provided to `widget` for advanced functionality. These functions are called with `widget` as its context so you can access `widget` API directly with `this`.
+
+ - `init()`: initialization
+ - `render()`: called after switching mode, setting values or validating, for re-rendering
+ - `isEmpty(v)`: provide `isEmpty` check above basic check against undefined or '' values.
+ - `validate(v)`: validate the given value ( the stored value, maybe structued ) manually
+   - we pass structured value here before mod may want to validate the whole value.
+ - `value(v)`: when the real value is structured, use this function to return a value that can be used to validate
+
+
 ## base widget
 
 TODO
