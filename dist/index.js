@@ -264,14 +264,19 @@
         }
         return ret;
       }
-      return Promise.all((function(){
-        var ref$, results$ = [];
+      return Promise.resolve().then(function(){
+        var ps, res$, p, ref$, w;
+        res$ = [];
         for (p in ref$ = this._ws.w) {
           w = ref$[p];
-          results$.push(w.value(v[p], opt));
+          if (!v.hasOwnProperty(p) && opt.partial) {
+            continue;
+          }
+          res$.push(w.value(v[p], opt));
         }
-        return results$;
-      }.call(this)));
+        ps = res$;
+        return Promise.all(ps);
+      });
     },
     mode: function(m){
       var this$ = this;
@@ -851,7 +856,7 @@
     value: function(v, opt){
       var this$ = this;
       opt == null && (opt = {});
-      if (typeof v === 'undefined') {
+      if (arguments.length === 0) {
         return this._value;
       }
       this._value = v;

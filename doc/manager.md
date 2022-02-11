@@ -69,6 +69,8 @@ Instance API:
    - `opt`: additional options, including:
      - `from-source`: called from source, should fire change event.
      - `init`: this is for initialization. won't trigger status change ( leave it as `1` )
+     - `partial`: default false. if true, update path that only defined in `v`.
+       - Please note that, without `partial = true`, value({}) means setting values of all widgets to `undefined`.
 
 
 ## Events

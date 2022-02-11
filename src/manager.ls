@@ -122,9 +122,14 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
       return ret
     # even if v[p] is "", 0 or event undefined, we should still update them
     # since user may explicitly enter this value in order to overwrite previous value.
-    # mechanism for status 1 by emptiness should be implemented in specific widgets.
-    # TODO: if v[p] is undefined, w.value(v[p]) won't work. should reconsider how to implement `value`.
-    Promise.all [w.value(v[p], opt) for p, w of @_ws.w]
+    # we by default iterate through all widgets for values even if it's undefined
+    # since we don't know if some value are skipped intentionally or accenditally
+    # however, user can enforce a partial update by setting opt.partial to true.
+    Promise.resolve!then ->
+      ps = for p, w of @_ws.w
+        if !v.hasOwnProperty(p) and opt.partial => continue
+        w.value v[p], opt
+      Promise.all ps
 
   mode: (m) ->
     if !(m?) => return @_mode

@@ -59,7 +59,7 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
   errors: -> @_errors
 
   value: (v, opt = {}) ->
-    if typeof(v) == \undefined => return @_value
+    if arguments.length == 0 => return @_value
     @ <<< _value: v, _empty: (if @mod and @mod.is-empty => @mod.is-empty.call(@,v) else !v)
     @validate opt{init} .then ~> if !opt.from-source => @fire \change, @_value
 
