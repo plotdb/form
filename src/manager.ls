@@ -125,7 +125,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     # we by default iterate through all widgets for values even if it's undefined
     # since we don't know if some value are skipped intentionally or accenditally
     # however, user can enforce a partial update by setting opt.partial to true.
-    Promise.resolve!then ->
+    Promise.resolve!then ~>
       ps = for p, w of @_ws.w
         if !v.hasOwnProperty(p) and opt.partial => continue
         w.value v[p], opt

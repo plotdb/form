@@ -254,7 +254,7 @@
       return fd;
     },
     value: function(v, opt){
-      var ret, p, ref$, w;
+      var ret, p, ref$, w, this$ = this;
       opt == null && (opt = {});
       if (!v) {
         ret = {};
@@ -267,7 +267,7 @@
       return Promise.resolve().then(function(){
         var ps, res$, p, ref$, w;
         res$ = [];
-        for (p in ref$ = this._ws.w) {
+        for (p in ref$ = this$._ws.w) {
           w = ref$[p];
           if (!v.hasOwnProperty(p) && opt.partial) {
             continue;
