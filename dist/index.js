@@ -426,11 +426,11 @@
         "extension": "副檔名限制"
       },
       convert: function(v){
-        if (Array.isArray(v)) {
-          return v;
-        } else {
-          return [v];
-        }
+        return (Array.isArray(v)
+          ? v
+          : [v]).filter(function(it){
+          return it;
+        });
       },
       ops: {
         "size-limit": {

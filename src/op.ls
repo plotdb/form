@@ -43,7 +43,7 @@ form.opset.default = [
       "size-limit": "檔案大小上限"
       "count-limit": "檔案數量上限"
       "extension": "副檔名限制"
-    convert: (v) -> if Array.isArray(v) => v else [v]
+    convert: (v) -> (if Array.isArray(v) => v else [v]).filter -> it
     ops:
       "size-limit":
         func: (v, c = {}) -> !v.filter(-> it.size > c.val).length
