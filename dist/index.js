@@ -109,6 +109,9 @@
     widget: function(p){
       return this._ws.w[p];
     },
+    content: function(p){
+      return this._ws.w[p].content();
+    },
     status: function(){
       return this._status;
     },
@@ -871,12 +874,17 @@
         }
       });
     },
+    content: function(){
+      if (this.mod && this.mod.content) {
+        return this.mod.content.call(this, this._value);
+      } else {
+        return this._value;
+      }
+    },
     validate: function(opt){
       var v, this$ = this;
       opt == null && (opt = {});
-      v = this.mod && this.mod.value
-        ? this.mod.value.call(this, this._value)
-        : this._value;
+      v = this.content();
       return Promise.resolve().then(function(){
         if (this$.mod && this$.mod.validate) {
           return this$.mod.validate.call(this$, this$._value);
@@ -898,9 +906,7 @@
           });
         })).then(function(it){
           var nv;
-          nv = this$.mod && this$.mod.value
-            ? this$.mod.value.call(this$, this$._value)
-            : this$._value;
+          nv = this$.content();
           if (v !== nv) {
             return;
           }

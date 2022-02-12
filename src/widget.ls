@@ -65,8 +65,10 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
       _empty: (if @mod and @mod.is-empty => @mod.is-empty.call(@,v) else (typeof(v) == \undefined or (v == '')))
     @validate opt{init} .then ~> if !opt.from-source => @fire \change, @_value
 
+  content: -> if @mod and @mod.content => @mod.content.call @, @_value else @_value
+
   validate: (opt = {}) ->
-    v = if @mod and @mod.value => @mod.value.call @, @_value else @_value
+    v = @content!
     Promise.resolve!
       .then ~>
         if @mod and @mod.validate => return @mod.validate.call @, @_value
@@ -85,7 +87,7 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
             # since term is Promise-based,
             # validation result may expire if between this a new value has been set.
             # we may need a better way to check this. before that we simply check if value is different.
-            nv = if @mod and @mod.value => @mod.value.call @, @_value else @_value
+            nv = @content!
             if v != nv => return
             @_errors = it.filter(->!it.1).map -> it.0.msg or 'error'
             @status if @_errors.length => 2 else 0

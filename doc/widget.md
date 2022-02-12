@@ -47,6 +47,10 @@
    - `opt`: additional options, including:
      - `from-source`: called from source, should fire change event.
      - `init`: this is for initialization. won't trigger status change ( leave it as `1` )
+ - `content()`: get content from this widget.
+   - concept of `content` is defined by widget, and will be used in validation.
+   - for example, string get from input field is content, but widget may wrap this content in an object, which is defined as value here.
+   - see also `mod.content` in following section.
  - `adapt()`: apply programmatic options such as uploadr?
  - `mode(v)`:
    - setting mode triggers validation. return a Promise which resolves when validation completes.
@@ -123,7 +127,10 @@ mod is a set of functions that can be provided to `widget` for advanced function
  - `isEmpty(v)`: provide `isEmpty` check above basic check against undefined or '' values.
  - `validate(v)`: validate the given value ( the stored value, maybe structued ) manually
    - we pass structured value here before mod may want to validate the whole value.
- - `value(v)`: when the real value is structured, use this function to return a value that can be used to validate
+ - `content(v)`: return semantic content instead of structure content.
+   - return value may still be a structured data such as array or object, if widget intetionally does this.
+     - however all the returned value should be considered as "content".
+   - `@plotdb/form` validator use this to get value for validation.
 
 
 ## base widget

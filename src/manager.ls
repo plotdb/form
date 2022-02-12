@@ -55,6 +55,9 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     delete @_ws.l[o.path]
 
   widget: (p) -> @_ws.w[p]
+
+  content: (p) -> @_ws.w[p].content!
+
   status: -> @_status
   progress: ->
     ret =
