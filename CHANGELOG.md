@@ -1,5 +1,12 @@
 # Change Logs
 
+## v0.0.17
+
+ - fix bug: file opset validation failed due to illegal value in list
+ - add a `content` api in both manager and widget for users to retrieve content defined by widget.
+   - also rename `mod.value` to `mod.content` for consistency
+
+
 ## v0.0.16
 
  - check arguments.length instead of typeof(v) in widget.value to support setting undefined as value
