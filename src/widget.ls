@@ -86,9 +86,9 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
           .then ~>
             # since term is Promise-based,
             # validation result may expire if between this a new value has been set.
-            # we may need a better way to check this. before that we simply check if value is different.
+            # TODO we may need a better way to check this. before that we simply check if value is different.
             nv = @content!
-            if v != nv => return
+            if JSON.stringify(v) != JSON.stringify(nv) => return
             @_errors = it.filter(->!it.1).map -> it.0.msg or 'error'
             @status if @_errors.length => 2 else 0
             @render!

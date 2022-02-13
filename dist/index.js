@@ -907,7 +907,7 @@
         })).then(function(it){
           var nv;
           nv = this$.content();
-          if (v !== nv) {
+          if (JSON.stringify(v) !== JSON.stringify(nv)) {
             return;
           }
           this$._errors = it.filter(function(it){

@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.18
+
+ - fix bug: validation sometimes fails due to object content returned for comparison.
+
+
 ## v0.0.17
 
  - fix bug: file opset validation failed due to illegal value in list
