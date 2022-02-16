@@ -47,10 +47,14 @@
    - `opt`: additional options, including:
      - `from-source`: called from source, should fire change event.
      - `init`: this is for initialization. won't trigger status change ( leave it as `1` )
- - `content()`: get content from this widget.
+ - `content(v)`: get content from this widget.
+   - get content from v if v is provided, otherwise from `value()`
    - concept of `content` is defined by widget, and will be used in validation.
    - for example, string get from input field is content, but widget may wrap this content in an object, which is defined as value here.
    - see also `mod.content` in following section.
+ - `isEmpty(v): check for emptiness of a given value
+   - get content from v if v is provided, otherwise from `value()`
+   - see also `mod.isEmpty` in following section.
  - `adapt()`: apply programmatic options such as uploadr?
  - `mode(v)`:
    - setting mode triggers validation. return a Promise which resolves when validation completes.
@@ -125,9 +129,11 @@ mod is a set of functions that can be provided to `widget` for advanced function
  - `init()`: initialization
  - `render()`: called after switching mode, setting values or validating, for re-rendering
  - `isEmpty(v)`: provide `isEmpty` check above basic check against undefined or '' values.
+   - if omitted, by default a value is empty if a value is undefined or is an empty string ( '' ).
  - `validate(v)`: validate the given value ( the stored value, maybe structued ) manually
    - we pass structured value here before mod may want to validate the whole value.
  - `content(v)`: return semantic content instead of structure content.
+   - if omitted, return the value from `value()` directly
    - return value may still be a structured data such as array or object, if widget intetionally does this.
      - however all the returned value should be considered as "content".
    - `@plotdb/form` validator use this to get value for validation.

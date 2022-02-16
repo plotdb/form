@@ -60,12 +60,22 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
 
   value: (v, opt = {}) ->
     if arguments.length == 0 => return @_value
-    @ <<<
-      _value: v
-      _empty: (if @mod and @mod.is-empty => @mod.is-empty.call(@,v) else (typeof(v) == \undefined or (v == '')))
+    @ <<< _value: v, _empty: @is-empty(v)
     @validate opt{init} .then ~> if !opt.from-source => @fire \change, @_value
 
-  content: -> if @mod and @mod.content => @mod.content.call @, @_value else @_value
+  is-empty: (v) ->
+    if !arguments.length => v = @_value
+    if @mod and @mod.is-empty => @mod.is-empty.call @, v
+    else (typeof(v) == \undefined or (v == ''))
+
+  # while we can check if v.v is defined ( or, hasOwnProperty ),
+  # we have no idea if it's just not provided yet or if it's a custom format.
+  # Thus mod has always to provide a content method even if they use `v.v` to store value
+  content: (v) ->
+    if !arguments.length => v = @_value
+    if @mod and @mod.content => @mod.content.call @, v
+    else if typeof(v) == \object and v and v.hasOwnProperty(v) => v.v
+    else v
 
   validate: (opt = {}) ->
     v = @content!

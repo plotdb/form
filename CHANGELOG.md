@@ -1,5 +1,11 @@
 # Change Logs
 
+## v0.0.19
+
+ - provide `isEmpty(v)` api for accessing `mod.isEmpty`
+ - accept param in `content(v)` so `content` can also be an utility function for value testing.
+
+
 ## v0.0.18
 
  - fix bug: validation sometimes fails due to object content returned for comparison.

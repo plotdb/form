@@ -863,9 +863,7 @@
         return this._value;
       }
       this._value = v;
-      this._empty = this.mod && this.mod.isEmpty
-        ? this.mod.isEmpty.call(this, v)
-        : typeof v === 'undefined' || v === '';
+      this._empty = this.isEmpty(v);
       return this.validate({
         init: opt.init
       }).then(function(){
@@ -874,11 +872,26 @@
         }
       });
     },
-    content: function(){
-      if (this.mod && this.mod.content) {
-        return this.mod.content.call(this, this._value);
+    isEmpty: function(v){
+      if (!arguments.length) {
+        v = this._value;
+      }
+      if (this.mod && this.mod.isEmpty) {
+        return this.mod.isEmpty.call(this, v);
       } else {
-        return this._value;
+        return typeof v === 'undefined' || v === '';
+      }
+    },
+    content: function(v){
+      if (!arguments.length) {
+        v = this._value;
+      }
+      if (this.mod && this.mod.content) {
+        return this.mod.content.call(this, v);
+      } else if (typeof v === 'object' && v && v.hasOwnProperty(v)) {
+        return v.v;
+      } else {
+        return v;
       }
     },
     validate: function(opt){
