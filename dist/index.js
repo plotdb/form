@@ -694,7 +694,8 @@
         enabled: this.enabled,
         opset: this.opset.id,
         op: this.op.id,
-        config: this.config
+        config: this.config,
+        msg: this.msg
       };
     },
     deserialize: function(v){
@@ -825,6 +826,7 @@
       this._meta.term = (v.term || []).map(function(it){
         return new form.term(it);
       });
+      this.fire('meta', this._meta);
       return this.validate({
         init: true
       }).then(function(){

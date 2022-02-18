@@ -156,7 +156,7 @@ form.term.prototype = Object.create(Object.prototype) <<< do
     @op.validate(v, @config)
 
   serialize: ->
-    return {enabled: @enabled, opset: @opset.id, op: @op.id, config: @config}
+    return {enabled: @enabled, opset: @opset.id, op: @op.id, config: @config, msg: @msg}
 
   # TBD - do we need this? ( we already can deserialize directly from new form.term(serializedObject) )
   deserialize: (v) ->

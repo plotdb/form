@@ -69,6 +69,7 @@
    - `status`: new status
  - `render`: fired when widget is going to re-rendered.
  - `mode`: fired when mode is changed.
+ - `meta`: fired when metadata is (potentially) changed.
 
 
 ## Internal members

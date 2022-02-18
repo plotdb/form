@@ -45,6 +45,7 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
     @_meta <<< v{key, title, desc, is-required, readonly}
     @_meta.config = JSON.parse(JSON.stringify(v.config or {}))
     @_meta.term = (v.term or []).map -> new form.term it
+    @fire \meta, @_meta
     @validate {init: true} .then ~> @render!
 
   mode: (m) ->

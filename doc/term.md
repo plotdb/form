@@ -15,6 +15,7 @@ Sample usage:
  - `op`: id of the op to use. use `defaultOp` of `opset` if omitted.
  - `config`: config object used when calling `op.validate`. generated from default value of `op` if omitted.
  - `enabled`: if false, `validate` always return true. default true.
+ - `msg`: message to show when there is an error by this term.
 
 
 ## API
