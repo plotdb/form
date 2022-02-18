@@ -1,5 +1,11 @@
 # Change Logs
 
+## v0.0.20
+
+ - add `msg` field in term for showing error message
+ - add `meta` event, fired when `meta` is modified.
+
+
 ## v0.0.19
 
  - provide `isEmpty(v)` api for accessing `mod.isEmpty`
