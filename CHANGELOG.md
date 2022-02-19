@@ -2,6 +2,7 @@
 
 ## v0.0.21
 
+ - fix bug: internal widget changes affect host object when setting value with `manager.value`.
  - add `isEqual` widget and widget mod api.
 
 

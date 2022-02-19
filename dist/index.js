@@ -267,6 +267,7 @@
         }
         return ret;
       }
+      v = JSON.parse(JSON.stringify(v));
       return Promise.resolve().then(function(){
         var ps, res$, p, ref$, w;
         res$ = [];

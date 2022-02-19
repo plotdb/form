@@ -65,6 +65,7 @@ Instance API:
    - return a Promise which resolves when validation completes.
    - options:
    - `v`: an object storing values for each widget managed by this manager.
+     - object always duplicated to prevent pollution due to share object.
      - (TODO) currently we don't correctly support a arbitrary JSON object, but only a single level object.
    - `opt`: additional options, including:
      - `from-source`: called from source, should fire change event.

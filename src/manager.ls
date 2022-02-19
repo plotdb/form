@@ -123,6 +123,8 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
       ret = {}
       for p,w of @_ws.w => ret[p] = w.value!
       return ret
+    # dup v to prevent internal change pollutes host object.
+    v = JSON.parse(JSON.stringify(v))
     # even if v[p] is "", 0 or event undefined, we should still update them
     # since user may explicitly enter this value in order to overwrite previous value.
     # we by default iterate through all widgets for values even if it's undefined
