@@ -55,6 +55,10 @@
  - `isEmpty(v): check for emptiness of a given value
    - get content from v if v is provided, otherwise from `value()`
    - see also `mod.isEmpty` in following section.
+ - `isEqual(u,v): check for emptiness of a given value
+   - return true if `u` and `v` are equivalent.
+   - when `v` is omitted, internal value is used to compare against `u`
+   - see also `mod.isEqual` in following section.
  - `adapt()`: apply programmatic options such as uploadr?
  - `mode(v)`:
    - setting mode triggers validation. return a Promise which resolves when validation completes.
@@ -131,6 +135,7 @@ mod is a set of functions that can be provided to `widget` for advanced function
  - `render()`: called after switching mode, setting values or validating, for re-rendering
  - `isEmpty(v)`: provide `isEmpty` check above basic check against undefined or '' values.
    - if omitted, by default a value is empty if a value is undefined or is an empty string ( '' ).
+ - `isEqual(u,v)`: compare `u`, `v` and only return true if `u` and `v` are equivalent.
  - `validate(v)`: validate the given value ( the stored value, maybe structued ) manually
    - we pass structured value here before mod may want to validate the whole value.
  - `content(v)`: return semantic content instead of structure content.

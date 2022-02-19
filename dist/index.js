@@ -884,6 +884,24 @@
         return typeof v === 'undefined' || v === '';
       }
     },
+    isEqual: function(u, v){
+      var eu, ev;
+      if (arguments.length === 1) {
+        v = this._value;
+      }
+      if (this.mod && this.mod.isEqual) {
+        return this.mod.isEqual.call(this, u, v);
+      }
+      eu = this.isEmpty(u);
+      ev = this.isEmpty(v);
+      if (!eu !== !ev && (eu || ev)) {
+        return false;
+      }
+      if (eu && ev) {
+        return true;
+      }
+      return JSON.stringify(u) === JSON.stringify(v);
+    },
     content: function(v){
       if (!arguments.length) {
         v = this._value;
@@ -922,7 +940,7 @@
         })).then(function(it){
           var nv;
           nv = this$.content();
-          if (JSON.stringify(v) !== JSON.stringify(nv)) {
+          if (!this$.isEqual(nv, v)) {
             return;
           }
           this$._errors = it.filter(function(it){

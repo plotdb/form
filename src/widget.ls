@@ -69,6 +69,15 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
     if @mod and @mod.is-empty => @mod.is-empty.call @, v
     else (typeof(v) == \undefined or (v == ''))
 
+  is-equal: (u, v) ->
+    if arguments.length == 1 => v = @_value
+    if @mod and @mod.is-equal => return @mod.is-equal.call @, u, v
+    eu = @is-empty u
+    ev = @is-empty v
+    if eu xor ev => return false
+    if eu and ev => return true
+    return JSON.stringify(u) == JSON.stringify(v)
+
   # while we can check if v.v is defined ( or, hasOwnProperty ),
   # we have no idea if it's just not provided yet or if it's a custom format.
   # Thus mod has always to provide a content method even if they use `v.v` to store value
@@ -99,7 +108,7 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
             # validation result may expire if between this a new value has been set.
             # TODO we may need a better way to check this. before that we simply check if value is different.
             nv = @content!
-            if JSON.stringify(v) != JSON.stringify(nv) => return
+            if !@is-equal nv, v => return
             @_errors = it.filter(->!it.1).map -> it.0.msg or 'error'
             @status if @_errors.length => 2 else 0
             @render!

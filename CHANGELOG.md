@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.21
+
+ - add `isEqual` widget and widget mod api.
+
+
 ## v0.0.20
 
  - add `msg` field in term for showing error message
