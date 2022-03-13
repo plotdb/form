@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.23
+
+ - add string `regex` op
+
+
 ## v0.0.22
 
  - add length `eq` op

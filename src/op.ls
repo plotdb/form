@@ -64,6 +64,7 @@ form.opset.default = [
         include: "包含"
         exclude: "排除"
         email: "電子郵件"
+        regex: "正規表達式"
     ops:
       include:
         func: (v, c = {}) -> ~("" + (v or '')).indexOf(c.str or '')
@@ -74,6 +75,12 @@ form.opset.default = [
       email:
         func: (v) -> /^[^@]+@[^@]+$/.exec(v)
         config: {}
+      regex:
+        func: (v, c={}) ->
+          if !c.rule => return true
+          if typeof(c.rule) == \object and c.rule.exec => return c.rule.exec(v)
+          return new RegExp(c.rule).exec(v)
+        config: {rule: {type: \text}}
   }, {
     id: 'length'
     i18n:

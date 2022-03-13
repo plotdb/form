@@ -488,7 +488,8 @@
           string: "文字",
           include: "包含",
           exclude: "排除",
-          email: "電子郵件"
+          email: "電子郵件",
+          regex: "正規表達式"
         }
       },
       ops: {
@@ -519,6 +520,23 @@
             return /^[^@]+@[^@]+$/.exec(v);
           },
           config: {}
+        },
+        regex: {
+          func: function(v, c){
+            c == null && (c = {});
+            if (!c.rule) {
+              return true;
+            }
+            if (typeof c.rule === 'object' && c.rule.exec) {
+              return c.rule.exec(v);
+            }
+            return new RegExp(c.rule).exec(v);
+          },
+          config: {
+            rule: {
+              type: 'text'
+            }
+          }
         }
       }
     }, {
