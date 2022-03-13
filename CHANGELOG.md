@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.22
+
+ - add length `eq` op
+
+
 ## v0.0.21
 
  - fix bug: internal widget changes affect host object when setting value with `manager.value`.

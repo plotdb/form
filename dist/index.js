@@ -543,6 +543,18 @@
               hint: "maximal length"
             }
           }
+        },
+        eq: {
+          func: function(v, c){
+            c == null && (c = {});
+            return (v + "").length === +c.val;
+          },
+          config: {
+            val: {
+              type: 'number',
+              hint: "length"
+            }
+          }
         }
       }
     }, {

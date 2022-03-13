@@ -86,6 +86,9 @@ form.opset.default = [
       lte:
         func: (v, c = {}) -> "#v".length <= +c.val
         config: {val: {type: \number, hint: "maximal length"}}
+      eq:
+        func: (v, c = {}) -> "#v".length == +c.val
+        config: {val: {type: \number, hint: "length"}}
 
   }, {
     id: 'number'
