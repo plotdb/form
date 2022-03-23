@@ -143,6 +143,7 @@ mod is a set of functions that can be provided to `widget` for advanced function
    - return value may still be a structured data such as array or object, if widget intetionally does this.
      - however all the returned value should be considered as "content".
    - `@plotdb/form` validator use this to get value for validation.
+ - `config`: config definition in `@plotdb/konfig` spec. ( TBD )
 
 
 ## base widget
