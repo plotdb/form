@@ -92,7 +92,7 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
     v = @content!
     Promise.resolve!
       .then ~>
-        if @mod and @mod.validate => return @mod.validate.call @, @_value
+        if @mod and @mod.validate => return @mod.validate.call @, opt
         if @_validate => return @_validate v
         if @_empty and @_meta.is-required =>
           @_errors = ["required"]

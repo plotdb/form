@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.25
+
+ - fix bug: incorrect parameter value ( which should be opt ) passed to submod validator
+
+
 ## v0.0.24
 
  - support `defaultValue` in widget

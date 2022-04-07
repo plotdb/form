@@ -961,7 +961,7 @@
       v = this.content();
       return Promise.resolve().then(function(){
         if (this$.mod && this$.mod.validate) {
-          return this$.mod.validate.call(this$, this$._value);
+          return this$.mod.validate.call(this$, opt);
         }
         if (this$._validate) {
           return this$._validate(v);
