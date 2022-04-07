@@ -40,13 +40,15 @@
  - `errors()`
  - `opsets()`
  - `data()`
- - `value(v, opt)`: set value
-   - return a Promise which resolves when validation completes.
+ - `value(v, opt)`: set/get value
+   - return value:
+     - get: return the value stored in this widget.
+     - set: a Promise which resolves when validation completes.
    - options:
-   - `v`: value to set.
-   - `opt`: additional options, including:
-     - `from-source`: called from source, should fire change event.
-     - `init`: this is for initialization. won't trigger status change ( leave it as `1` )
+     - `v`: value to set. call `value` without parameters to get its value.
+     - `opt`: additional options, including:
+       - `from-source`: called from source, should fire change event.
+       - `init`: this is for initialization. won't trigger status change ( leave it as `1` )
  - `content(v)`: get content from this widget.
    - get content from v if v is provided, otherwise from `value()`
    - concept of `content` is defined by widget, and will be used in validation.
