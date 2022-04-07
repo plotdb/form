@@ -37,16 +37,17 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
     @_status = v
     if ov != v => @fire \status, v
   serialize: ->
-    ret = {} <<< @_meta{key, title, desc, is-required, readonly}
+    ret = {} <<< @_meta{key, title, desc, is-required, readonly, default-value}
     ret.config = JSON.parse(JSON.stringify(@_meta.config or {}))
     ret.term = @_meta.term.map -> it.serialize!
     ret
   deserialize: (v) ->
-    @_meta <<< v{key, title, desc, is-required, readonly}
+    @_meta <<< v{key, title, desc, is-required, readonly, default-value}
     @_meta.config = JSON.parse(JSON.stringify(v.config or {}))
     @_meta.term = (v.term or []).map -> new form.term it
     @fire \meta, @_meta
-    @validate {init: true} .then ~> @render!
+    if !@_meta.default-value? => @validate {init: true} .then ~> @render!
+    else @value @_meta.default-value, {init: true, from-source: true} .then ~> @render!
 
   mode: (m) ->
     if !(m?) => return @_mode

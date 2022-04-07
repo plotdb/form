@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.24
+
+ - support `defaultValue` in widget
+
+
 ## v0.0.23
 
  - add string `regex` op

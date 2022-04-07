@@ -838,7 +838,7 @@
     },
     serialize: function(){
       var ref$, ret, ref1$;
-      ret = (ref1$ = {}, ref1$.key = (ref$ = this._meta).key, ref1$.title = ref$.title, ref1$.desc = ref$.desc, ref1$.isRequired = ref$.isRequired, ref1$.readonly = ref$.readonly, ref1$);
+      ret = (ref1$ = {}, ref1$.key = (ref$ = this._meta).key, ref1$.title = ref$.title, ref1$.desc = ref$.desc, ref1$.isRequired = ref$.isRequired, ref1$.readonly = ref$.readonly, ref1$.defaultValue = ref$.defaultValue, ref1$);
       ret.config = JSON.parse(JSON.stringify(this._meta.config || {}));
       ret.term = this._meta.term.map(function(it){
         return it.serialize();
@@ -853,16 +853,26 @@
       ref$.desc = v.desc;
       ref$.isRequired = v.isRequired;
       ref$.readonly = v.readonly;
+      ref$.defaultValue = v.defaultValue;
       this._meta.config = JSON.parse(JSON.stringify(v.config || {}));
       this._meta.term = (v.term || []).map(function(it){
         return new form.term(it);
       });
       this.fire('meta', this._meta);
-      return this.validate({
-        init: true
-      }).then(function(){
-        return this$.render();
-      });
+      if (this._meta.defaultValue == null) {
+        return this.validate({
+          init: true
+        }).then(function(){
+          return this$.render();
+        });
+      } else {
+        return this.value(this._meta.defaultValue, {
+          init: true,
+          fromSource: true
+        }).then(function(){
+          return this$.render();
+        });
+      }
     },
     mode: function(m){
       var this$ = this;
