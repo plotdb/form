@@ -109,15 +109,15 @@ meta should be only editable by administrator. value is inputed by expected end 
  - `alias`: alias of key, for semantic meaning. should also be unique.
    - for example, to locate a widget for phone number, we can search for widgets with `phone` alias.
    - useful when we lost old widget meta but want to associate old values with newly created widget.
- - `config`: basic config including
-   - `isRequired`
-   - `isPublic`
+ - `isRequired`: true if this widget should not be left empty.
+ - `readonly`: true if user can edit its value
+ - `defaultValue`: default value for this widget
  - `term`: Array of `op.term` objects. should be serialized when stored as data.
+
 
 additional fields ( TBD )
 
  - `hint`: additional hint supposed to be shown after certain interaction
- - `default`: default value
  - `placeholder`: placeholder value
  - `ext`: widget specific configuration
 
