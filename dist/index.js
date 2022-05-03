@@ -455,10 +455,12 @@
           func: function(v, c){
             var exts;
             c == null && (c = {});
-            exts = c.str.split(',') || [];
+            exts = (c.str.split(',') || []).map(function(it){
+              return it.toLowerCase();
+            });
             return !v.filter(function(it){
               var ext, ref$;
-              return !in$((ext = (ref$ = it.filename.split('.'))[ref$.length - 1]) || '', exts);
+              return !in$(((ext = (ref$ = it.filename.split('.'))[ref$.length - 1]) || '').toLowerCase(), exts);
             }).length;
           },
           config: {

@@ -3,7 +3,7 @@
   "name": "@plotdb/form",
   "license": "MIT",
   "description": "form blocks",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "browser": "dist/index.min.js",
   "main": "dist/index.min.js",
   "files": [

@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.28
+
+ - fix bug: extension matching should ignore case
+
+
 ## v0.0.27
 
  - fix bug: value in widget change event should be cloned, otherwise user can alter widget internal value.
