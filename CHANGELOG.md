@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.27
+
+ - fix bug: value in widget change event should be cloned, otherwise user can alter widget internal value.
+
+
 ## v0.0.26
 
  - fix bug: widget value call should return cloned value, and should also store cloned value.

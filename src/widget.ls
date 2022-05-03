@@ -69,7 +69,7 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
     if @is-equal(v, @_value) => return Promise.resolve!
     _v = if v? => JSON.parse(JSON.stringify(v)) else v
     @ <<< _value: _v, _empty: @is-empty(_v)
-    @validate opt{init} .then ~> if !opt.from-source => @fire \change, @_value
+    @validate opt{init} .then ~> if !opt.from-source => @fire \change, JSON.parse(JSON.stringify @_value)
 
   is-empty: (v) ->
     if !arguments.length => v = @_value

@@ -917,7 +917,7 @@
         init: opt.init
       }).then(function(){
         if (!opt.fromSource) {
-          return this$.fire('change', this$._value);
+          return this$.fire('change', JSON.parse(JSON.stringify(this$._value)));
         }
       });
     },
