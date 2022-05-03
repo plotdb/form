@@ -61,8 +61,14 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
   errors: -> @_errors
 
   value: (v, opt = {}) ->
-    if arguments.length == 0 => return @_value
-    @ <<< _value: v, _empty: @is-empty(v)
+    if arguments.length == 0 =>
+      # internal value should be kept as a new, standalone object
+      # otherwise user can modify this value from outside, causing bizarre behavior
+      return if @_value? => JSON.parse(JSON.stringify @_value) else @_value
+    # dont update value if these values are exactly the same
+    if @is-equal(v, @_value) => return Promise.resolve!
+    _v = if v? => JSON.parse(JSON.stringify(v)) else v
+    @ <<< _value: _v, _empty: @is-empty(_v)
     @validate opt{init} .then ~> if !opt.from-source => @fire \change, @_value
 
   is-empty: (v) ->

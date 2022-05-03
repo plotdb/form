@@ -900,13 +900,19 @@
       return this._errors;
     },
     value: function(v, opt){
-      var this$ = this;
+      var _v, this$ = this;
       opt == null && (opt = {});
       if (arguments.length === 0) {
-        return this._value;
+        return this._value != null
+          ? JSON.parse(JSON.stringify(this._value))
+          : this._value;
       }
-      this._value = v;
-      this._empty = this.isEmpty(v);
+      if (this.isEqual(v, this._value)) {
+        return Promise.resolve();
+      }
+      _v = v != null ? JSON.parse(JSON.stringify(v)) : v;
+      this._value = _v;
+      this._empty = this.isEmpty(_v);
       return this.validate({
         init: opt.init
       }).then(function(){

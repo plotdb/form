@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.26
+
+ - fix bug: widget value call should return cloned value, and should also store cloned value.
+
+
 ## v0.0.25
 
  - fix bug: incorrect parameter value ( which should be opt ) passed to submod validator
