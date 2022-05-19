@@ -931,7 +931,7 @@
       if (this.mod && this.mod.isEmpty) {
         return this.mod.isEmpty.call(this, v);
       } else {
-        return typeof v === 'undefined' || v === '';
+        return v === null || typeof v === 'undefined' || v === '';
       }
     },
     isEqual: function(u, v){

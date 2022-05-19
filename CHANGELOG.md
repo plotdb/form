@@ -1,8 +1,9 @@
 # Change Logs
 
-## v0.0.29 (upcoming)
+## v0.0.29
 
  - fix bug: `check` should return a list instead of undefined
+ - fix bug: `null` should also be treated as `empty`.
 
 
 ## v0.0.28

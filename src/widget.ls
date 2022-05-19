@@ -74,7 +74,7 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
   is-empty: (v) ->
     if !arguments.length => v = @_value
     if @mod and @mod.is-empty => @mod.is-empty.call @, v
-    else (typeof(v) == \undefined or (v == ''))
+    else (v == null or typeof(v) == \undefined or (v == ''))
 
   is-equal: (u, v) ->
     if arguments.length == 1 => v = @_value
