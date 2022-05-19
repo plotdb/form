@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.29 (upcoming)
+
+ - fix bug: `check` should return a list instead of undefined
+
+
 ## v0.0.28
 
  - fix bug: extension matching should ignore case

@@ -182,8 +182,9 @@
         return now
           ? this$._check(null, true)
           : this$._checkDebounced();
-      }).then(function(){
-        return this$._restatus();
+      }).then(function(it){
+        this$._restatus();
+        return it;
       });
     },
     _check: function(o, now){

@@ -83,7 +83,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
         if !o => return @check [{widget: w, path: p} for p,w of @_ws.w], now
         @[]check-list ++= (if Array.isArray(o) => o else [o])
         return if now => @_check(null, true) else @_check-debounced!
-      .then ~> @_restatus!
+      .then ~> @_restatus!; it
 
   _check: (o, now) ->
     if !o =>
