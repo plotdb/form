@@ -1,5 +1,11 @@
 # Change Logs
 
+## v0.0.30
+
+ - fix bug: `manager._restatus` should consider widget status as `0` if it has status `1` and `isRequired` as false.
+ - support option in `deserialize` to control `init` flag in subsequential calls to `validate` and `value`. 
+
+
 ## v0.0.29
 
  - fix bug: `check` should return a list instead of undefined

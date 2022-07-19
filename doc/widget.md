@@ -34,9 +34,12 @@
    - return Promise, which resolves to list of errors ( if any )
    - options in opt:
      - `init`: true if this validation attempt is triggered by initial input ( e.g., deserialize ).
- - `serialize()`: consider renaming to `config`, merge with `deserialize()`
- - `deserialize()`
-   - return a Promise which resolves when validation completes.
+ - `serialize()`: (TBD)consider renaming to `config`, merge with `deserialize()`
+ - `deserialize(meta, opt)`: return a Promise which resolves when validation completes.
+   - parameters:
+     - `meta`: widget meta. See `meta` section for detail definition.
+     - `opt`: an object with following fields:
+       - `init`: default false. when true, will init value if needed and validate with `init` set to true.
  - `errors()`
  - `opsets()`
  - `data()`

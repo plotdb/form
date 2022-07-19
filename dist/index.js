@@ -140,18 +140,35 @@
       return ret;
     },
     _restatus: function(){
-      var os, ret, k, v;
+      var os, ret, k, v, this$ = this;
       os = this._status;
       delete this._status;
       ret = (function(){
         var ref$, results$ = [];
         for (k in ref$ = this._ws.w) {
           v = ref$[k];
-          results$.push(this._ws.s[k]);
+          results$.push({
+            k: k,
+            v: v
+          });
         }
         return results$;
-      }.call(this)).filter(function(s){
-        return !(s != null && s === 0);
+      }.call(this)).map(function(arg$){
+        var k, v, s;
+        k = arg$.k, v = arg$.v;
+        s = this$._ws.s[k];
+        if (s == null) {
+          return true;
+        }
+        if (s === 0) {
+          return false;
+        }
+        if (s === 1 && !v._meta.isRequired) {
+          return false;
+        }
+        return true;
+      }).filter(function(it){
+        return it;
       }).length;
       this._status = ret ? 1 : 0;
       if (os !== this._status) {
@@ -848,8 +865,9 @@
       });
       return ret;
     },
-    deserialize: function(v){
+    deserialize: function(v, o){
       var ref$, this$ = this;
+      o == null && (o = {});
       ref$ = this._meta;
       ref$.key = v.key;
       ref$.title = v.title;
@@ -862,20 +880,24 @@
         return new form.term(it);
       });
       this.fire('meta', this._meta);
-      if (this._meta.defaultValue == null) {
-        return this.validate({
-          init: true
-        }).then(function(){
-          return this$.render();
-        });
-      } else {
-        return this.value(this._meta.defaultValue, {
+      return Promise.resolve().then(function(){
+        if (!o.init) {
+          return;
+        }
+        if (!(this$._meta.defaultValue != null && this$.isEmpty())) {
+          return;
+        }
+        return this$.value(this$._meta.defaultValue, {
           init: true,
           fromSource: true
-        }).then(function(){
-          return this$.render();
         });
-      }
+      }).then(function(){
+        return this$.validate({
+          init: o.init
+        });
+      }).then(function(){
+        return this$.render();
+      });
     },
     mode: function(m){
       var this$ = this;

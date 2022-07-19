@@ -69,7 +69,15 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
   _restatus: ->
     os = @_status
     delete @_status
-    ret = [@_ws.s[k] for k,v of @_ws.w].filter((s) ~> !(s? and s == 0)).length
+    ret = [{k,v} for k,v of @_ws.w]
+      .map ({k,v})~>
+        s = @_ws.s[k]
+        if !s? => return true
+        if s == 0 => return false
+        if s == 1 and !v._meta.is-required => return false
+        return true
+      .filter(->it)
+      .length
     @_status = if ret => 1 else 0
     if os != @_status => @fire \readystatechange, @_status == 0
 
