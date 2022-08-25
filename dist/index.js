@@ -509,6 +509,7 @@
           include: "包含",
           exclude: "排除",
           email: "電子郵件",
+          url: "網址",
           regex: "正規表達式"
         }
       },
@@ -538,6 +539,12 @@
         email: {
           func: function(v){
             return /^[^@]+@[^@]+$/.exec(v);
+          },
+          config: {}
+        },
+        url: {
+          func: function(v){
+            return /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)$/.exec(v);
           },
           config: {}
         },

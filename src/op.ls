@@ -64,6 +64,7 @@ form.opset.default = [
         include: "包含"
         exclude: "排除"
         email: "電子郵件"
+        url: "網址"
         regex: "正規表達式"
     ops:
       include:
@@ -74,6 +75,9 @@ form.opset.default = [
         config: {str: {type: \text}}
       email:
         func: (v) -> /^[^@]+@[^@]+$/.exec(v)
+        config: {}
+      url:
+        func: (v) -> /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)$/.exec(v)
         config: {}
       regex:
         func: (v, c={}) ->

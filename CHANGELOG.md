@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.31
+
+ - support `url` op in string opset
+
+
 ## v0.0.30
 
  - fix bug: `manager._restatus` should consider widget status as `0` if it has status `1` and `isRequired` as false.
