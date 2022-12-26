@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.32 (upcoming)
+
+ - upgrade dependencies to fix vulnerabilities
+
+
 ## v0.0.31
 
  - support `url` op in string opset
