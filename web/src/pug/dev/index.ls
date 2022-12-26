@@ -1,13 +1,13 @@
 <-(->it.apply {}) _
 
-@mgr = new block.manager registry: ({name,version,path,type}) ->
+@mgr = new block.manager registry: ({ns, url, name, version, path, type}) ->
+  if url => return url
   if type == \block => return "/dev/block/#name.html"
   return "/assets/lib/#name/#version/#{path or \index.min.js}"
 
 view = new ldview root: document.body
 
 @nodes = {}
-
 
 meta = 
   sheet: title: \budget
@@ -26,7 +26,6 @@ meta =
       "zh-TW":
         "male": "男"
         "female": "女"
-
 
 prepare = ({name, node, data}) ~>
   _data = data or {}
