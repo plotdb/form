@@ -1,8 +1,9 @@
 # Change Logs
 
-## v0.0.32 (upcoming)
+## v0.0.32
 
  - upgrade dependencies to fix vulnerabilities
+ - fix bug: widget tries to clone `undefined` when firing change event.
 
 
 ## v0.0.31

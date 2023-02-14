@@ -948,9 +948,10 @@
       return this.validate({
         init: opt.init
       }).then(function(){
-        if (!opt.fromSource) {
-          return this$.fire('change', JSON.parse(JSON.stringify(this$._value)));
+        if (opt.fromSource) {
+          return;
         }
+        return this$.fire('change', this$._value != null ? JSON.parse(JSON.stringify(this$._value)) : undefined);
       });
     },
     isEmpty: function(v){
