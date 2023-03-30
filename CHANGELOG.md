@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.33
+
+ - fix bug: remove widget in form manager use an incorrect object to invoke widget's off function
+
+
 ## v0.0.32
 
  - upgrade dependencies to fix vulnerabilities

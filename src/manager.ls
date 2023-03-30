@@ -48,8 +48,8 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
   remove: (o) ->
     if Array.isArray(o) => return o.map ~> @remove it
     if !(ws = @_ws.w[o.path]) => return
-    o.off \change, @_ws.l[o.path].c
-    o.off \status, @_ws.l[o.path].s
+    ws.off \change, @_ws.l[o.path].c
+    ws.off \status, @_ws.l[o.path].s
     @_ws.p.delete ws
     delete @_ws.w[o.path]
     delete @_ws.l[o.path]

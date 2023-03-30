@@ -100,8 +100,8 @@
       if (!(ws = this._ws.w[o.path])) {
         return;
       }
-      o.off('change', this._ws.l[o.path].c);
-      o.off('status', this._ws.l[o.path].s);
+      ws.off('change', this._ws.l[o.path].c);
+      ws.off('status', this._ws.l[o.path].s);
       this._ws.p['delete'](ws);
       delete this._ws.w[o.path];
       return ref1$ = (ref$ = this._ws.l)[key$ = o.path], delete ref$[key$], ref1$;
