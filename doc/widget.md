@@ -141,9 +141,9 @@ mod is a set of functions that can be provided to `widget` for advanced function
  - `isEmpty(v)`: provide `isEmpty` check above basic check against undefined or '' values.
    - if omitted, by default a value is empty if a value is undefined or is an empty string ( '' ).
  - `isEqual(u,v)`: compare `u`, `v` and only return true if `u` and `v` are equivalent.
- - `validate(v)`: validate the given value ( the stored value, maybe structued ) manually
-   - we pass structured value here before mod may want to validate the whole value.
-   - return value should be the list of errors, either as an array or a Promise resolves with an array.
+ - `validate(v)`: optional. Validate the given value ( the stored value, maybe structued ) manually
+   - when provided, it should also update status manually with `status()`
+   - return value: a list of errors, optionally in Promise.
  - `content(v)`: return semantic content instead of structure content.
    - if omitted, return the value from `value()` directly
    - return value may still be a structured data such as array or object, if widget intetionally does this.
