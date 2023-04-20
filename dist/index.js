@@ -110,7 +110,12 @@
       return this._ws.w[p];
     },
     content: function(p){
-      return this._ws.w[p].content();
+      var that;
+      if (that = this._ws.w[p]) {
+        return that.content();
+      } else {
+        return null;
+      }
     },
     status: function(){
       return this._status;

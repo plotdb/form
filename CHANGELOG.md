@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.35
+
+ - fix bug: in manager, getting content for non-existent widgets causing exception
+
+
 ## v0.0.34
 
  - add `manager` api in mod for supporting recursive form manager

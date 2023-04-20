@@ -56,7 +56,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
 
   widget: (p) -> @_ws.w[p]
 
-  content: (p) -> @_ws.w[p].content!
+  content: (p) -> if @_ws.w[p] => that.content! else null
 
   status: -> @_status
   progress: ->
