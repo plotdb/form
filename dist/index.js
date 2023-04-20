@@ -1051,6 +1051,17 @@
       if (this.mod && this.mod.adapt) {
         return this.mod.adapt.apply(this, args);
       }
+    },
+    manager: function(){
+      var ret;
+      ret = this.mod && this.mod.manager
+        ? this.mod.manager.apply(this)
+        : [];
+      return (Array.isArray(ret)
+        ? ret
+        : [ret]).filter(function(it){
+        return it;
+      });
     }
   });
   if (typeof module != 'undefined' && module !== null) {

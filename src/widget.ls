@@ -134,3 +134,7 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
 
   adapt: (...args) ->
     if @mod and @mod.adapt => @mod.adapt.apply @, args
+
+  manager: ->
+    ret = if @mod and @mod.manager => @mod.manager.apply(@) else []
+    return (if Array.isArray(ret) => ret else [ret]).filter(->it)
