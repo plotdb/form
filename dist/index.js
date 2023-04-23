@@ -82,6 +82,9 @@
       });
       return w.on('status', this._ws.l[p].s = function(s){
         this$._ws.s[p] = s;
+        if (this$._ws.w[p]._meta.disabled) {
+          return;
+        }
         this$.fire('status', {
           widget: w,
           path: p,
@@ -121,24 +124,24 @@
       return this._status;
     },
     progress: function(){
-      var ret, k, s;
+      var list, k, s, ret, this$ = this;
+      list = (function(){
+        var ref$, results$ = [];
+        for (k in ref$ = this._ws.s) {
+          s = ref$[k];
+          results$.push({
+            k: k,
+            s: s
+          });
+        }
+        return results$;
+      }.call(this)).filter(function(it){
+        return !this$._ws.w[it.k]._meta.disabled;
+      });
       ret = {
-        total: (function(){
-          var results$ = [];
-          for (k in this._ws.w) {
-            results$.push(k);
-          }
-          return results$;
-        }.call(this)).length,
-        done: (function(){
-          var ref$, results$ = [];
-          for (k in ref$ = this._ws.s) {
-            s = ref$[k];
-            results$.push(s);
-          }
-          return results$;
-        }.call(this)).filter(function(s){
-          return s != null && s === 0;
+        total: list.length,
+        done: list.filter(function(o){
+          return o.s != null && o.s === 0;
         }).length
       };
       ret.percent = ret.done / (ret.total || 1);
@@ -158,7 +161,11 @@
           });
         }
         return results$;
-      }.call(this)).map(function(arg$){
+      }.call(this)).filter(function(arg$){
+        var k, v;
+        k = arg$.k, v = arg$.v;
+        return !v._meta.disabled;
+      }).map(function(arg$){
         var k, v, s;
         k = arg$.k, v = arg$.v;
         s = this$._ws.s[k];
@@ -196,7 +203,11 @@
               });
             }
             return results$;
-          }.call(this$)), now);
+          }.call(this$)).filter(function(arg$){
+            var widget;
+            widget = arg$.widget;
+            return !widget._meta.disabled;
+          }), now);
         }
         this$.checkList = (this$.checkList || (this$.checkList = [])).concat(Array.isArray(o)
           ? o
@@ -267,6 +278,9 @@
       fd = new FormData();
       for (p in ref$ = this._ws.w) {
         w = ref$[p];
+        if (w._meta.disabled) {
+          continue;
+        }
         val = w.value();
         if (Array.isArray(v)) {
           for (i$ = 0, to$ = v.length; i$ < to$; ++i$) {
@@ -286,7 +300,9 @@
         ret = {};
         for (p in ref$ = this._ws.w) {
           w = ref$[p];
-          ret[p] = w.value();
+          if (!w._meta.disabled) {
+            ret[p] = w.value();
+          }
         }
         return ret;
       }
@@ -296,6 +312,9 @@
         res$ = [];
         for (p in ref$ = this$._ws.w) {
           w = ref$[p];
+          if (w._meta.disabled) {
+            continue;
+          }
           if (!v.hasOwnProperty(p) && opt.partial) {
             continue;
           }
@@ -324,10 +343,14 @@
           var ref$, results$ = [];
           for (p in ref$ = this._ws.w) {
             w = ref$[p];
-            results$.push(w.mode(m));
+            results$.push(w);
           }
           return results$;
-        }.call(this$)));
+        }.call(this$)).filter(function(w){
+          return !w._meta.disabled;
+        }).map(function(w){
+          return w.mode(m);
+        }));
       });
     }
   });
@@ -870,7 +893,7 @@
     },
     serialize: function(){
       var ref$, ret, ref1$;
-      ret = (ref1$ = {}, ref1$.key = (ref$ = this._meta).key, ref1$.title = ref$.title, ref1$.desc = ref$.desc, ref1$.isRequired = ref$.isRequired, ref1$.readonly = ref$.readonly, ref1$.defaultValue = ref$.defaultValue, ref1$);
+      ret = (ref1$ = {}, ref1$.key = (ref$ = this._meta).key, ref1$.title = ref$.title, ref1$.desc = ref$.desc, ref1$.isRequired = ref$.isRequired, ref1$.disabled = ref$.disabled, ref1$.readonly = ref$.readonly, ref1$.defaultValue = ref$.defaultValue, ref1$);
       ret.config = JSON.parse(JSON.stringify(this._meta.config || {}));
       ret.term = this._meta.term.map(function(it){
         return it.serialize();
@@ -885,6 +908,7 @@
       ref$.title = v.title;
       ref$.desc = v.desc;
       ref$.isRequired = v.isRequired;
+      ref$.disabled = v.disabled;
       ref$.readonly = v.readonly;
       ref$.defaultValue = v.defaultValue;
       this._meta.config = JSON.parse(JSON.stringify(v.config || {}));

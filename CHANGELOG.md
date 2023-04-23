@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.36
+
+ - support `disabled` flag in widget to indicate widgets to skip in manager.
+
+
 ## v0.0.35
 
  - fix bug: in manager, getting content for non-existent widgets causing exception

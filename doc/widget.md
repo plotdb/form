@@ -116,6 +116,7 @@ meta should be only editable by administrator. value is inputed by expected end 
    - for example, to locate a widget for phone number, we can search for widgets with `phone` alias.
    - useful when we lost old widget meta but want to associate old values with newly created widget.
  - `isRequired`: true if this widget should not be left empty.
+ - `disabled`: if true, manager will ignore this widget.
  - `readonly`: true if user can edit its value
  - `defaultValue`: default value for this widget
  - `term`: Array of `op.term` objects. should be serialized when stored as data.

@@ -38,6 +38,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     w.on \status, (
       @_ws.l[p].s = (s) ~>
         @_ws.s[p] = s
+        if @_ws.w[p]._meta.disabled => return
         @fire \status, {widget: w, path: p, status: s}
         @_restatus-debounced!
     )
@@ -60,9 +61,10 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
 
   status: -> @_status
   progress: ->
+    list = [{k,s} for k,s of @_ws.s].filter ~> !@_ws.w[it.k]._meta.disabled
     ret =
-      total: [k for k of @_ws.w].length
-      done: [s for k,s of @_ws.s].filter((s) -> s? and s == 0).length
+      total: list.length
+      done: list.filter((o) -> o.s? and o.s == 0).length
     ret.percent = ret.done / ( ret.total or 1)
     return ret
 
@@ -70,6 +72,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     os = @_status
     delete @_status
     ret = [{k,v} for k,v of @_ws.w]
+      .filter ({k,v}) ~>!v._meta.disabled
       .map ({k,v})~>
         s = @_ws.s[k]
         if !s? => return true
@@ -88,7 +91,12 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
   check: (o, now = false) ->
     Promise.resolve!
       .then ~>
-        if !o => return @check [{widget: w, path: p} for p,w of @_ws.w], now
+        if !o =>
+          return @check(
+            [{widget: w, path: p} for p,w of @_ws.w]
+              .filter(({widget}) ->! widget._meta.disabled),
+            now
+          )
         @[]check-list ++= (if Array.isArray(o) => o else [o])
         return if now => @_check(null, true) else @_check-debounced!
       .then ~> @_restatus!; it
@@ -119,6 +127,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
   form-data: ->
     fd = new FormData!
     for p,w of @_ws.w =>
+      if w._meta.disabled => continue
       val = w.value!
       # if we omit the (), else will not be executed when !v.files. so keep it here.
       if Array.isArray(v) => (for i from 0 til v.length => fd.append "#p[]", v[i])
@@ -129,7 +138,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     # TODO decompose p and fill ret with given hierarchy
     if !v =>
       ret = {}
-      for p,w of @_ws.w => ret[p] = w.value!
+      for p,w of @_ws.w => if !w._meta.disabled => ret[p] = w.value!
       return ret
     # dup v to prevent internal change pollutes host object.
     v = JSON.parse(JSON.stringify(v))
@@ -140,6 +149,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     # however, user can enforce a partial update by setting opt.partial to true.
     Promise.resolve!then ~>
       ps = for p, w of @_ws.w
+        if w._meta.disabled => continue
         if !v.hasOwnProperty(p) and opt.partial => continue
         w.value v[p], opt
       Promise.all ps
@@ -151,4 +161,4 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     if @_mode == m => return
     @_mode = m
     @fire \mode, m
-    Promise.all [w.mode m for p, w of @_ws.w]
+    Promise.all [w for p, w of @_ws.w].filter((w)->!w._meta.disabled).map((w)->w.mode m)
