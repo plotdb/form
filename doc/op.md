@@ -104,14 +104,28 @@ For example, a `string` opset may contain ops such as `include`, `exclude`, `ema
 
 ### Default opset
 
-By default `@plotdb/form` provides following 2 opsets:
+By default `@plotdb/form` provides following opsets:
 
- - `string`, includes following ops:
+ - `string`, including following ops:
    - `include`: input includes specified substring.
    - `exclude`: input does not include specified substring.
    - `email`: input is an email.
- - `number`, includes following ops:
+ - `number`, including following ops:
    - `lte`: input is less or equal than specified value
    - `gte`: input is greater or equal than specified value
    - `ne`: input does not euqal to specified value
    - `eq`: input euqals to specified value
+ - `file`, including following ops:
+   - `extension`: file extension, with config:
+     - `str`: comma separated extensions.
+   - `size-limit`: file size limitation, with config:
+     - `val`: maximal file size (in bytes)
+   - `count-limit`: (deprecated) file count limitation
+     - `val`: maximal file count - 1
+   - `count-max`: maximal file count, with config:
+     - `val`: maximal value
+   - `count-min`: minimal file count, with config:
+     - `val`: minimal value
+   - `count-range`: file count range, with configs:
+     - `min`: minimal value
+     - `max`: maimal value

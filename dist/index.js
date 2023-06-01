@@ -471,9 +471,14 @@
     {
       id: "file",
       i18n: {
-        "size-limit": "檔案大小上限",
-        "count-limit": "檔案數量上限",
-        "extension": "副檔名限制"
+        "zh-TW": {
+          "size-limit": "檔案大小上限",
+          "count-limit": "檔案數量上限",
+          "extension": "副檔名限制",
+          "count-max": "檔案數量上限",
+          "count-min": "檔案數量下限",
+          "count-range": "檔案數量範圍"
+        }
       },
       convert: function(v){
         return (Array.isArray(v)
@@ -525,6 +530,42 @@
             val: {
               type: 'number',
               hint: "maximal file amount"
+            }
+          }
+        },
+        "count-max": {
+          func: function(v, c){
+            c == null && (c = {});
+            return v.length <= c.val;
+          },
+          config: {
+            val: {
+              type: 'number',
+              hint: "maximal file amount"
+            }
+          }
+        },
+        "count-min": {
+          func: function(v, c){
+            c == null && (c = {});
+            return v.length >= c.val;
+          },
+          config: {
+            val: {
+              type: 'number',
+              hint: "minimal file amount"
+            }
+          }
+        },
+        "count-range": {
+          func: function(v, c){
+            c == null && (c = {});
+            return v.length >= c.min && v.length <= c.max;
+          },
+          config: {
+            val: {
+              type: 'number',
+              hint: "file amount range"
             }
           }
         }

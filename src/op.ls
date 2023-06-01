@@ -40,9 +40,13 @@ form.opset.default = [
   {
     id: "file"
     i18n:
-      "size-limit": "檔案大小上限"
-      "count-limit": "檔案數量上限"
-      "extension": "副檔名限制"
+      "zh-TW":
+        "size-limit": "檔案大小上限"
+        "count-limit": "檔案數量上限"
+        "extension": "副檔名限制"
+        "count-max": "檔案數量上限"
+        "count-min": "檔案數量下限"
+        "count-range": "檔案數量範圍"
     convert: (v) -> (if Array.isArray(v) => v else [v]).filter -> it
     ops:
       "size-limit":
@@ -53,9 +57,18 @@ form.opset.default = [
           exts = (c.str.split(',') or []).map -> it.toLowerCase!
           !v.filter(->!(((ext = it.filename.split('.')[* - 1]) or '').toLowerCase! in exts)).length
         config: {str: {type: \text, hint: "extension, comma separated, without dot"}}
-      "count-limit":
+      "count-limit": # deprecated. use `count-max` instead. note the difference between `<` and `<=`
         func: (v, c = {}) -> v.length < c.val
         config: {val: {type: \number, hint: "maximal file amount"}}
+      "count-max":
+        func: (v, c = {}) -> v.length <= c.val
+        config: {val: {type: \number, hint: "maximal file amount"}}
+      "count-min":
+        func: (v, c = {}) -> v.length >= c.val
+        config: {val: {type: \number, hint: "minimal file amount"}}
+      "count-range":
+        func: (v, c = {}) -> v.length >= c.min and v.length <= c.max
+        config: {val: {type: \number, hint: "file amount range"}}
   }, {
     id: 'string'
     i18n:

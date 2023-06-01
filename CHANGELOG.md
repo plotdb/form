@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.37
+
+ - add `count-min`, `count-max` and `count-range` file ops. deprecate `count-limit` file op.
+
+
 ## v0.0.36
 
  - support `disabled` flag in widget to indicate widgets to skip in manager.
