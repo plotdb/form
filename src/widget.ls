@@ -107,6 +107,13 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
       .then ~>
         if @mod and @mod.validate => return @mod.validate.call @, opt
         if @_validate => return @_validate v
+      .then (ret = []) ~>
+        if ret and ret.length =>
+          @_errors = ret
+          @status if opt.init => 1 else 2
+          @render!
+          return @_errors
+
         if @_empty and @_meta.is-required =>
           @_errors = ["required"]
           @status (if opt.init => 1 else 2)

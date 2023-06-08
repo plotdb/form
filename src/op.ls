@@ -36,8 +36,37 @@ form.opset.prototype = Object.create(Object.prototype) <<< do
 form.opset.register = -> @[]list.push if it instanceof form.opset => it else new form.opset(it)
 form.opset.get = (id) -> @[]list.filter(->(it.id or it.name) == id).0
 
+count-ops =
+  "count-max":
+    func: (v, c = {}) -> v.length <= c.val
+    config: {val: {type: \number, hint: "maximal amount"}}
+  "count-min":
+    func: (v, c = {}) -> v.length >= c.val
+    config: {val: {type: \number, hint: "minimal amount"}}
+  "count-range":
+    func: (v, c = {}) -> v.length >= c.min and v.length <= c.max
+    config:
+      min: {type: \number, hint: "minimal amount"}
+      max: {type: \number, hint: "maximal amount"}
+  "count":
+    func: (v, c = {}) ->
+      console.log ">>> [count]", v.length, c.val
+      v.length == c.val
+    config: {val: {type: \number, hint: "number of entries"}}
+
 form.opset.default = [
   {
+    id: "list"
+    i18n:
+      "zh-TW":
+        "count-max": "數量上限"
+        "count-min": "數量下限"
+        "count-range": "數量範圍"
+        "count": "數量要求"
+    convert: (v) -> (if Array.isArray(v) => v else [v]).filter -> it
+    ops: {} <<< count-ops
+
+  }, {
     id: "file"
     i18n:
       "zh-TW":
@@ -48,7 +77,7 @@ form.opset.default = [
         "count-min": "檔案數量下限"
         "count-range": "檔案數量範圍"
     convert: (v) -> (if Array.isArray(v) => v else [v]).filter -> it
-    ops:
+    ops: {
       "size-limit":
         func: (v, c = {}) -> !v.filter(-> it.size > c.val).length
         config: {val: {type: \number, hint: "maximal size"}}
@@ -60,15 +89,8 @@ form.opset.default = [
       "count-limit": # deprecated. use `count-max` instead. note the difference between `<` and `<=`
         func: (v, c = {}) -> v.length < c.val
         config: {val: {type: \number, hint: "maximal file amount"}}
-      "count-max":
-        func: (v, c = {}) -> v.length <= c.val
-        config: {val: {type: \number, hint: "maximal file amount"}}
-      "count-min":
-        func: (v, c = {}) -> v.length >= c.val
-        config: {val: {type: \number, hint: "minimal file amount"}}
-      "count-range":
-        func: (v, c = {}) -> v.length >= c.min and v.length <= c.max
-        config: {val: {type: \number, hint: "file amount range"}}
+    } <<< count-ops
+
   }, {
     id: 'string'
     i18n:

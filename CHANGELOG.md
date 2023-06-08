@@ -1,5 +1,11 @@
 # Change Logs
 
+## v0.0.38
+
+ - add opset for `list`. use the same code for list count in `list` and `file` opset.
+ - check emptyness and terms even if validate function is provided in a widget.
+
+
 ## v0.0.37
 
  - add `count-min`, `count-max` and `count-range` file ops. deprecate `count-limit` file op.
