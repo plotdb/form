@@ -49,9 +49,7 @@ count-ops =
       min: {type: \number, hint: "minimal amount"}
       max: {type: \number, hint: "maximal amount"}
   "count":
-    func: (v, c = {}) ->
-      console.log ">>> [count]", v.length, c.val
-      v.length == c.val
+    func: (v, c = {}) -> v.length == c.val
     config: {val: {type: \number, hint: "number of entries"}}
 
 form.opset.default = [

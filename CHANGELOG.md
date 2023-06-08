@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.39
+
+ - remove unwanted log
+
+
 ## v0.0.38
 
  - add opset for `list`. use the same code for list count in `list` and `file` opset.
