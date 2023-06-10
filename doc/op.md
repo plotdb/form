@@ -115,6 +115,17 @@ By default `@plotdb/form` provides following opsets:
    - `gte`: input is greater or equal than specified value
    - `ne`: input does not euqal to specified value
    - `eq`: input euqals to specified value
+ - `length`: calculate string length.
+   - different approaches to count length includes:
+     - `char`: by string length from javascript. default value
+     - `simple-word`: a naive approach by separating words with space, and count all unicodes as one word.
+   - here is a sample term for length op `lte` with `simple-word` algorithm:
+
+         {opset: \length, enabled: true, op: \lte, msg: '太長了', config: val: 300, method: \simple-word}
+
+   - including following ops:
+     - `lte`: length is less than or equal to given value.
+     - `eq`: length is equal to given value.
  - `file`, including following ops:
    - `extension`: file extension, with config:
      - `str`: comma separated extensions.

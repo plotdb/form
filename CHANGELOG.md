@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.40
+
+ - support `simple-word` algorithm for counting string length in `length` opset. 
+
+
 ## v0.0.39
 
  - remove unwanted log

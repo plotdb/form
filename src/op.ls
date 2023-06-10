@@ -36,6 +36,15 @@ form.opset.prototype = Object.create(Object.prototype) <<< do
 form.opset.register = -> @[]list.push if it instanceof form.opset => it else new form.opset(it)
 form.opset.get = (id) -> @[]list.filter(->(it.id or it.name) == id).0
 
+word-len = (v = "", method) ->
+  return if method == \simple-word =>
+    v.split(/\s|[,.;:!?，。；：︰！？、．　"]/).filter(->it)
+      .map ->
+        # segment by non-ascii codes
+        it.split(/[\u1000-\uffff]/).map(-> if it.length => 2 else 1).reduce(((a,b) -> a + b),0) - 1
+      .reduce(((a,b) -> a + b), 0)
+  else v.length
+
 count-ops =
   "count-max":
     func: (v, c = {}) -> v.length <= c.val
@@ -128,11 +137,15 @@ form.opset.default = [
         "maximal length": "長度上限"
     ops:
       lte:
-        func: (v, c = {}) -> "#v".length <= +c.val
-        config: {val: {type: \number, hint: "maximal length"}}
+        func: (v, c = {}) -> word-len("#v", c.method) <= +c.val
+        config:
+          val: {type: \number, hint: "maximal length"}
+          method: type: \choice, default: \char, values: <[char simple-word]>
       eq:
-        func: (v, c = {}) -> "#v".length == +c.val
-        config: {val: {type: \number, hint: "length"}}
+        func: (v, c = {}) -> word-len("#v", c.method) == +c.val
+        config:
+          val: {type: \number, hint: "length"}
+          method: type: \choice, default: \char, values: <[char simple-word]>
 
   }, {
     id: 'number'
