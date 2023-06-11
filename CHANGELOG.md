@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.41
+
+ - don't validate terms of empty fields that are not required, otherwise they may become forced to be required.
+
+
 ## v0.0.40
 
  - support `simple-word` algorithm for counting string length in `length` opset. 

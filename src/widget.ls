@@ -114,11 +114,17 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
           @render!
           return @_errors
 
-        if @_empty and @_meta.is-required =>
-          @_errors = ["required"]
-          @status (if opt.init => 1 else 2)
-          @render!
-          return @_errors
+        if @_empty =>
+          if @_meta.is-required =>
+            @_errors = ["required"]
+            @status (if opt.init => 1 else 2)
+            @render!
+            return @_errors
+          else
+            # don't validate empty field.
+            @status 0
+            @render!
+            return @_errors = []
         Promise.all(
           @_meta.term
             .filter (t) -> t.enabled

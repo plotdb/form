@@ -1149,11 +1149,17 @@
           this$.render();
           return this$._errors;
         }
-        if (this$._empty && this$._meta.isRequired) {
-          this$._errors = ["required"];
-          this$.status(opt.init ? 1 : 2);
-          this$.render();
-          return this$._errors;
+        if (this$._empty) {
+          if (this$._meta.isRequired) {
+            this$._errors = ["required"];
+            this$.status(opt.init ? 1 : 2);
+            this$.render();
+            return this$._errors;
+          } else {
+            this$.status(0);
+            this$.render();
+            return this$._errors = [];
+          }
         }
         return Promise.all(this$._meta.term.filter(function(t){
           return t.enabled;
