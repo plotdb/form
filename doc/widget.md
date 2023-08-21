@@ -31,7 +31,9 @@
    - 4 ~ 9: preserved
    - 10 and above: user defined.
  - `validate(opt)`: force re-validating user input.
-   - return Promise, which resolves to list of errors ( if any )
+   - return Promise, which resolves to list of errors ( if any ), or an object with following fields:
+     - `status`: expected status
+     - `errors`: list of errors ( if any )
    - options in opt:
      - `init`: true if this validation attempt is triggered by initial input ( e.g., deserialize ).
  - `serialize()`: (TBD)consider renaming to `config`, merge with `deserialize()`
@@ -145,8 +147,10 @@ mod is a set of functions that can be provided to `widget` for advanced function
  - `isEqual(u,v)`: compare `u`, `v` and only return true if `u` and `v` are equivalent.
  - `validate(v)`: optional. Validate the given value ( the stored value, maybe structued ) manually
    - when provided, it should also update status manually with `status()`
-   - return value: a list of errors, optionally in Promise.
-   - even if provided, `widget` will still validate its emptyness and terms (if any).
+   - return value: a list of errors, optionally in Promise, or an object with following fields:
+     - `status`: expected status
+     - `errors`: list of errors ( if any )
+   - even if provided, `widget` will still validate its emptyness and terms (if any) unless status 3 is returned.
  - `content(v)`: return semantic content instead of structure content.
    - if omitted, return the value from `value()` directly
    - return value may still be a structured data such as array or object, if widget intetionally does this.

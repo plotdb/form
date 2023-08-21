@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.42 (upcoming)
+
+ - support status 3 from custom `validate` which suppress checks but also not considered empty.
+
+
 ## v0.0.41
 
  - don't validate terms of empty fields that are not required, otherwise they may become forced to be required.

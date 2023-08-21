@@ -108,6 +108,15 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
         if @mod and @mod.validate => return @mod.validate.call @, opt
         if @_validate => return @_validate v
       .then (ret = []) ~>
+        # status 3 (editing) means validation isn't done yet,
+        # perhaps due to untouched internal fields, thus we shouldn't skip further checks for now.
+        # unlike status 1 which is considered empty in restatus,
+        # status 3 won't signal `valid` in restatus if field is empty.
+        if ret.status == 3 =>
+          @_errors = ret.errors or []
+          @status 3
+          @render!
+          return @_errors
         if ret and ret.length =>
           @_errors = ret
           @status if opt.init => 1 else 2

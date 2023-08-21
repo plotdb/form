@@ -1143,6 +1143,12 @@
         }
       }).then(function(ret){
         ret == null && (ret = []);
+        if (ret.status === 3) {
+          this$._errors = ret.errors || [];
+          this$.status(3);
+          this$.render();
+          return this$._errors;
+        }
         if (ret && ret.length) {
           this$._errors = ret;
           this$.status(opt.init ? 1 : 2);
