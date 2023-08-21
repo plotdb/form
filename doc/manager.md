@@ -50,7 +50,10 @@ Instance API:
      - 0: valid
      - 1: untouched ( not yet edit )
      - 2: invalid
-     - 3: editing
+     - 3: editing - validation of this widget isn't finished yet.
+       - e.g., multi-fields composite widget with some fields untouched yet.
+         ( using status 1 cause this widget to be considered valid if its `is-required` is not true,
+         since we treat `untouched` as empty in `restatus` api. )
      - 4 ~ 9: preserved
      - 10 and above: user defined.
  - `progress()`: return current progress of this form. Returned value is an object with following fields:
