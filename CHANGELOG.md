@@ -1,8 +1,11 @@
 # Change Logs
 
-## v0.0.42 (upcoming)
+## v0.0.42
 
  - support status 3 from custom `validate` which suppress checks but also not considered empty.
+ - extend `check` api params in backward compatible fashion to support both boolean and object for configuration.
+ - support `skipEmpty` option in `check`
+ - pass `check` options into `validate`
 
 
 ## v0.0.41
