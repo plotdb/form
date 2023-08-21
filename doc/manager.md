@@ -23,7 +23,7 @@ Instance API:
  - `fire(n, ...args)`: fire event `n` with args passing to `cb` in the above watcher
  - `add(o)`: add an widget. option `o` is an object with following fields:
    - `widget`: an `form.widget` instance
-   - `path`: path to add. dot separated string for constructing a JSON object. 
+   - `path`: path to add. dot separated string for constructing a JSON object.
      - TBD we may also use ot path.
  - `remove(o)`: remove an widget from a specific path. option `o` is an object with following fields:
    - `path`: path to remove.
@@ -31,19 +31,27 @@ Instance API:
  - `afterCheck()`: check overall status after each `check` call.
    - It's a debounced function. Call it immediately by `afterCheck().now()`.
      - check `@loadingio/debounce.js` for more information.
- - `check(o, now)`: validate widgets that match given `o`
+ - `check(o, opt)`: validate widgets that match given `o`
    - return a Promise that resolves to following value:
      - `null` if check passed. otherwise:
      - return a list of below object, if this check is against multiple widgets.
      - return object `{widget, path, status}` if only one object is checked.
-   - `now`: default `false`. `check` debounces without now, set now to true to enforce check immediately.
-     - this may also flush checks debounced earlier.
+   - `opt`: either a boolean or an object value. default `false`.
+     - boolean: `check` debounces if it's false, set `opt` to true to enforce check immediately.
+       - this may also flush checks debounced earlier.
+     - object: an object with following fields:
+       - `now`: treat as the boolean value for controlling debouncing describe above.
+       - `skipEmpty`: default false. when true and `o` is null, empty widgets will be skipped.
+       - `force`: if true, enforce checking all widgets if necessary. passed to `validate` too.
+       - `init`: check from initialization calls, may skip some warning e.g., for untouched fields.
+                 passed to `validate` too.
    - o may be:
+     - null;  `check` will list all widgets for checking (and skip empty widgets based on `opt` config)
      - a list of below object
      - an object with following fields:
        - `path`: path to the given widget
        - `widget`: widget to check.
-       - `now`: default `false`. when `true`, force a post-check immediately.
+       - (TBD) `now`: default `false`. when `true`, force a post-check immediately.
  - `status()`: return current status of manager ( all widgets combiined )
    - this doesn't trigger validation so status may be outdated.
    - status definition is the same with `ldform`:

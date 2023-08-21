@@ -86,36 +86,44 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
 
   # o:
   #  - a list of below
-  #  - a single object of { widget, path, now }
+  #  - a single object of { widget, path, now(TBD) }
   #  - null: check all
-  check: (o, now = false) ->
+  check: (o, opt) ->
+    if typeof(opt) != \object => opt = {now: opt}
     Promise.resolve!
       .then ~>
         if !o =>
           return @check(
             [{widget: w, path: p} for p,w of @_ws.w]
-              .filter(({widget}) ->! widget._meta.disabled),
-            now
+              .filter ({widget}) ->
+                if widget._meta.disabled => return false
+                # we can tune range of widgets to check even if check all is requested.
+                # e.g., set `opt.skipEmpty` to true instruct it to check widgets
+                # only if they are not empty or has status 2
+                return if !opt.skip-empty => true
+                else !widget.is-empty! or widget.status! == 2
+            opt
           )
         @[]check-list ++= (if Array.isArray(o) => o else [o])
-        return if now => @_check(null, true) else @_check-debounced!
+        return if opt.now => @_check(null, opt) else @_check-debounced(null, opt)
       .then ~> @_restatus!; it
 
-  _check: (o, now) ->
+  _check: (o, opt = {}) ->
     if !o =>
       list = (@check-list or [])
       @check-list = []
-      return @_check(list, now)
+      return @_check list, opt
     if Array.isArray(o) =>
       return Promise
-        .all(o.map ~> @_check it, now)
+        .all(o.map ~> @_check it, opt)
         .then -> it.filter(->it)
     return new Promise (res, rej) ~>
+      # TBD _now = o.now is defined in spec yet we seem never use it.
       [w, p, _now] = [o.widget, o.path, o.now]
       if !(w and p) => return res!
       if !w and !(w = @_ws.w[p]) => return res!
       if !p => p = @_ws.p[w]
-      w.validate!
+      w.validate opt{force, init, skip-empty}
         .then ~>
           os = @_ws.s[p]
           @_ws.s[p] = w.status!

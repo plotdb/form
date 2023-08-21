@@ -187,9 +187,13 @@
         return this.fire('readystatechange', this._status === 0);
       }
     },
-    check: function(o, now){
+    check: function(o, opt){
       var this$ = this;
-      now == null && (now = false);
+      if (typeof opt !== 'object') {
+        opt = {
+          now: opt
+        };
+      }
       return Promise.resolve().then(function(){
         var p, w;
         if (!o) {
@@ -206,30 +210,36 @@
           }.call(this$)).filter(function(arg$){
             var widget;
             widget = arg$.widget;
-            return !widget._meta.disabled;
-          }), now);
+            if (widget._meta.disabled) {
+              return false;
+            }
+            return !opt.skipEmpty
+              ? true
+              : !widget.isEmpty() || widget.status() === 2;
+          }), opt);
         }
         this$.checkList = (this$.checkList || (this$.checkList = [])).concat(Array.isArray(o)
           ? o
           : [o]);
-        return now
-          ? this$._check(null, true)
-          : this$._checkDebounced();
+        return opt.now
+          ? this$._check(null, opt)
+          : this$._checkDebounced(null, opt);
       }).then(function(it){
         this$._restatus();
         return it;
       });
     },
-    _check: function(o, now){
+    _check: function(o, opt){
       var list, this$ = this;
+      opt == null && (opt = {});
       if (!o) {
         list = this.checkList || [];
         this.checkList = [];
-        return this._check(list, now);
+        return this._check(list, opt);
       }
       if (Array.isArray(o)) {
         return Promise.all(o.map(function(it){
-          return this$._check(it, now);
+          return this$._check(it, opt);
         })).then(function(it){
           return it.filter(function(it){
             return it;
@@ -248,7 +258,11 @@
         if (!p) {
           p = this$._ws.p[w];
         }
-        return w.validate().then(function(){
+        return w.validate({
+          force: opt.force,
+          init: opt.init,
+          skipEmpty: opt.skipEmpty
+        }).then(function(){
           var os;
           os = this$._ws.s[p];
           this$._ws.s[p] = w.status();

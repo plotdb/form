@@ -14,6 +14,7 @@
  - `mod`: modifier that extend `form.widget`. Described below.
  - `meta`: configuration of this widget. Described below.
  - `value`: value of this widget. Described below.
+ - `validate(v)`: (TBD) optional. validate the given value manually.
 
 
 ## API
@@ -36,6 +37,9 @@
      - `errors`: list of errors ( if any )
    - options in opt:
      - `init`: true if this validation attempt is triggered by initial input ( e.g., deserialize ).
+     - `force`: true if this validation attempt is triggered by intentional user action.
+     - `now`, `skipEmpty`: options from `check` if called from `check`.
+       - this is provided for customized validators passing
  - `serialize()`: (TBD)consider renaming to `config`, merge with `deserialize()`
  - `deserialize(meta, opt)`: return a Promise which resolves when validation completes.
    - parameters:
@@ -133,7 +137,7 @@ additional fields ( TBD )
 
 ### value
 
-value ( user input ) can be anything ( string, number or object ) and is defined by implementation of specific widget. 
+value ( user input ) can be anything ( string, number or object ) and is defined by implementation of specific widget.
 
 
 ## Mod
@@ -145,7 +149,8 @@ mod is a set of functions that can be provided to `widget` for advanced function
  - `isEmpty(v)`: provide `isEmpty` check above basic check against undefined or '' values.
    - if omitted, by default a value is empty if a value is undefined or is an empty string ( '' ).
  - `isEqual(u,v)`: compare `u`, `v` and only return true if `u` and `v` are equivalent.
- - `validate(v)`: optional. Validate the given value ( the stored value, maybe structued ) manually
+ - `validate(opt)`: optional. content valiadator.
+   - see `validate` in API for detail explanation of `opt`.
    - when provided, it should also update status manually with `status()`
    - return value: a list of errors, optionally in Promise, or an object with following fields:
      - `status`: expected status
