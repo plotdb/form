@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.43
+
+ - length opset: add `range` op for limiting word length in a range.
+
+
 ## v0.0.42
 
  - support status 3 from custom `validate` which suppress checks but also not considered empty.

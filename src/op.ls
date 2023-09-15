@@ -133,9 +133,19 @@ form.opset.default = [
       "zh-TW":
         length: "長度"
         lte: "≦ 小於或等於"
+        range: "範圍"
         number: "數字"
+        "minimal length": "長度下限"
         "maximal length": "長度上限"
     ops:
+      range:
+        func: (v, c = {}) ->
+          len = word-len("#v", c.method)
+          len >= +c.min and len <= +c.max
+        config:
+          min: {type: \number, hint: "minimal length"}
+          max: {type: \number, hint: "maximal length"}
+          method: type: \choice, default: \char, values: <[char simple-word]>
       lte:
         func: (v, c = {}) -> word-len("#v", c.method) <= +c.val
         config:
