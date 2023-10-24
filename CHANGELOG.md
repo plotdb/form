@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.44
+
+ - list opset: support checkbox / radio style content
+
+
 ## v0.0.43
 
  - length opset: add `range` op for limiting word length in a range.

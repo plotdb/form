@@ -567,9 +567,15 @@
         }
       },
       convert: function(v){
-        return (Array.isArray(v)
+        var ret;
+        ret = Array.isArray(v)
           ? v
-          : [v]).filter(function(it){
+          : v && Array.isArray(v.list)
+            ? v.list.concat(v.other && v.other.enabled
+              ? [v.other.text]
+              : [])
+            : [v];
+        return ret.filter(function(it){
           return it;
         });
       },

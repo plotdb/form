@@ -70,7 +70,12 @@ form.opset.default = [
         "count-min": "數量下限"
         "count-range": "數量範圍"
         "count": "數量要求"
-    convert: (v) -> (if Array.isArray(v) => v else [v]).filter -> it
+    convert: (v) ->
+      ret = if Array.isArray(v) => v
+      else if v and Array.isArray(v.list) =>
+        v.list ++ (if v.other and v.other.enabled => [v.other.text] else [])
+      else [v]
+      ret.filter -> it
     ops: {} <<< count-ops
 
   }, {
