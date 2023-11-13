@@ -189,6 +189,25 @@ form.opset.default = [
       is:
         func: (v) -> !isNaN(v)
         config: {}
+  }, {
+    id: \date
+    i18n: "zh-TW":
+      "min age": "最小年齡"
+      "max age": "最大年齡"
+      age: "年齡"
+    convert: (v) -> return new Date(v)
+    ops:
+      age:
+        config:
+          min: {type: \number, hint: 'min age'}
+          max: {type: \number, hint: 'max age'}
+        func: (v, c = {}) ->
+          dmin = (new Date(v.getYear! + 1900 + (c.min or 0), v.getMonth!, v.getDate!)).getTime!
+          dmax = (new Date(v.getYear! + 1900 + (c.max or 0), v.getMonth!, v.getDate!)).getTime!
+          dnow = Date.now!
+          if c.min? and dmin > dnow => return false
+          if c.max? and dmax < dnow => return false
+          return true
   }
 ]
 

@@ -869,6 +869,46 @@
           config: {}
         }
       }
+    }, {
+      id: 'date',
+      i18n: {
+        "zh-TW": {
+          "min age": "最小年齡",
+          "max age": "最大年齡",
+          age: "年齡"
+        }
+      },
+      convert: function(v){
+        return new Date(v);
+      },
+      ops: {
+        age: {
+          config: {
+            min: {
+              type: 'number',
+              hint: 'min age'
+            },
+            max: {
+              type: 'number',
+              hint: 'max age'
+            }
+          },
+          func: function(v, c){
+            var dmin, dmax, dnow;
+            c == null && (c = {});
+            dmin = new Date(v.getYear() + 1900 + (c.min || 0), v.getMonth(), v.getDate()).getTime();
+            dmax = new Date(v.getYear() + 1900 + (c.max || 0), v.getMonth(), v.getDate()).getTime();
+            dnow = Date.now();
+            if (c.min != null && dmin > dnow) {
+              return false;
+            }
+            if (c.max != null && dmax < dnow) {
+              return false;
+            }
+            return true;
+          }
+        }
+      }
     }
   ];
   form.opset['default'].map(function(it){
