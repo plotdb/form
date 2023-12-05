@@ -155,6 +155,7 @@ mod is a set of functions that can be provided to `widget` for advanced function
    - return value: a list of errors, optionally in Promise, or an object with following fields:
      - `status`: expected status
      - `errors`: list of errors ( if any )
+       - see `errors` section below for more information
    - even if provided, `widget` will still validate its emptyness and terms (if any) unless status 3 is returned.
  - `content(v)`: return semantic content instead of structure content.
    - if omitted, return the value from `value()` directly
@@ -165,6 +166,16 @@ mod is a set of functions that can be provided to `widget` for advanced function
  - `manager()`: optional. if provided, return form manager(s) used in this widget is any.
    - return a form manager (or a list of that) used by this widget to manage child widgets.
    - note that `widget.manager()` always returns an array (even if empty) to users by converting result from here automatically.
+
+
+## errors
+
+Errors returned by `validate()` are usually string of messages indicating the reason of failure. However, following strings are reserved for special purpose:
+
+ - `error`: a generic error.
+ - `required`: this field is required.
+ - `nested`: there are errors from widgets in nested formmgr
+   - this error should trigger nested formggr lookup and will itslef be ignored then.
 
 
 ## base widget
