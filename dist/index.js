@@ -647,6 +647,53 @@
         }
       }, countOps)
     }, {
+      id: "image",
+      i18n: {
+        "zh-TW": {
+          "long-size": "長邊尺寸限制",
+          "short-size": "短邊尺寸限制",
+          "width": "寬度限制",
+          "height": "高度限制",
+          "pixel-count": "像素量限制"
+        }
+      },
+      convert: function(v){
+        return (Array.isArray(v)
+          ? v
+          : [v]).filter(function(it){
+          return it;
+        });
+      },
+      ops: Object.fromEntries([['long-side', 'long'], ['short-side', 'short'], ['width', 'width'], ['height', 'height'], ['pixel-count', 'pixels']].map(function(n){
+        return [
+          n[0], function(k){
+            return {
+              func: function(v, c){
+                v == null && (v = []);
+                c == null && (c = {});
+                console.log("[x] image func: ", v, c, k);
+                console.log(v.filter(function(it){
+                  return !((c.min == null || it[k] >= (c.min || 0)) && (c.max == null || it[k] <= c.max));
+                }));
+                return !v.filter(function(it){
+                  return !((c.min == null || it[k] >= (c.min || 0)) && (c.max == null || it[k] <= c.max));
+                }).length;
+              },
+              config: {
+                min: {
+                  type: 'number',
+                  hint: "minimal size"
+                },
+                max: {
+                  type: 'number',
+                  hint: "minimal size"
+                }
+              }
+            };
+          }(n[1])
+        ];
+      }))
+    }, {
       id: 'string',
       i18n: {
         "zh-TW": {

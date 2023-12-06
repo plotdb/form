@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.46
+
+ - add opset `image` for checking image size / pixels
+
+
 ## v0.0.45
 
  - add opset for date with an op `age`

@@ -102,7 +102,31 @@ form.opset.default = [
         func: (v, c = {}) -> v.length < c.val
         config: {val: {type: \number, hint: "maximal file amount"}}
     } <<< count-ops
-
+  }, {
+    # file object modifier is required to be run before using this opset
+    # for width, height, long, short, pixels fields
+    id: "image"
+    i18n:
+      "zh-TW":
+        "long-size": "長邊尺寸限制"
+        "short-size": "短邊尺寸限制"
+        "width": "寬度限制"
+        "height": "高度限制"
+        "pixel-count": "像素量限制"
+    convert: (v) -> (if Array.isArray(v) => v else [v]).filter -> it
+    ops: Object.fromEntries(
+      [<[long-side long]>, <[short-side short]>, <[width width]>, <[height height]>, <[pixel-count pixels]>]
+      .map (n) -> [
+        n.0,
+        ((k) -> {
+          func: (v = [], c = {}) ->
+            console.log "[x] image func: ", v, c, k
+            console.log v.filter(->!((!c.min? or it[k] >= (c.min or 0)) and (!c.max? or it[k] <= c.max)))
+            !v.filter(->!((!c.min? or it[k] >= (c.min or 0)) and (!c.max? or it[k] <= c.max))).length
+          config: {min: {type: \number, hint: "minimal size"}, max: {type: \number, hint: "minimal size"}}
+        }) n.1
+      ]
+    )
   }, {
     id: 'string'
     i18n:
