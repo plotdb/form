@@ -671,10 +671,6 @@
               func: function(v, c){
                 v == null && (v = []);
                 c == null && (c = {});
-                console.log("[x] image func: ", v, c, k);
-                console.log(v.filter(function(it){
-                  return !((c.min == null || it[k] >= (c.min || 0)) && (c.max == null || it[k] <= c.max));
-                }));
                 return !v.filter(function(it){
                   return !((c.min == null || it[k] >= (c.min || 0)) && (c.max == null || it[k] <= c.max));
                 }).length;

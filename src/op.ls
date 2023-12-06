@@ -120,8 +120,6 @@ form.opset.default = [
         n.0,
         ((k) -> {
           func: (v = [], c = {}) ->
-            console.log "[x] image func: ", v, c, k
-            console.log v.filter(->!((!c.min? or it[k] >= (c.min or 0)) and (!c.max? or it[k] <= c.max)))
             !v.filter(->!((!c.min? or it[k] >= (c.min or 0)) and (!c.max? or it[k] <= c.max))).length
           config: {min: {type: \number, hint: "minimal size"}, max: {type: \number, hint: "minimal size"}}
         }) n.1

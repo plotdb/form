@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.47
+
+ - remove unnecessary log
+
+
 ## v0.0.46
 
  - add opset `image` for checking image size / pixels
