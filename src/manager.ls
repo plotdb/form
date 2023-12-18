@@ -157,7 +157,8 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     # however, user can enforce a partial update by setting opt.partial to true.
     Promise.resolve!then ~>
       ps = for p, w of @_ws.w
-        if w._meta.disabled => continue
+        # even if w is disabled, we should still set its value
+        # since it may just be disabled temporarily.
         if !v.hasOwnProperty(p) and opt.partial => continue
         w.value v[p], opt
       Promise.all ps

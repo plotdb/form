@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.48
+
+ - make value still work for disabled widgets
+
+
 ## v0.0.47
 
  - remove unnecessary log

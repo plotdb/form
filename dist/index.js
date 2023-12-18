@@ -326,9 +326,6 @@
         res$ = [];
         for (p in ref$ = this$._ws.w) {
           w = ref$[p];
-          if (w._meta.disabled) {
-            continue;
-          }
           if (!v.hasOwnProperty(p) && opt.partial) {
             continue;
           }
