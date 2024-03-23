@@ -616,11 +616,13 @@
             var exts;
             c == null && (c = {});
             exts = (c.str.split(',') || []).map(function(it){
-              return it.toLowerCase();
+              return (it || '').trim().toLowerCase();
+            }).filter(function(it){
+              return it;
             });
             return !v.filter(function(it){
               var ext, ref$;
-              return !in$(((ext = (ref$ = it.filename.split('.'))[ref$.length - 1]) || '').toLowerCase(), exts);
+              return !in$(((ext = (ref$ = it.filename.split('.'))[ref$.length - 1]) || '').trim().toLowerCase(), exts);
             }).length;
           },
           config: {

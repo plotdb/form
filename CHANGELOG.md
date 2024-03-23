@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.49
+
+ - extension op: trim input to acces configs with space like `jpg, jpeg`
+
+
 ## v0.0.48
 
  - make value still work for disabled widgets
