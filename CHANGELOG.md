@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.50
+
+ - fix bug: seg mode for all widgets without filtering out disabled widgets
+
+
 ## v0.0.49
 
  - extension op: trim input to acces configs with space like `jpg, jpeg`

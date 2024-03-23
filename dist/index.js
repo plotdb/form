@@ -357,9 +357,7 @@
             results$.push(w);
           }
           return results$;
-        }.call(this$)).filter(function(w){
-          return !w._meta.disabled;
-        }).map(function(w){
+        }.call(this$)).map(function(w){
           return w.mode(m);
         }));
       });

@@ -170,4 +170,6 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     if @_mode == m => return
     @_mode = m
     @fire \mode, m
-    Promise.all [w for p, w of @_ws.w].filter((w)->!w._meta.disabled).map((w)->w.mode m)
+    # we used to filter widgets by disabled status, but this shouldn't be done,
+    # because disabled widgets may be enabled later, and we should still apply mode to them.
+    Promise.all [w for p, w of @_ws.w].map((w)->w.mode m)
