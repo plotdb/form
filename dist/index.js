@@ -73,6 +73,13 @@
       this._ws.p.set(w, p);
       this._ws.l[p] = {};
       this._ws.s[p] = w.status();
+      w.on('meta', this._ws.l[p].m = function(v){
+        return this$.fire('meta', {
+          widget: w,
+          path: p,
+          value: v
+        });
+      });
       w.on('change', this._ws.l[p].c = function(v){
         return this$.fire('change', {
           widget: w,
@@ -103,6 +110,7 @@
       if (!(ws = this._ws.w[o.path])) {
         return;
       }
+      ws.off('meta', this._ws.l[o.path].m);
       ws.off('change', this._ws.l[o.path].c);
       ws.off('status', this._ws.l[o.path].s);
       this._ws.p['delete'](ws);

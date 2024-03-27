@@ -1,5 +1,11 @@
 # Change Logs
 
+## v0.0.51
+
+ - fire meta event from manager triggered by widget.
+ - upgrade dependencies
+
+
 ## v0.0.50
 
  - fix bug: seg mode for all widgets without filtering out disabled widgets

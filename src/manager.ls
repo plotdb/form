@@ -31,6 +31,10 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     @_ws.p.set w, p
     @_ws.l[p] = {}
     @_ws.s[p] = w.status!
+    w.on \meta, (
+      @_ws.l[p].m = (v) ~>
+        @fire \meta, {widget: w, path: p, value: v}
+    )
     w.on \change, (
       @_ws.l[p].c = (v) ~>
         @fire \change, {widget: w, path: p, value: v}
@@ -49,6 +53,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
   remove: (o) ->
     if Array.isArray(o) => return o.map ~> @remove it
     if !(ws = @_ws.w[o.path]) => return
+    ws.off \meta, @_ws.l[o.path].m
     ws.off \change, @_ws.l[o.path].c
     ws.off \status, @_ws.l[o.path].s
     @_ws.p.delete ws
