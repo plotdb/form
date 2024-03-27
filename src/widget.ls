@@ -6,6 +6,7 @@ form.widget = (opt = {}) ->
   @_custom = {}
   @_status = 1
   @_meta = {config: {}, key: Math.random!toString(36)substring(2)}
+  @_meta_dig = "" # for tracking meta change.
   @ <<< _value: undefined, _empty: true
   @_mode = opt.mode or \edit
   @_validate = opt.validate or null
@@ -45,7 +46,10 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
     @_meta <<< v{key, title, desc, is-required, disabled, readonly, default-value}
     @_meta.config = JSON.parse(JSON.stringify(v.config or {}))
     @_meta.term = (v.term or []).map -> new form.term it
-    @fire \meta, @_meta
+    dig = JSON.stringify(v)
+    # we won't want to fire meta event if 1. it's init call, 2. no change
+    if @_meta_dig != dig and !o.init => @fire \meta, @_meta
+    @_meta_dig = dig
     Promise.resolve!
       .then ~>
         if !o.init => return

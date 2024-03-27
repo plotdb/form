@@ -33,7 +33,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     @_ws.s[p] = w.status!
     w.on \meta, (
       @_ws.l[p].m = (v) ~>
-        @fire \meta, {widget: w, path: p, value: v}
+        @fire \meta, {widget: w, path: p, meta: v}
     )
     w.on \change, (
       @_ws.l[p].c = (v) ~>
@@ -69,6 +69,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     list = [{k,s} for k,s of @_ws.s].filter ~> !@_ws.w[it.k]._meta.disabled
     ret =
       total: list.length
+      invalid: list.filter((o) -> o.s? and o.s == 2).length
       done: list.filter((o) -> o.s? and o.s == 0).length
     ret.percent = ret.done / ( ret.total or 1)
     return ret

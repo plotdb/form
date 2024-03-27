@@ -77,7 +77,7 @@
         return this$.fire('meta', {
           widget: w,
           path: p,
-          value: v
+          meta: v
         });
       });
       w.on('change', this._ws.l[p].c = function(v){
@@ -148,6 +148,9 @@
       });
       ret = {
         total: list.length,
+        invalid: list.filter(function(o){
+          return o.s != null && o.s === 2;
+        }).length,
         done: list.filter(function(o){
           return o.s != null && o.s === 0;
         }).length
@@ -1044,6 +1047,7 @@
       config: {},
       key: Math.random().toString(36).substring(2)
     };
+    this._meta_dig = "";
     this._value = undefined;
     this._empty = true;
     this._mode = opt.mode || 'edit';
@@ -1141,7 +1145,7 @@
       return ret;
     },
     deserialize: function(v, o){
-      var ref$, this$ = this;
+      var ref$, dig, this$ = this;
       o == null && (o = {});
       ref$ = this._meta;
       ref$.key = v.key;
@@ -1155,7 +1159,11 @@
       this._meta.term = (v.term || []).map(function(it){
         return new form.term(it);
       });
-      this.fire('meta', this._meta);
+      dig = JSON.stringify(v);
+      if (this._meta_dig !== dig && !o.init) {
+        this.fire('meta', this._meta);
+      }
+      this._meta_dig = dig;
       return Promise.resolve().then(function(){
         if (!o.init) {
           return;

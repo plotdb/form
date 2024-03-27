@@ -1,5 +1,12 @@
 # Change Logs
 
+## v0.0.52
+
+ - meta event should provide meta value in `meta` field instead of `value` field.
+ - also provide `invalid` count in progress api
+ - meta change event only fired if meta digest changes and is not a init call
+
+
 ## v0.0.51
 
  - fire meta event from manager triggered by widget.
@@ -8,7 +15,7 @@
 
 ## v0.0.50
 
- - fix bug: seg mode for all widgets without filtering out disabled widgets
+ - fix bug: set mode for all widgets without filtering out disabled widgets
 
 
 ## v0.0.49
