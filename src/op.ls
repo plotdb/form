@@ -96,7 +96,7 @@ form.opset.default = [
       extension:
         func: (v, c = {}) ->
           exts = (c.str.split(',') or []).map(-> (it or '').trim!toLowerCase!).filter -> it
-          !v.filter(->!(((ext = it.filename.split('.')[* - 1]) or '').trim!toLowerCase! in exts)).length
+          !v.filter(->!(((ext = (it.filename or '').split('.')[* - 1]) or '').trim!toLowerCase! in exts)).length
         config: {str: {type: \text, hint: "extension, comma separated, without dot"}}
       "count-limit": # deprecated. use `count-max` instead. note the difference between `<` and `<=`
         func: (v, c = {}) -> v.length < c.val

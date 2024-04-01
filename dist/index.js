@@ -631,7 +631,7 @@
             });
             return !v.filter(function(it){
               var ext, ref$;
-              return !in$(((ext = (ref$ = it.filename.split('.'))[ref$.length - 1]) || '').trim().toLowerCase(), exts);
+              return !in$(((ext = (ref$ = (it.filename || '').split('.'))[ref$.length - 1]) || '').trim().toLowerCase(), exts);
             }).length;
           },
           config: {

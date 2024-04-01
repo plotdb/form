@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.53
+
+ - fix bug: extension check error if filename is not provided
+
+
 ## v0.0.52
 
  - meta event should provide meta value in `meta` field instead of `value` field.
