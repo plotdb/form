@@ -32,3 +32,30 @@ Sample usage:
  - `serialize()`: return a serialized term that can be used to reconstruct a term object.
    - to deserialize, simply use `new form.term(serializedObject)`.
  - (TBD) `deserialize(v)`: deserialize a serialized object `v` into this object.
+
+
+## Sample Terms
+
+Following are some commonly used terms for you to quickly adopted. For more possible terms, also check `op.md` for complete op / opset list.
+
+    # length limitation 3000 words (note: not characters)
+    opset: \length, op: \lte, msg: 'too long', config: {val: 3000, method: \simple-word}
+
+    # file type jpg or png
+    opset: \file, op: \extension, msg: 'incorrect format', config: {str: "jpg,jpeg,png"}
+
+    # string format: email
+    opset: \string, op: \email, msg: "malformat"
+
+    # string format: url
+    opset: \string, op: \url, msg: "malformat"
+
+    # string format: phone (taiwan schema, xxxx-xxxxxx / xxx-xxxxxxxx#xxx / xxx-xxxxxxxx)
+    opset: \string, op: \regex, msg: "error", config: {rule: "^\\d{4}-\\d{6}$|^\\d{2,3}-\\d{7,8}(#\\d+)?$"}
+
+    # file count
+    opset: \file, op: \count-min, msg: '1 file minimal', config: {val: 1}
+
+    # list count
+    opset: \list, op: \count-max, msg: '3 max', config: {val: 3}
+    opset: \list, op: \count-range, msg: '1 ~ 2', config: {min: 1, max: 2}

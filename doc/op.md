@@ -140,3 +140,5 @@ By default `@plotdb/form` provides following opsets:
    - `count-range`: file count range, with configs:
      - `min`: minimal value
      - `max`: maimal value
+
+Please check `term.md` for convenient copy-past common term examples.
