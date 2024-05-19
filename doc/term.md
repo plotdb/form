@@ -59,3 +59,6 @@ Following are some commonly used terms for you to quickly adopted. For more poss
     # list count
     opset: \list, op: \count-max, msg: '3 max', config: {val: 3}
     opset: \list, op: \count-range, msg: '1 ~ 2', config: {min: 1, max: 2}
+
+    # file size
+    opset: \file, op: \size-limit, msg: 'file too large', config: val: 30 * 1048576 # 30MB
