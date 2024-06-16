@@ -31,6 +31,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     @_ws.p.set w, p
     @_ws.l[p] = {}
     @_ws.s[p] = w.status!
+    w.mode @_mode
     w.on \meta, (
       @_ws.l[p].m = (v) ~>
         @fire \meta, {widget: w, path: p, meta: v}

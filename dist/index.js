@@ -73,6 +73,7 @@
       this._ws.p.set(w, p);
       this._ws.l[p] = {};
       this._ws.s[p] = w.status();
+      w.mode(this._mode);
       w.on('meta', this._ws.l[p].m = function(v){
         return this$.fire('meta', {
           widget: w,

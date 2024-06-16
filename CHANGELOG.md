@@ -1,5 +1,11 @@
 # Change Logs
 
+## v0.0.54
+
+ - fix bug: current formmgr mode doesn't affect newly added widgets
+ - upgrade dependencies to fix vulnerabilities
+
+
 ## v0.0.53
 
  - fix bug: extension check error if filename is not provided
