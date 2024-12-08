@@ -86,6 +86,7 @@
  - `render`: fired when widget is going to re-rendered.
  - `mode`: fired when mode is changed.
  - `meta`: fired when metadata is (potentially) changed.
+ - `config`: fired when metadata is changed due to editor configuring. (TBD)
 
 
 ## Internal members
