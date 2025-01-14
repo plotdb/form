@@ -117,8 +117,9 @@ meta should be only editable by administrator. value is inputed by expected end 
 ### meta
 
  - `title`: a short description about purpose of this widget
- - `desc`: a longer description about purpose of this widget
- - `key`: unique key identifying this widegt
+ - `desc`: a longer description about purpose of this widget. optional
+ - `tag`: an array of strings representing tags about this widget. optional
+ - `key`: unique key identifying this widget
  - `alias`: alias of key, for semantic meaning. should also be unique.
    - for example, to locate a widget for phone number, we can search for widgets with `phone` alias.
    - useful when we lost old widget meta but want to associate old values with newly created widget.
