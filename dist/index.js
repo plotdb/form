@@ -1117,7 +1117,10 @@
       return this._root;
     },
     _init: function(){
-      return Promise.resolve(this.mod && this.mod.init ? this.mod.init.apply(this) : '');
+      var this$ = this;
+      return Promise.resolve(this.mod && this.mod.init ? this.mod.init.apply(this) : '').then(function(){
+        return this$.fire('init');
+      });
     },
     key: function(keyonly){
       keyonly == null && (keyonly = false);
@@ -1161,8 +1164,12 @@
         return new form.term(it);
       });
       dig = JSON.stringify(v);
-      if (this._meta_dig !== dig && !o.init) {
-        this.fire('meta', this._meta);
+      if (this._meta_dig !== dig) {
+        if (!o.init) {
+          this.fire('meta', this._meta);
+        } else {
+          this.fire('init');
+        }
       }
       this._meta_dig = dig;
       return Promise.resolve().then(function(){

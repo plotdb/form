@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.55
+
+ - fire `init` event when init or deserialize with `init` option.
+
+
 ## v0.0.54
 
  - fix bug: current formmgr mode doesn't affect newly added widgets

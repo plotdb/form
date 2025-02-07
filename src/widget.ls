@@ -28,7 +28,9 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
     if l.indexOf(cb) >= 0 => l.splice l.indexOf(cb), 1
   fire: (n, ...v) -> for cb in (@evt-handler[n] or []) => cb.apply @, v
   root: -> @_root
-  _init: -> Promise.resolve(if @mod and @mod.init => @mod.init.apply @ else '')
+  _init: ->
+    <~ Promise.resolve(if @mod and @mod.init => @mod.init.apply @ else '').then _
+    @fire \init
   key: (keyonly = false) ->
     return if keyonly => @_meta.key
     else @_meta.alias or @_meta.key
@@ -48,7 +50,9 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
     @_meta.term = (v.term or []).map -> new form.term it
     dig = JSON.stringify(v)
     # we won't want to fire meta event if 1. it's init call, 2. no change
-    if @_meta_dig != dig and !o.init => @fire \meta, @_meta
+    if @_meta_dig != dig =>
+      if !o.init => @fire \meta, @_meta
+      else @fire \init
     @_meta_dig = dig
     Promise.resolve!
       .then ~>

@@ -86,6 +86,7 @@
  - `render`: fired when widget is going to re-rendered.
  - `mode`: fired when mode is changed.
  - `meta`: fired when metadata is (potentially) changed.
+ - `init`: fired when widget is inited, including deserializing with `init` option set to true.
  - `config`: fired when metadata is changed due to editor configuring. (TBD)
 
 
