@@ -178,6 +178,11 @@ form.opset.default = [
         config:
           val: {type: \number, hint: "maximal length"}
           method: type: \choice, default: \char, values: <[char simple-word]>
+      gte:
+        func: (v, c = {}) -> word-len("#v", c.method) >= +c.val
+        config:
+          val: {type: \number, hint: "minimal length"}
+          method: type: \choice, default: \char, values: <[char simple-word]>
       eq:
         func: (v, c = {}) -> word-len("#v", c.method) == +c.val
         config:

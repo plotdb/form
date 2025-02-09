@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.56
+
+ - add `gte` op in length opset
+
+
 ## v0.0.55
 
  - fire `init` event when init or deserialize with `init` option.

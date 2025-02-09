@@ -816,6 +816,23 @@
             }
           }
         },
+        gte: {
+          func: function(v, c){
+            c == null && (c = {});
+            return wordLen(v + "", c.method) >= +c.val;
+          },
+          config: {
+            val: {
+              type: 'number',
+              hint: "minimal length"
+            },
+            method: {
+              type: 'choice',
+              'default': 'char',
+              values: ['char', 'simple-word']
+            }
+          }
+        },
         eq: {
           func: function(v, c){
             c == null && (c = {});
