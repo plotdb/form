@@ -3,7 +3,7 @@
   "name": "@plotdb/form",
   "license": "MIT",
   "description": "form blocks",
-  "version": "0.0.56",
+  "version": "0.0.57",
   "browser": "dist/index.min.js",
   "main": "dist/index.min.js",
   "files": [
@@ -84,7 +84,7 @@
     "@plotdb/sheet": "^0.6.7",
     "@plotdb/suuid": "^0.5.1",
     "curegex": "^0.0.4",
-    "dompurify": "^2.2.6",
+    "dompurify": "^3.2.4",
     "ldcolor": "^1.1.2",
     "ldpalettepicker": "^4.1.1",
     "ldslider": "^3.1.2",
