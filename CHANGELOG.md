@@ -1,5 +1,11 @@
 # Change Logs
 
+## v0.0.57
+
+ - `value` of form manager now returns full data including disabled fields.
+ - support `partial` option for retrieving value partially without disabled fields.
+
+
 ## v0.0.56
 
  - add `gte` op in length opset

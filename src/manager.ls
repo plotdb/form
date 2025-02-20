@@ -153,7 +153,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     # TODO decompose p and fill ret with given hierarchy
     if !v =>
       ret = {}
-      for p,w of @_ws.w => if !w._meta.disabled => ret[p] = w.value!
+      for p,w of @_ws.w => if !(opt.partial and w._meta.disabled) => ret[p] = w.value!
       return ret
     # dup v to prevent internal change pollutes host object.
     v = JSON.parse(JSON.stringify(v))

@@ -326,7 +326,7 @@
         ret = {};
         for (p in ref$ = this._ws.w) {
           w = ref$[p];
-          if (!w._meta.disabled) {
+          if (!(opt.partial && w._meta.disabled)) {
             ret[p] = w.value();
           }
         }
