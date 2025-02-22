@@ -1256,6 +1256,12 @@
         return this$.fire('change', this$._value != null ? JSON.parse(JSON.stringify(this$._value)) : undefined);
       });
     },
+    disabled: function(){
+      return this._meta.disabled;
+    },
+    readonly: function(){
+      return this._meta.readonly;
+    },
     isEmpty: function(v){
       if (!arguments.length) {
         v = this._value;

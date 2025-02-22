@@ -169,7 +169,8 @@ mod is a set of functions that can be provided to `widget` for advanced function
  - `manager()`: optional. if provided, return form manager(s) used in this widget is any.
    - return a form manager (or a list of that) used by this widget to manage child widgets.
    - note that `widget.manager()` always returns an array (even if empty) to users by converting result from here automatically.
-
+ - `readonly()`: return true if this widget is readonly.
+ - `disabled()`: return true if this widget is disabled.
 
 ## errors
 

@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.58
+
+ - support `readonly()` and `disabled()` in `form.widget` api
+
+
 ## v0.0.57
 
  - `value` of form manager now returns full data including disabled fields.

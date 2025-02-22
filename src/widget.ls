@@ -86,6 +86,9 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
       if opt.from-source => return
       @fire \change, (if @_value? => JSON.parse(JSON.stringify @_value) else undefined)
 
+  disabled: -> @_meta.disabled
+  readonly: -> @_meta.readonly
+
   is-empty: (v) ->
     if !arguments.length => v = @_value
     if @mod and @mod.is-empty => @mod.is-empty.call @, v
