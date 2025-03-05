@@ -36,6 +36,7 @@ form.opset.prototype = Object.create(Object.prototype) <<< do
 form.opset.register = -> @[]list.push if it instanceof form.opset => it else new form.opset(it)
 form.opset.get = (id) -> @[]list.filter(->(it.id or it.name) == id).0
 
+# TODO abstract this. before this is done, be sure to update richtext's word-len if we patch this function.
 word-len = (v = "", method) ->
   return if method == \simple-word =>
     v.split(/\s|[,.;:!?，。；：︰！？、．　"]/).filter(->it)

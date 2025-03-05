@@ -173,6 +173,10 @@ mod is a set of functions that can be provided to `widget` for advanced function
    - note that `widget.manager()` always returns an array (even if empty) to users by converting result from here automatically.
  - `readonly()`: return true if this widget is readonly.
  - `disabled()`: return true if this widget is disabled.
+ - `opsets`: optional, a list of dedicated opsets available for this widget.
+   - You can specify an opset without `id` or `name` here as a fallback opset,
+     used along with terms wit `opset` left empty.
+
 
 ## errors
 

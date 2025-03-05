@@ -1051,7 +1051,7 @@
     }
   });
   form.widget = function(opt){
-    var this$ = this;
+    var o, this$ = this;
     opt == null && (opt = {});
     this._root = typeof opt.root === 'string'
       ? document.querySelector(opt.root)
@@ -1070,10 +1070,10 @@
     this._empty = true;
     this._mode = opt.mode || 'edit';
     this._validate = opt.validate || null;
-    this._opsets = (opt.opsets || []).map(function(opset){
+    this._opsets = ((opt.opsets || []).concat((opt.mod || {}).opsets || [])).map(function(opset){
       if (typeof opset === 'string') {
         return form.opset.get(opset);
-      } else if (typeof opset === form.opset) {
+      } else if (opset instanceof form.opset) {
         return opset;
       } else {
         return new form.opset(opset);
@@ -1089,6 +1089,14 @@
       }
       return results$;
     });
+    this._opsets = Object.fromEntries((function(){
+      var i$, ref$, len$, results$ = [];
+      for (i$ = 0, len$ = (ref$ = this._opsets).length; i$ < len$; ++i$) {
+        o = ref$[i$];
+        results$.push([o.id || o.name || '', o]);
+      }
+      return results$;
+    }.call(this)));
     this._errors = [];
     this.init = proxise.once(function(){
       return this$._init();
@@ -1177,8 +1185,13 @@
       ref$.readonly = v.readonly;
       ref$.defaultValue = v.defaultValue;
       this._meta.config = JSON.parse(JSON.stringify(v.config || {}));
-      this._meta.term = (v.term || []).map(function(it){
-        return new form.term(it);
+      this._meta.term = (v.term || []).map(function(t){
+        var that;
+        return new form.term(import$(import$({}, t), (that = this$._opsets[t.opset || ''])
+          ? {
+            opset: that
+          }
+          : {}));
       });
       dig = JSON.stringify(v);
       if (this._meta_dig !== dig) {

@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.59 (upcoming)
+
+ - consider widget internal opset if available for term construction
+
+
 ## v0.0.58
 
  - support `readonly()` and `disabled()` in `form.widget` api

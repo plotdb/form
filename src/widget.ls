@@ -10,13 +10,14 @@ form.widget = (opt = {}) ->
   @ <<< _value: undefined, _empty: true
   @_mode = opt.mode or \edit
   @_validate = opt.validate or null
-  @_opsets = (opt.opsets or []).map (opset) ->
+  @_opsets = ((opt.opsets or []) ++ ((opt.mod or {}).opsets or [])).map (opset) ->
     if typeof(opset) == \string => form.opset.get opset
-    else if typeof(opset) == form.opset => opset
-    else new form.opset(opset)
+    else if opset instanceof form.opset => opset
+    else new form.opset opset
   @_opsets
     .filter -> it.i18n
     .map ~> for k,v of it.i18n => @i18n{}[k] <<< v
+  @_opsets = Object.fromEntries [[(o.id or o.name or ''), o] for o in @_opsets]
   @_errors = []
   @init = proxise.once ~> @_init!
   @
@@ -47,7 +48,8 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
   deserialize: (v, o = {}) ->
     @_meta <<< v{key, title, desc, is-required, disabled, readonly, default-value}
     @_meta.config = JSON.parse(JSON.stringify(v.config or {}))
-    @_meta.term = (v.term or []).map -> new form.term it
+    @_meta.term = (v.term or []).map (t) ~>
+      new form.term({} <<< t <<< (if @_opsets[t.opset or ''] => {opset: that} else {}))
     dig = JSON.stringify(v)
     # we won't want to fire meta event if 1. it's init call, 2. no change
     if @_meta_dig != dig =>
