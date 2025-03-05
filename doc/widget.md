@@ -88,6 +88,8 @@
  - `meta`: fired when metadata is (potentially) changed.
  - `init`: fired when widget is inited, including deserializing with `init` option set to true.
  - `config`: fired when metadata is changed due to editor configuring. (TBD)
+ - `manager.changed`: fired when manager list updated.
+   - `mod` developer is responsible for firing this event if mod updates formmgr list.
 
 
 ## Internal members
