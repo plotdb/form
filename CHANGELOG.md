@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.60
+
+ - add `ctrl` for accessing custom api in widget
+
+
 ## v0.0.59
 
  - consider widget internal opset if available for term construction

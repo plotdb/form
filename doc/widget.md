@@ -70,7 +70,8 @@
    - return true if `u` and `v` are equivalent.
    - when `v` is omitted, internal value is used to compare against `u`
    - see also `mod.isEqual` in following section.
- - `adapt()`: apply programmatic options such as uploadr?
+ - `adapt(opt)`: apply programmatic options such as uploadr from host environment.
+   - `opt` is defined by speific widget.
  - `mode(v)`:
    - setting mode triggers validation. return a Promise which resolves when validation completes.
    - set widget mode to `v`, return current mode if `v` is omitted.
@@ -175,6 +176,9 @@ mod is a set of functions that can be provided to `widget` for advanced function
  - `manager()`: optional. if provided, return form manager(s) used in this widget is any.
    - return a form manager (or a list of that) used by this widget to manage child widgets.
    - note that `widget.manager()` always returns an array (even if empty) to users by converting result from here automatically.
+ - `adapt(...)`: optional. adapt api or interface provided from host environment.
+   - widgets are responsible of designing and documenting options used.
+ - `ctrl()`: optional. return a customized widget control interface for caller to use.
  - `readonly()`: return true if this widget is readonly.
  - `disabled()`: return true if this widget is disabled.
  - `opsets`: optional, a list of dedicated opsets available for this widget.
