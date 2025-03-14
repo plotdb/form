@@ -91,6 +91,10 @@
  - `manager.changed`: fired when manager list updated.
    - `mod` developer is responsible for firing this event if mod updates formmgr list.
 
+Since widgets are customizable, so as events. To use customized events, prefix event name with `widget`, such as:
+
+    widget.on("widget.widget-specific-event", function () { ... })
+
 
 ## Internal members
 
