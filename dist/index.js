@@ -1168,7 +1168,7 @@
       var ref$, ret, ref1$;
       ret = (ref1$ = {}, ref1$.key = (ref$ = this._meta).key, ref1$.title = ref$.title, ref1$.desc = ref$.desc, ref1$.isRequired = ref$.isRequired, ref1$.disabled = ref$.disabled, ref1$.readonly = ref$.readonly, ref1$.defaultValue = ref$.defaultValue, ref1$);
       ret.config = JSON.parse(JSON.stringify(this._meta.config || {}));
-      ret.term = this._meta.term.map(function(it){
+      ret.term = (this._meta.term || []).map(function(it){
         return it.serialize();
       });
       return ret;

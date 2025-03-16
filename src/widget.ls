@@ -43,7 +43,7 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
   serialize: ->
     ret = {} <<< @_meta{key, title, desc, is-required, disabled, readonly, default-value}
     ret.config = JSON.parse(JSON.stringify(@_meta.config or {}))
-    ret.term = @_meta.term.map -> it.serialize!
+    ret.term = (@_meta.term or []).map -> it.serialize!
     ret
   deserialize: (v, o = {}) ->
     @_meta <<< v{key, title, desc, is-required, disabled, readonly, default-value}

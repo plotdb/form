@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.61
+
+ - fix bug: check term and fallback to `[]` in serialize if term is not available.
+
+
 ## v0.0.60
 
  - add `ctrl` for accessing custom api in widget
