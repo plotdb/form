@@ -60,6 +60,8 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
       .then ~>
         if !o.init => return
         if !(@_meta.default-value? and @is-empty!) => return
+        # NOTE: definition of from-source is contradicted in doc and here.
+        # before we clarify its purpose, don't use it. also, check doc for more information.
         @value @_meta.default-value, {init: true, from-source: true}
       .then ~> @validate {init: o.init}
       .then ~> @render!
@@ -85,6 +87,8 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
     _v = if v? => JSON.parse(JSON.stringify(v)) else v
     @ <<< _value: _v, _empty: @is-empty(_v)
     @validate opt{init} .then ~>
+      # NOTE: definition of from-source is contradicted in doc and here.
+      # before we clarify its purpose, don't use it. also, check doc for more information.
       if opt.from-source => return
       @fire \change, (if @_value? => JSON.parse(JSON.stringify @_value) else undefined)
 

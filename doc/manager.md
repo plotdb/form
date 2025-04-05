@@ -79,7 +79,7 @@ Instance API:
      - object always duplicated to prevent pollution due to share object.
      - (TODO) currently we don't correctly support a arbitrary JSON object, but only a single level object.
    - `opt`: additional options, including:
-     - `from-source`: called from source, should fire change event.
+     - `fromSource`: DONT USE THIS. see `fromSource` in `widget.md`.
      - `init`: this is for initialization. won't trigger status change ( leave it as `1` )
      - `partial`: default false. if true, update path that only defined in `v`.
        - Please note that, without `partial = true`, value({}) means setting values of all widgets to `undefined`.

@@ -56,7 +56,13 @@
    - options:
      - `v`: value to set. call `value` without parameters to get its value.
      - `opt`: additional options, including:
-       - `from-source`: called from source, should fire change event.
+       - `fromSource`: (TBD) this option may cause some issue. definition and implementation are contradicted
+         - in this doc it's defined as `called from source, should fire change event.`
+           however, in the code it prevent from firing `change` event.
+           originally it should be designed to suppress change event,
+           however nest block relys on `change` event to update its internal formmgr.
+           that is, before we find use cases of suppressing change event, we should not use it.
+         - for now, only `@makeform/table` and `widget.deserialize` use it.
        - `init`: this is for initialization. won't trigger status change ( leave it as `1` )
  - `content(v)`: get content from this widget.
    - get content from v if v is provided, otherwise from `value()`
