@@ -68,10 +68,16 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
   status: -> @_status
   progress: ->
     list = [{k,s} for k,s of @_ws.s].filter ~> !@_ws.w[it.k]._meta.disabled
+    mgrs = list.map(~>@_ws.w[it.k].manager!).filter(->it).reduce(((a,b) -> a ++ b),[])
     ret =
       total: list.length
       invalid: list.filter((o) -> o.s? and o.s == 2).length
       done: list.filter((o) -> o.s? and o.s == 0).length
+    mgrs.map ->
+      r = it.progress!
+      ret.total += (r.total or 0)
+      ret.invalid += (r.invalid or 0)
+      ret.done += (r.done or 0)
     ret.percent = ret.done / ( ret.total or 1)
     return ret
 

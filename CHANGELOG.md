@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.62
+
+ - update progress based on recursive manager hierarchy
+
+
 ## v0.0.61
 
  - fix bug: check term and fallback to `[]` in serialize if term is not available.

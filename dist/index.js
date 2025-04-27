@@ -133,7 +133,7 @@
       return this._status;
     },
     progress: function(){
-      var list, k, s, ret, this$ = this;
+      var list, k, s, mgrs, ret, this$ = this;
       list = (function(){
         var ref$, results$ = [];
         for (k in ref$ = this._ws.s) {
@@ -147,6 +147,13 @@
       }.call(this)).filter(function(it){
         return !this$._ws.w[it.k]._meta.disabled;
       });
+      mgrs = list.map(function(it){
+        return this$._ws.w[it.k].manager();
+      }).filter(function(it){
+        return it;
+      }).reduce(function(a, b){
+        return a.concat(b);
+      }, []);
       ret = {
         total: list.length,
         invalid: list.filter(function(o){
@@ -156,6 +163,13 @@
           return o.s != null && o.s === 0;
         }).length
       };
+      mgrs.map(function(it){
+        var r;
+        r = it.progress();
+        ret.total += r.total || 0;
+        ret.invalid += r.invalid || 0;
+        return ret.done += r.done || 0;
+      });
       ret.percent = ret.done / (ret.total || 1);
       return ret;
     },
