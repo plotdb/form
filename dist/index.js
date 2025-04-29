@@ -132,8 +132,16 @@
     status: function(){
       return this._status;
     },
-    progress: function(){
-      var list, k, s, mgrs, ret, this$ = this;
+    progress: function(arg$){
+      var _recurred, ref$, ret, list, k, s, this$ = this;
+      _recurred = (ref$ = (arg$ != null
+        ? arg$
+        : {})._recurred) != null ? ref$ : false;
+      ret = {
+        total: 0,
+        invalid: 0,
+        done: 0
+      };
       list = (function(){
         var ref$, results$ = [];
         for (k in ref$ = this._ws.s) {
@@ -147,28 +155,35 @@
       }.call(this)).filter(function(it){
         return !this$._ws.w[it.k]._meta.disabled;
       });
-      mgrs = list.map(function(it){
-        return this$._ws.w[it.k].manager();
-      }).filter(function(it){
-        return it;
-      }).reduce(function(a, b){
-        return a.concat(b);
-      }, []);
-      ret = {
-        total: list.length,
-        invalid: list.filter(function(o){
-          return o.s != null && o.s === 2;
-        }).length,
-        done: list.filter(function(o){
-          return o.s != null && o.s === 0;
-        }).length
-      };
-      mgrs.map(function(it){
-        var r;
-        r = it.progress();
-        ret.total += r.total || 0;
-        ret.invalid += r.invalid || 0;
-        return ret.done += r.done || 0;
+      list.forEach(function(o){
+        var w, ms, e;
+        w = this$._ws.w[o.k];
+        if (!_recurred && (ms = w.manager()).length) {
+          ms = ms.filter(function(m){
+            var p;
+            p = m.progress({
+              _recurred: true
+            });
+            ret.total += p.total;
+            ret.invalid += p.invalid;
+            ret.done += p.done;
+            return !!p.invalid;
+          });
+          if (ms.length) {
+            return;
+          }
+        }
+        ret.total += 1;
+        e = w.errors();
+        if (e.length === 1 && e[0] === 'nested') {
+          return;
+        }
+        if (o.s != null && o.s === 2) {
+          ret.invalid += 1;
+        }
+        if (o.s != null && o.s === 0) {
+          return ret.done += 1;
+        }
       });
       ret.percent = ret.done / (ret.total || 1);
       return ret;

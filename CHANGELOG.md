@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.63
+
+ - fix bug: recursive progress may count nested fields multiple times
+
+
 ## v0.0.62
 
  - update progress based on recursive manager hierarchy

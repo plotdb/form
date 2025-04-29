@@ -66,18 +66,26 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
   content: (p) -> if @_ws.w[p] => that.content! else null
 
   status: -> @_status
-  progress: ->
+  progress: ({_recurred = false} = {}) ->
+    ret = total: 0, invalid: 0, done: 0
     list = [{k,s} for k,s of @_ws.s].filter ~> !@_ws.w[it.k]._meta.disabled
-    mgrs = list.map(~>@_ws.w[it.k].manager!).filter(->it).reduce(((a,b) -> a ++ b),[])
-    ret =
-      total: list.length
-      invalid: list.filter((o) -> o.s? and o.s == 2).length
-      done: list.filter((o) -> o.s? and o.s == 0).length
-    mgrs.map ->
-      r = it.progress!
-      ret.total += (r.total or 0)
-      ret.invalid += (r.invalid or 0)
-      ret.done += (r.done or 0)
+    list.for-each (o) ~>
+      w = @_ws.w[o.k]
+      # `w.manager!` gets all managers under this manager
+      # thus we only check progress in them if this progress is not a recursive call.
+      if !_recurred and (ms = w.manager!).length =>
+        ms = ms.filter (m) ->
+          p = m.progress {_recurred: true}
+          ret.total += p.total
+          ret.invalid += p.invalid
+          ret.done += p.done
+          return !!p.invalid
+        if ms.length => return
+      ret.total += 1
+      e = w.errors!
+      if e.length == 1 and e.0 == \nested => return
+      if o.s? and o.s == 2 => ret.invalid += 1
+      if o.s? and o.s == 0 => ret.done += 1
     ret.percent = ret.done / ( ret.total or 1)
     return ret
 
