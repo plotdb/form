@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.64
+
+ - fix bug: url op only supports 6 characters long top level domain
+ 
+
 ## v0.0.63
 
  - fix bug: recursive progress may count nested fields multiple times

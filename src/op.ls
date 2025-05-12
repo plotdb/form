@@ -149,7 +149,7 @@ form.opset.default = [
         func: (v) -> /^[^@]+@[^@]+$/.exec(v)
         config: {}
       url:
-        func: (v) -> /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)$/.exec(v)
+        func: (v) -> /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,15}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)$/.exec(v)
         config: {}
       regex:
         func: (v, c={}) ->
