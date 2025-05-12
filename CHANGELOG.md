@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.66
+
+ - fix bug: check `_meta` before using in progress
+ 
+
 ## v0.0.65
 
  - fix bug: check `_meta` before using in progress
