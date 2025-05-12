@@ -68,7 +68,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
   status: -> @_status
   progress: ({_recurred = false} = {}) ->
     ret = total: 0, invalid: 0, done: 0
-    list = [{k,s} for k,s of @_ws.s].filter ~> !@_ws.w[it.k]._meta.disabled
+    list = [{k,s} for k,s of @_ws.s].filter ~> @_ws.w[it.k]._meta and !@_ws.w[it.k]._meta.disabled
     list.for-each (o) ~>
       w = @_ws.w[o.k]
       # `w.manager!` gets all managers under this manager

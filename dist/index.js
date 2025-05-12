@@ -153,7 +153,7 @@
         }
         return results$;
       }.call(this)).filter(function(it){
-        return !this$._ws.w[it.k]._meta.disabled;
+        return this$._ws.w[it.k]._meta && !this$._ws.w[it.k]._meta.disabled;
       });
       list.forEach(function(o){
         var w, ms, e;
