@@ -48,7 +48,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
         @_restatus-debounced!
     )
 
-  # add(o): remove an widget or a list of widgets. o:
+  # remove(o): remove an widget or a list of widgets. o:
   #  - list
   #  - {path}
   remove: (o) ->
