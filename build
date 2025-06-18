@@ -15,4 +15,5 @@ echo "copy dist to web ..."
 rm -rf web/static/assets/lib/@plotdb/form/dev/
 mkdir -p web/static/assets/lib/@plotdb/form/dev/
 cp -R dist/* web/static/assets/lib/@plotdb/form/dev/
-
+ln -s dev web/static/assets/lib/@plotdb/form/main
+rm web/static/assets/lib/@plotdb/form/dev/dev
