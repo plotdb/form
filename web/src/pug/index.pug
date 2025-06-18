@@ -1,4 +1,19 @@
 extends /base.pug
+block head
+  style(type="text/css"): include:stylus index.styl
 block body
+  .w-1024.rwd.mx-auto.my-5
+    div(ld-each="widget")
+    div(ld="form")
+    hr
+    .d-flex.g-2.align-items-center
+      .btn.btn-outline-secondary(ld="validate") Validate
+      .btn.btn-outline-secondary(ld="dump") Dump
+      .flex-grow-1
+        .mb-0.text-sm Progress
+        .progress
+          .progress-bar.progress-bar-striped.progress-bar-animated(ld="progress-bar")
 block script
-  script(type="module"): include:lsc index.ls
+  script(type="module")
+    include:lsc api.ls
+    include:lsc index.ls
