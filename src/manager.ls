@@ -82,6 +82,9 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
           ret.done += p.done
           return !!p.invalid
         if ms.length => return
+      # this design above (return if any manager contains failed fields ) skip any nested widget
+      # that contains error, which may provide better progress information,
+      # however this makes total amount vary.
       ret.total += 1
       e = w.errors!
       if e.length == 1 and e.0 == \nested => return
