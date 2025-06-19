@@ -110,6 +110,10 @@ By default `@plotdb/form` provides following opsets:
    - `include`: input includes specified substring.
    - `exclude`: input does not include specified substring.
    - `email`: input is an email.
+   - `url`: input is an url.
+   - `regex`: input is an regular expression, with config:
+     - `rule`: a string of regular expression.
+       - should not be an regular expression object in order to be able to be serialized
  - `number`, including following ops:
    - `lte`: input is less or equal than specified value
    - `gte`: input is greater or equal than specified value
