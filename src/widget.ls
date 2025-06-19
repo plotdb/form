@@ -94,6 +94,7 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
 
   disabled: -> @_meta.disabled
   readonly: -> @_meta.readonly
+  is-required: -> @_meta.is-required
 
   is-empty: (v) ->
     if !arguments.length => v = @_value

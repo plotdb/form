@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.67
+
+ - add `isRequired` api in form.widget
+
+
 ## v0.0.66
 
  - fix bug: check `_meta` before using in progress

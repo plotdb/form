@@ -186,6 +186,7 @@ mod is a set of functions that can be provided to `widget` for advanced function
    - widgets are responsible of designing and documenting options used.
  - `ctrl()`: optional. return a customized widget control interface for caller to use.
  - `readonly()`: return true if this widget is readonly.
+ - `isRequired`: true if this widget is required.
  - `disabled()`: return true if this widget is disabled.
  - `opsets`: optional, a list of dedicated opsets available for this widget.
    - You can specify an opset without `id` or `name` here as a fallback opset,

@@ -1304,6 +1304,9 @@
     readonly: function(){
       return this._meta.readonly;
     },
+    isRequired: function(){
+      return this._meta.isRequired;
+    },
     isEmpty: function(v){
       if (!arguments.length) {
         v = this._value;
