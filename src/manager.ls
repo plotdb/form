@@ -198,3 +198,29 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     # we used to filter widgets by disabled status, but this shouldn't be done,
     # because disabled widgets may be enabled later, and we should still apply mode to them.
     Promise.all [w for p, w of @_ws.w].map((w)->w.mode m)
+
+  order: ->
+    node-idx = (r, n, opt) ->
+      opt.idx++
+      if r == n => return true
+      if !(r and r.childNodes) => return
+      for i from 0 til r.childNodes.length
+        v = node-idx r.childNodes[i], n, opt
+        if v => return true
+      return
+    _ = (m, obj) ->
+      ws = m._ws.w
+      for k,v of ws =>
+        ms = v.manager! or []
+        if ms.length =>
+          child = {}
+          ms.map (m) -> _ m, child
+        opt = {idx: 0}
+        node-idx document.body, v._root, opt
+        obj[k] =
+          title: v._meta.title
+          idx: opt.idx
+          child: child
+          meta: v.serialize!
+    _ @, obj = {}
+    return obj

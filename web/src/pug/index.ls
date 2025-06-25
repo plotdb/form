@@ -31,6 +31,7 @@ view = new ldview do
   action: click:
     validate: -> formctl.check force: true .now!then -> view.render!
     dump: -> console.log formctl.formmgr!value!
+    order: -> console.log formctl.formmgr!order!
   handler:
     "progress-bar": ({node}) ->
       stat = formctl.formmgr!progress!

@@ -85,6 +85,17 @@ Instance API:
        - Please note that, without `partial = true`, value({}) means setting values of all widgets to `undefined`.
  - `content(p)`: get content from widget with path `p`.
    - for more about `content`, see cotnent in `widget` document.
+ - `order()`: return information about field visual orders in the form, as an object with followin structure:
+
+    {
+      "field-key": {
+        "title": "field title"
+        "idx": <number indicating its order. lower = higher>
+        "meta": <field meta ( generated from serialize() )>
+        "child": { ... /* recursive definition, for nested widgets */ ... }
+      }
+    }
+
 
 ## Events
 

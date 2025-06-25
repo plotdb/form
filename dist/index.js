@@ -402,6 +402,54 @@
           return w.mode(m);
         }));
       });
+    },
+    order: function(){
+      var nodeIdx, _, obj;
+      nodeIdx = function(r, n, opt){
+        var i$, to$, i, v;
+        opt.idx++;
+        if (r === n) {
+          return true;
+        }
+        if (!(r && r.childNodes)) {
+          return;
+        }
+        for (i$ = 0, to$ = r.childNodes.length; i$ < to$; ++i$) {
+          i = i$;
+          v = nodeIdx(r.childNodes[i], n, opt);
+          if (v) {
+            return true;
+          }
+        }
+      };
+      _ = function(m, obj){
+        var ws, k, v, ms, child, opt, results$ = [];
+        ws = m._ws.w;
+        for (k in ws) {
+          v = ws[k];
+          ms = v.manager() || [];
+          if (ms.length) {
+            child = {};
+            ms.map(fn$);
+          }
+          opt = {
+            idx: 0
+          };
+          nodeIdx(document.body, v._root, opt);
+          results$.push(obj[k] = {
+            title: v._meta.title,
+            idx: opt.idx,
+            child: child,
+            meta: v.serialize()
+          });
+        }
+        return results$;
+        function fn$(m){
+          return _(m, child);
+        }
+      };
+      _(this, obj = {});
+      return obj;
     }
   });
   form.op = function(opt){

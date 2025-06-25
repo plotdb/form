@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.68 (upcoming)
+
+ - add `order` api in form.manager for automatically determing field orders
+
+
 ## v0.0.67
 
  - add `isRequired` api in form.widget
