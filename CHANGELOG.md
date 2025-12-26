@@ -1,6 +1,6 @@
 # Change Logs
 
-## v0.0.68 (upcoming)
+## v0.0.68
 
  - add `order` api in form.manager for automatically determing field orders
 
