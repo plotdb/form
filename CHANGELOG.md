@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.1.0 (upcoming)
+
+ - [breaking change] remove the `init` event inside deserialize; use `meta` with `init` option instead.
+
+
 ## v0.0.68
 
  - add `order` api in form.manager for automatically determing field orders

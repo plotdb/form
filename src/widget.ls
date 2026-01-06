@@ -51,10 +51,11 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
     @_meta.term = (v.term or []).map (t) ~>
       new form.term({} <<< t <<< (if @_opsets[t.opset or ''] => {opset: that} else {}))
     dig = JSON.stringify(v)
-    # we won't want to fire meta event if 1. it's init call, 2. no change
+    # we won't want to fire meta event if no change. also, we should provide init flag
     if @_meta_dig != dig =>
-      if !o.init => @fire \meta, @_meta
-      else @fire \init
+      # we should pass opt (especially the init flag),
+      # so widget such as nest can pass it along to subsequential deserialize determine if they should
+      @fire \meta, JSON.parse(JSON.stringify @_meta), o{init}
     @_meta_dig = dig
     Promise.resolve!
       .then ~>

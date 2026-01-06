@@ -46,6 +46,7 @@
      - `meta`: widget meta. See `meta` section for detail definition.
      - `opt`: an object with following fields:
        - `init`: default false. when true, will init value if needed and validate with `init` set to true.
+     - this fires `meta` event with the two parameters `meta` and `opt`.
  - `errors()`
  - `opsets()`
  - `data()`

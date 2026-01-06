@@ -1272,11 +1272,9 @@
       });
       dig = JSON.stringify(v);
       if (this._meta_dig !== dig) {
-        if (!o.init) {
-          this.fire('meta', this._meta);
-        } else {
-          this.fire('init');
-        }
+        this.fire('meta', JSON.parse(JSON.stringify(this._meta)), {
+          init: o.init
+        });
       }
       this._meta_dig = dig;
       return Promise.resolve().then(function(){
