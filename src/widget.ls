@@ -55,7 +55,7 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
     if @_meta_dig != dig =>
       # we should pass opt (especially the init flag),
       # so widget such as nest can pass it along to subsequential deserialize determine if they should
-      @fire \meta, JSON.parse(JSON.stringify @_meta), o{init}
+      @fire \meta, @serialize!, o{init}
     @_meta_dig = dig
     Promise.resolve!
       .then ~>

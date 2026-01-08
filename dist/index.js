@@ -1272,7 +1272,7 @@
       });
       dig = JSON.stringify(v);
       if (this._meta_dig !== dig) {
-        this.fire('meta', JSON.parse(JSON.stringify(this._meta)), {
+        this.fire('meta', this.serialize(), {
           init: o.init
         });
       }
