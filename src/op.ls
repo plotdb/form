@@ -33,8 +33,9 @@ form.opset.prototype = Object.create(Object.prototype) <<< do
   get-op: (id) -> @ops[id or @default-op]
   get-ops: -> [v for k,v of @ops]
 
-form.opset.register = -> @[]list.push if it instanceof form.opset => it else new form.opset(it)
-form.opset.get = (id) -> @[]list.filter(->(it.id or it.name) == id).0
+form.opset.register = -> @[]_list.push if it instanceof form.opset => it else new form.opset(it)
+form.opset.get = (id) -> @[]_list.filter(->(it.id or it.name) == id).0
+form.opset.list = -> (@_list or []).map(-> it)
 
 # TODO abstract this. before this is done, be sure to update following if we patch this function:
 #  - richtext's word-len

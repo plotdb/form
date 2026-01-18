@@ -556,14 +556,19 @@
     }
   });
   form.opset.register = function(it){
-    return (this.list || (this.list = [])).push(it instanceof form.opset
+    return (this._list || (this._list = [])).push(it instanceof form.opset
       ? it
       : new form.opset(it));
   };
   form.opset.get = function(id){
-    return (this.list || (this.list = [])).filter(function(it){
+    return (this._list || (this._list = [])).filter(function(it){
       return (it.id || it.name) === id;
     })[0];
+  };
+  form.opset.list = function(){
+    return (this._list || []).map(function(it){
+      return it;
+    });
   };
   wordLen = function(v, method){
     v == null && (v = "");

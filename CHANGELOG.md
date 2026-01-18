@@ -3,6 +3,7 @@
 ## v0.1.0 (upcoming)
 
  - [breaking change] remove the `init` event inside deserialize; use `meta` with `init` option instead.
+ - add `opset.list` api for listing available opsets
 
 
 ## v0.0.68
