@@ -9,6 +9,7 @@ form.manager = (o = {}) ->
   @_status = 1
   @_mode = \edit
   @_mod = {}
+  @_cond = new form.condctrl manager: @
   @_check-debounced = debounce 10, (...args) ~> @_check.apply @, args
   @_restatus-debounced = debounce 10, (...args) ~> @_restatus.apply @, args
   @
@@ -19,6 +20,7 @@ form.manager = (o = {}) ->
 #   - change
 form.manager.prototype = Object.create(Object.prototype) <<< do
   on: (n, cb) -> (if Array.isArray(n) => n else [n]).map (n) ~> @_evthdr.[][n].push cb
+  condition: -> @_cond
   fire: (n, ...v) -> for cb in (@_evthdr[n] or []) => cb.apply @, v
   # add(o): add an widget or a list of widgets. o:
   #  - list
