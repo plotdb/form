@@ -4,6 +4,8 @@
 
  - [breaking change] remove the `init` event inside deserialize; use `meta` with `init` option instead.
  - add `opset.list` api for listing available opsets
+ - add conctrl submodule
+ - add depth option in manager api
 
 
 ## v0.0.68
