@@ -6,14 +6,16 @@ block body
     div(ld-each="widget")
     div(ld="form")
     hr
-    .d-flex.g-2.align-items-center
+
+  .sticky.border-top.p-3.w-100.bg-white.shadow(style="bottom:0")
+    .d-flex.g-2.align-items-center.w-1024.rwd.mx-auto
       .btn.btn-outline-secondary(ld="validate") Validate
       .btn.btn-outline-secondary(ld="dump") Dump
       .btn.btn-outline-secondary(ld="order") Order
       .flex-grow-1
         .mb-0.text-sm Progress
-        .progress
-          .progress-bar.progress-bar-striped.progress-bar-animated(ld="progress-bar")
+        .progress: .progress-bar.progress-bar-striped.progress-bar-animated(ld="progress-bar")
+
 block script
   script(type="module")
     include:lsc api.ls
