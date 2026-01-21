@@ -22,6 +22,7 @@
     "start": "npx server -r web -o true"
   },
   "devDependencies": {
+    "@grantdash/composer": "^0.0.3",
     "@loadingio/bootstrap.ext": "^0.0.12",
     "@loadingio/debounce.js": "^1.0.1",
     "@loadingio/ldquery": "^3.0.6",
@@ -48,23 +49,12 @@
   "frontendDependencies": {
     "root": "web/static/assets/lib",
     "modules": [
-      "bootstrap",
+      "@grantdash/composer",
       "@loadingio/bootstrap.ext",
-      "bootstrap.native",
-      "ldcover",
       "@loadingio/ldquery",
       "@loadingio/debounce.js",
       "@loadingio/ldcolorpicker",
-      "ldview",
-      "ldiconfont",
-      "ldslider",
-      "ldcolor",
-      "ldpalettepicker",
-      "marked",
-      "curegex",
-      "dompurify",
-      "proxise",
-      "i18next",
+      "@makeform/nest",
       "@plotdb/sheet",
       "@plotdb/block",
       "@plotdb/json0",
@@ -74,7 +64,20 @@
       "@plotdb/rescope",
       "@plotdb/suuid",
       "@plotdb/konfig",
-      "@plotdb/csscope"
+      "@plotdb/csscope",
+      "bootstrap",
+      "bootstrap.native",
+      "curegex",
+      "dompurify",
+      "i18next",
+      "ldcolor",
+      "ldcover",
+      "ldiconfont",
+      "ldslider",
+      "ldpalettepicker",
+      "ldview",
+      "marked",
+      "proxise"
     ]
   },
   "dependencies": {
