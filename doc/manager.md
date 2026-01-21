@@ -85,6 +85,7 @@ Instance API:
        - Please note that, without `partial = true`, value({}) means setting values of all widgets to `undefined`.
  - `content(p)`: get content from widget with path `p`.
    - for more about `content`, see cotnent in `widget` document.
+ - `condition()`: get `condctrl` object of this manager.
  - `order()`: return information about field visual orders in the form, as an object with followin structure:
 
     {

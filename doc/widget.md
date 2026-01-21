@@ -83,8 +83,12 @@
    - setting mode triggers validation. return a Promise which resolves when validation completes.
    - set widget mode to `v`, return current mode if `v` is omitted.
    - check constructor options for possible values of mode.
- - `manager()`: return form manager(s) used by this widget.
+ - `manager(opt)`: return form manager(s) used by this widget.
    - return value: a list of form managers (an empty array is returned if no such manager available)
+   - option:
+     - `depth`: default 0 (all depth).
+       - when non-zero value specified, widgets should return recursive manager only if depth > 1,
+         and should pass down depth - 1 when calling recursive manager api.
 
 ## Events
 
