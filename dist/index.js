@@ -869,10 +869,18 @@
       id: "list",
       i18n: {
         "zh-TW": {
+          "list": "列表",
           "count-max": "數量上限",
           "count-min": "數量下限",
           "count-range": "數量範圍",
           "count": "數量要求"
+        },
+        "en": {
+          "list": "List",
+          "count-max": "Maximal Count",
+          "count-min": "Minimal Count",
+          "count-range": "Count Range",
+          "count": "Required Count"
         }
       },
       convert: function(v){
@@ -893,12 +901,22 @@
       id: "file",
       i18n: {
         "zh-TW": {
+          "file": "檔案",
           "size-limit": "檔案大小上限",
           "count-limit": "檔案數量上限",
           "extension": "副檔名限制",
           "count-max": "檔案數量上限",
           "count-min": "檔案數量下限",
           "count-range": "檔案數量範圍"
+        },
+        "en": {
+          "file": "File",
+          "size-limit": "Maximal File Size",
+          "count-limit": "Max File Count",
+          "extension": "File Extension",
+          "count-max": "Max File Count",
+          "count-min": "Min File Count",
+          "count-range": "File Count Range"
         }
       },
       convert: function(v){
@@ -961,11 +979,20 @@
       id: "image",
       i18n: {
         "zh-TW": {
-          "long-size": "長邊尺寸限制",
-          "short-size": "短邊尺寸限制",
+          "image": "圖像",
+          "long-side": "長邊尺寸限制",
+          "short-side": "短邊尺寸限制",
           "width": "寬度限制",
           "height": "高度限制",
           "pixel-count": "像素量限制"
+        },
+        "en": {
+          "image": "Image",
+          "long-side": "Long Side",
+          "short-side": "Short Side",
+          "width": "Width",
+          "height": "Height",
+          "pixel-count": "Max Pixel Count"
         }
       },
       convert: function(v){
@@ -1010,6 +1037,14 @@
           email: "電子郵件",
           url: "網址",
           regex: "正規表達式"
+        },
+        "en": {
+          string: "Text",
+          include: "Include",
+          exclude: "Exclude",
+          email: "Email",
+          url: "URL",
+          regex: "Regular Expression"
         }
       },
       ops: {
@@ -1075,6 +1110,14 @@
           number: "數字",
           "minimal length": "長度下限",
           "maximal length": "長度上限"
+        },
+        "en": {
+          length: "Length",
+          lte: "≦",
+          range: "Range",
+          number: "Number",
+          "minimal length": "Min Length",
+          "maximal length": "Max Length"
         }
       },
       ops: {
@@ -1163,6 +1206,14 @@
           ne: "≠ 不等於",
           eq: "= 等於",
           is: "任何數字"
+        },
+        "en": {
+          number: "Number",
+          lte: "≦ Equal/Less Than",
+          gte: "≧ Equal/Greater Than",
+          ne: "≠ Not Equals",
+          eq: "= Equals",
+          is: "Is Number"
         }
       },
       convert: function(v){
@@ -1244,9 +1295,16 @@
       id: 'date',
       i18n: {
         "zh-TW": {
+          date: '日期',
           "min age": "最小年齡",
           "max age": "最大年齡",
           age: "年齡"
+        },
+        "en": {
+          date: 'Date',
+          "min age": "Min Age",
+          "max age": "Max Age",
+          age: "Age"
         }
       },
       convert: function(v){

@@ -6,6 +6,7 @@
  - add `opset.list` api for listing available opsets
  - add conctrl submodule
  - add depth option in manager api
+ - add english translation for opset i18n object
 
 
 ## v0.0.68
