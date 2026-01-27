@@ -819,6 +819,7 @@
       config: {
         val: {
           type: 'number',
+          name: "count-max",
           hint: "maximal amount"
         }
       }
@@ -831,6 +832,7 @@
       config: {
         val: {
           type: 'number',
+          name: "count-min",
           hint: "minimal amount"
         }
       }
@@ -843,10 +845,12 @@
       config: {
         min: {
           type: 'number',
+          name: "count-min",
           hint: "minimal amount"
         },
         max: {
           type: 'number',
+          name: "count-max",
           hint: "maximal amount"
         }
       }
@@ -859,6 +863,7 @@
       config: {
         val: {
           type: 'number',
+          name: "count",
           hint: "number of entries"
         }
       }
@@ -937,6 +942,7 @@
           config: {
             val: {
               type: 'number',
+              name: 'size-limit',
               hint: "maximal size"
             }
           }
@@ -958,6 +964,7 @@
           config: {
             str: {
               type: 'text',
+              name: 'extension',
               hint: "extension, comma separated, without dot"
             }
           }
@@ -970,6 +977,7 @@
           config: {
             val: {
               type: 'number',
+              name: 'count-limit',
               hint: "maximal file amount"
             }
           }
@@ -984,7 +992,9 @@
           "short-side": "短邊尺寸限制",
           "width": "寬度限制",
           "height": "高度限制",
-          "pixel-count": "像素量限制"
+          "pixel-count": "像素量限制",
+          "min-size": "最小尺寸",
+          "max-size": "最大尺寸"
         },
         "en": {
           "image": "Image",
@@ -992,7 +1002,9 @@
           "short-side": "Short Side",
           "width": "Width",
           "height": "Height",
-          "pixel-count": "Max Pixel Count"
+          "pixel-count": "Max Pixel Count",
+          "min-size": "Min Size",
+          "max-size": "Max Size"
         }
       },
       convert: function(v){
@@ -1016,10 +1028,12 @@
               config: {
                 min: {
                   type: 'number',
+                  name: 'min-size',
                   hint: "minimal size"
                 },
                 max: {
                   type: 'number',
+                  name: 'max-size',
                   hint: "minimal size"
                 }
               }
@@ -1055,7 +1069,8 @@
           },
           config: {
             str: {
-              type: 'text'
+              type: 'text',
+              name: 'include'
             }
           }
         },
@@ -1066,7 +1081,8 @@
           },
           config: {
             str: {
-              type: 'text'
+              type: 'text',
+              name: 'exclude'
             }
           }
         },
@@ -1095,7 +1111,8 @@
           },
           config: {
             rule: {
-              type: 'text'
+              type: 'text',
+              name: 'regex'
             }
           }
         }
@@ -1131,11 +1148,11 @@
           config: {
             min: {
               type: 'number',
-              hint: "minimal length"
+              name: 'minimal length'
             },
             max: {
               type: 'number',
-              hint: "maximal length"
+              name: 'maximal length'
             },
             method: {
               type: 'choice',
@@ -1152,7 +1169,7 @@
           config: {
             val: {
               type: 'number',
-              hint: "maximal length"
+              name: "maximal length"
             },
             method: {
               type: 'choice',
@@ -1169,7 +1186,7 @@
           config: {
             val: {
               type: 'number',
-              hint: "minimal length"
+              name: "minimal length"
             },
             method: {
               type: 'choice',
@@ -1186,7 +1203,7 @@
           config: {
             val: {
               type: 'number',
-              hint: "length"
+              name: "length"
             },
             method: {
               type: 'choice',
@@ -1205,7 +1222,8 @@
           gte: "≧ 大於或等於",
           ne: "≠ 不等於",
           eq: "= 等於",
-          is: "任何數字"
+          is: "任何數字",
+          "ref-val": "參考值"
         },
         "en": {
           number: "Number",
@@ -1213,7 +1231,8 @@
           gte: "≧ Equal/Greater Than",
           ne: "≠ Not Equals",
           eq: "= Equals",
-          is: "Is Number"
+          is: "Is Number",
+          "ref-val": "Reference Value"
         }
       },
       convert: function(v){
@@ -1232,7 +1251,7 @@
           config: {
             val: {
               type: 'text',
-              hint: "number for comparison"
+              name: "ref-val"
             }
           }
         },
@@ -1248,7 +1267,7 @@
           config: {
             val: {
               type: 'text',
-              hint: "number for comparison"
+              name: "ref-val"
             }
           }
         },
@@ -1264,7 +1283,7 @@
           config: {
             val: {
               type: 'text',
-              hint: "number for comparison"
+              name: "ref-val"
             }
           }
         },
@@ -1280,7 +1299,7 @@
           config: {
             val: {
               type: 'text',
-              hint: "number for comparison"
+              name: "ref-val"
             }
           }
         },
@@ -1315,11 +1334,11 @@
           config: {
             min: {
               type: 'number',
-              hint: 'min age'
+              name: 'min age'
             },
             max: {
               type: 'number',
-              hint: 'max age'
+              name: 'max age'
             }
           },
           func: function(v, c){

@@ -52,18 +52,18 @@ word-len = (v = "", method) ->
 count-ops =
   "count-max":
     func: (v, c = {}) -> v.length <= c.val
-    config: {val: {type: \number, hint: "maximal amount"}}
+    config: {val: {type: \number, name: "count-max", hint: "maximal amount"}}
   "count-min":
     func: (v, c = {}) -> v.length >= c.val
-    config: {val: {type: \number, hint: "minimal amount"}}
+    config: {val: {type: \number, name: "count-min", hint: "minimal amount"}}
   "count-range":
     func: (v, c = {}) -> v.length >= c.min and v.length <= c.max
     config:
-      min: {type: \number, hint: "minimal amount"}
-      max: {type: \number, hint: "maximal amount"}
+      min: {type: \number, name: "count-min", hint: "minimal amount"}
+      max: {type: \number, name: "count-max", hint: "maximal amount"}
   "count":
     func: (v, c = {}) -> v.length == c.val
-    config: {val: {type: \number, hint: "number of entries"}}
+    config: {val: {type: \number, name: "count", hint: "number of entries"}}
 
 form.opset.default = [
   {
@@ -112,15 +112,15 @@ form.opset.default = [
     ops: {
       "size-limit":
         func: (v, c = {}) -> !v.filter(-> it.size > c.val).length
-        config: {val: {type: \number, hint: "maximal size"}}
+        config: {val: {type: \number, name: \size-limit, hint: "maximal size"}}
       extension:
         func: (v, c = {}) ->
           exts = (c.str.split(',') or []).map(-> (it or '').trim!toLowerCase!).filter -> it
           !v.filter(->!(((ext = (it.filename or '').split('.')[* - 1]) or '').trim!toLowerCase! in exts)).length
-        config: {str: {type: \text, hint: "extension, comma separated, without dot"}}
+        config: {str: {type: \text, name: \extension, hint: "extension, comma separated, without dot"}}
       "count-limit": # deprecated. use `count-max` instead. note the difference between `<` and `<=`
         func: (v, c = {}) -> v.length < c.val
-        config: {val: {type: \number, hint: "maximal file amount"}}
+        config: {val: {type: \number, name: \count-limit, hint: "maximal file amount"}}
     } <<< count-ops
   }, {
     # file object modifier is required to be run before using this opset
@@ -134,6 +134,8 @@ form.opset.default = [
         "width": "寬度限制"
         "height": "高度限制"
         "pixel-count": "像素量限制"
+        "min-size": "最小尺寸"
+        "max-size": "最大尺寸"
       "en":
         "image": "Image"
         "long-side": "Long Side"
@@ -141,6 +143,8 @@ form.opset.default = [
         "width": "Width"
         "height": "Height"
         "pixel-count": "Max Pixel Count"
+        "min-size": "Min Size"
+        "max-size": "Max Size"
     convert: (v) -> (if Array.isArray(v) => v else [v]).filter -> it
     ops: Object.fromEntries(
       [<[long-side long]>, <[short-side short]>, <[width width]>, <[height height]>, <[pixel-count pixels]>]
@@ -149,7 +153,9 @@ form.opset.default = [
         ((k) -> {
           func: (v = [], c = {}) ->
             !v.filter(->!((!c.min? or it[k] >= (c.min or 0)) and (!c.max? or it[k] <= c.max))).length
-          config: {min: {type: \number, hint: "minimal size"}, max: {type: \number, hint: "minimal size"}}
+          config:
+            min: {type: \number, name: 'min-size', hint: "minimal size"}
+            max: {type: \number, name: 'max-size', hint: "minimal size"}
         }) n.1
       ]
     )
@@ -173,10 +179,10 @@ form.opset.default = [
     ops:
       include:
         func: (v, c = {}) -> ~("" + (v or '')).indexOf(c.str or '')
-        config: {str: {type: \text}}
+        config: {str: {type: \text, name: \include}}
       exclude:
         func: (v, c = {}) -> !~("" + (v or '')).indexOf(c.str or '')
-        config: {str: {type: \text}}
+        config: {str: {type: \text, name: \exclude}}
       email:
         func: (v) -> /^[^@]+@[^@]+$/.exec(v)
         config: {}
@@ -188,7 +194,7 @@ form.opset.default = [
           if !c.rule => return true
           if typeof(c.rule) == \object and c.rule.exec => return c.rule.exec(v)
           return new RegExp(c.rule).exec(v)
-        config: {rule: {type: \text}}
+        config: {rule: {type: \text, name: \regex}}
   }, {
     id: 'length'
     i18n:
@@ -212,25 +218,24 @@ form.opset.default = [
           len = word-len("#v", c.method)
           len >= +c.min and len <= +c.max
         config:
-          min: {type: \number, hint: "minimal length"}
-          max: {type: \number, hint: "maximal length"}
+          min: {type: \number, name: 'minimal length'}
+          max: {type: \number, name: 'maximal length'}
           method: type: \choice, default: \char, values: <[char simple-word]>
       lte:
         func: (v, c = {}) -> word-len("#v", c.method) <= +c.val
         config:
-          val: {type: \number, hint: "maximal length"}
+          val: {type: \number, name: "maximal length"}
           method: type: \choice, default: \char, values: <[char simple-word]>
       gte:
         func: (v, c = {}) -> word-len("#v", c.method) >= +c.val
         config:
-          val: {type: \number, hint: "minimal length"}
+          val: {type: \number, name: "minimal length"}
           method: type: \choice, default: \char, values: <[char simple-word]>
       eq:
         func: (v, c = {}) -> word-len("#v", c.method) == +c.val
         config:
-          val: {type: \number, hint: "length"}
+          val: {type: \number, name: "length"}
           method: type: \choice, default: \char, values: <[char simple-word]>
-
   }, {
     id: 'number'
     i18n:
@@ -241,6 +246,7 @@ form.opset.default = [
         ne: "≠ 不等於"
         eq: "= 等於"
         is: "任何數字"
+        "ref-val": "參考值"
       "en":
         number: "Number"
         lte: "≦ Equal/Less Than"
@@ -248,20 +254,21 @@ form.opset.default = [
         ne: "≠ Not Equals"
         eq: "= Equals"
         is: "Is Number"
+        "ref-val": "Reference Value"
     convert: (v) -> +"#v".replace(/,/g,'')
     ops:
       lte:
         func: (v, c = {}) -> if isNaN(v) or isNaN(c.val) => false else +v <= +c.val
-        config: {val: {type: \text, hint: "number for comparison"}}
+        config: {val: {type: \text, name: "ref-val"}}
       gte:
         func: (v, c = {}) -> if isNaN(v) or isNaN(c.val) => false else +v >= +c.val
-        config: {val: {type: \text, hint: "number for comparison"}}
+        config: {val: {type: \text, name: "ref-val"}}
       ne:
         func: (v, c = {}) -> if isNaN(v) or isNaN(c.val) => false else +v != +c.val
-        config: {val: {type: \text, hint: "number for comparison"}}
+        config: {val: {type: \text, name: "ref-val"}}
       eq:
         func: (v, c = {}) -> if isNaN(v) or isNaN(c.val) => false else +v == +c.val
-        config: {val: {type: \text, hint: "number for comparison"}}
+        config: {val: {type: \text, name: "ref-val"}}
       is:
         func: (v) -> !isNaN(v)
         config: {}
@@ -282,8 +289,8 @@ form.opset.default = [
     ops:
       age:
         config:
-          min: {type: \number, hint: 'min age'}
-          max: {type: \number, hint: 'max age'}
+          min: {type: \number, name: 'min age'}
+          max: {type: \number, name: 'max age'}
         func: (v, c = {}) ->
           dmin = (new Date(v.getYear! + 1900 + (c.min or 0), v.getMonth!, v.getDate!)).getTime!
           dmax = (new Date(v.getYear! + 1900 + (c.max or 0), v.getMonth!, v.getDate!)).getTime!
