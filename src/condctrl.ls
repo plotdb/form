@@ -1,3 +1,7 @@
+# WIP Notice: this is the implementation ported from @makeform/nest.
+# it's a workable preview, however we may want to refactor this in the near future.
+# don't use this unless for experimental purpose.
+
 form.condctrl = (opt = {}) ->
   @{}_ <<<
     hash: {}, enabled: {}, manager: opt.manager

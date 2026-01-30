@@ -1,6 +1,6 @@
 # form.condctrl
 
-Condition controller.
+(WIP) Condition controller. **Working in Progress** and the spec is subjected to change.
 
 given a condition list, an array of objects with following fields:
 

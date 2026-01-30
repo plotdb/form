@@ -1,10 +1,10 @@
 # Change Logs
 
-## v0.1.0 (upcoming)
+## v0.1.0
 
  - [breaking change] remove the `init` event inside deserialize; use `meta` with `init` option instead.
  - add `opset.list` api for listing available opsets
- - add conctrl submodule
+ - add experimental condctrl submodule
  - add depth option in manager api
  - add english translation for opset i18n object
 
