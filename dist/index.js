@@ -569,9 +569,9 @@
       return fd;
     },
     value: function(v, opt){
-      var ret, p, ref$, w, this$ = this;
+      var ret, p, ref$, w, ps, res$, e;
       opt == null && (opt = {});
-      if (!v) {
+      if (!arguments.length) {
         ret = {};
         for (p in ref$ = this._ws.w) {
           w = ref$[p];
@@ -581,11 +581,12 @@
         }
         return ret;
       }
-      v = JSON.parse(JSON.stringify(v));
-      return Promise.resolve().then(function(){
-        var ps, res$, p, ref$, w;
+      v = v != null
+        ? JSON.parse(JSON.stringify(v))
+        : {};
+      try {
         res$ = [];
-        for (p in ref$ = this$._ws.w) {
+        for (p in ref$ = this._ws.w) {
           w = ref$[p];
           if (!v.hasOwnProperty(p) && opt.partial) {
             continue;
@@ -594,7 +595,10 @@
         }
         ps = res$;
         return Promise.all(ps);
-      });
+      } catch (e$) {
+        e = e$;
+        return Promise.reject(e);
+      }
     },
     mode: function(m){
       var this$ = this;
@@ -670,6 +674,24 @@
       };
       _(this, obj = {});
       return obj;
+    },
+    manager: function(opt){
+      var ret, k, ref$, s, w, mgrs;
+      ret = [];
+      for (k in ref$ = this._ws.s) {
+        s = ref$[k];
+        if (!(this._ws.w[it.k] && this._ws.w[it.k]._meta && !this._ws.w[it.k]._meta.disabled)) {
+          continue;
+        }
+        if (!(w = this.widget(k))) {
+          continue;
+        }
+        if (!(mgrs = w.manager(opt) || []).length) {
+          continue;
+        }
+        ret = ret.concat(mgrs);
+      }
+      return ret;
     }
   });
   form.op = function(opt){

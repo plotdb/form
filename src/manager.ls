@@ -169,26 +169,32 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
       else fd.append p, val
     return fd
 
+  # NOTE: in order to perform synchronous data analysis, value update here must be done synchrnously.
+  # however, it still returns a Promise which resolve after validation is done.
   value: (v, opt = {}) ->
     # TODO decompose p and fill ret with given hierarchy
-    if !v =>
+    if !arguments.length =>
       ret = {}
       for p,w of @_ws.w => if !(opt.partial and w._meta.disabled) => ret[p] = w.value!
       return ret
     # dup v to prevent internal change pollutes host object.
-    v = JSON.parse(JSON.stringify(v))
+    v = if v? => JSON.parse(JSON.stringify(v)) else {}
     # even if v[p] is "", 0 or event undefined, we should still update them
     # since user may explicitly enter this value in order to overwrite previous value.
     # we by default iterate through all widgets for values even if it's undefined
     # since we don't know if some value are skipped intentionally or accenditally
     # however, user can enforce a partial update by setting opt.partial to true.
-    Promise.resolve!then ~>
+    # NOTE use try / catch instead of Promise to guarantee synchronously data update
+    try
       ps = for p, w of @_ws.w
         # even if w is disabled, we should still set its value
         # since it may just be disabled temporarily.
         if !v.hasOwnProperty(p) and opt.partial => continue
+        # value in widget should also guarantee synchronous data update.
         w.value v[p], opt
-      Promise.all ps
+      return Promise.all ps
+    catch e
+      return Promise.reject e
 
   mode: (m) ->
     if !(m?) => return @_mode
@@ -226,3 +232,12 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
           meta: v.serialize!
     _ @, obj = {}
     return obj
+
+  manager: (opt) ->
+    ret = []
+    for k,s of @_ws.s =>
+      if !(@_ws.w[it.k] and @_ws.w[it.k]._meta and !@_ws.w[it.k]._meta.disabled) => continue
+      if !(w = @widget k) => continue
+      if !(mgrs = w.manager(opt) or []).length => continue
+      ret ++= mgrs
+    return ret

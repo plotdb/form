@@ -1,5 +1,12 @@
 # Change Logs
 
+## v0.1.1
+
+ - fix bug: exception when setting value with `manager.value` if value is undefined.
+ - support synchronously value update while still return Promise from validation in `value` API.
+ - add `manager` API in manager to recursively get submanagers from widgets.
+
+
 ## v0.1.0
 
  - [breaking change] remove the `init` event inside deserialize; use `meta` with `init` option instead.

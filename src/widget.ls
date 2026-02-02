@@ -78,6 +78,8 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
 
   errors: -> @_errors
 
+  # NOTE: in order to perform synchronous data analysis, value update here must be done synchrnously.
+  # however, it still returns a Promise which resolve after validation is done.
   value: (v, opt = {}) ->
     if arguments.length == 0 =>
       # internal value should be kept as a new, standalone object
