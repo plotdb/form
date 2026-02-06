@@ -225,6 +225,7 @@
       s: {},
       l: {}
     };
+    this._disabled = false;
     this._evthdr = {};
     this._status = 1;
     this._mode = 'edit';
@@ -264,6 +265,12 @@
     },
     condition: function(){
       return this._cond;
+    },
+    disabled: function(){
+      return !!this._disabled;
+    },
+    disable: function(it){
+      return this._disabled = it != null ? !!it : true;
     },
     fire: function(n){
       var v, res$, i$, to$, ref$, len$, cb, results$ = [];
@@ -379,7 +386,9 @@
         var w, ms, e;
         w = this$._ws.w[o.k];
         if (!_recurred && (ms = w.manager()).length) {
-          ms = ms.filter(function(m){
+          ms = ms.filter(function(it){
+            return !it.disabled();
+          }).filter(function(m){
             var p;
             p = m.progress({
               _recurred: true
@@ -405,7 +414,9 @@
           return ret.done += 1;
         }
       });
-      ret.percent = ret.done / (ret.total || 1);
+      ret.percent = !ret.total
+        ? 1
+        : ret.done / (ret.total || 1);
       return ret;
     },
     _restatus: function(){
@@ -690,6 +701,11 @@
           continue;
         }
         ret = ret.concat(mgrs);
+      }
+      if (this.disabled()) {
+        ret.map(function(it){
+          return it.disable();
+        });
       }
       return ret;
     }
@@ -1600,6 +1616,7 @@
           init: o.init
         });
       }
+      this.manager();
       this._meta_dig = dig;
       return Promise.resolve().then(function(){
         if (!o.init) {
@@ -1669,13 +1686,13 @@
       });
     },
     disabled: function(){
-      return this._meta.disabled;
+      return !!this._meta.disabled;
     },
     readonly: function(){
-      return this._meta.readonly;
+      return !!this._meta.readonly;
     },
     isRequired: function(){
-      return this._meta.isRequired;
+      return !!this._meta.isRequired;
     },
     isEmpty: function(v){
       if (!arguments.length) {
@@ -1805,11 +1822,17 @@
           depth: depth
         }])
         : [];
-      return (Array.isArray(ret)
+      ret = (Array.isArray(ret)
         ? ret
         : [ret]).filter(function(it){
         return it;
       });
+      if (this.disabled()) {
+        ret.map(function(it){
+          return it.disable();
+        });
+      }
+      return ret;
     },
     ctrl: function(){
       var args, res$, i$, to$;
