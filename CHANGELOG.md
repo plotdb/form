@@ -1,5 +1,17 @@
 # Change Logs
 
+## v0.1.2
+
+ - fix bug: `disabled`, `isRequired`, `readonly` may return undefined, causing issue for caller that need an explicit defined value.
+ - disable widget manager if this widget is disabled.
+   - update manager disable status also upon deserialize is called.
+   - add dev note about manager disable status in widget doc
+ - support disabling managers with `disabled()` and `disable()` api
+   - disable nested managers if this manager is disabled.
+   - check progress only on enabled managers.
+ - progress return percent 1 if total = 0
+
+
 ## v0.1.1
 
  - fix bug: exception when setting value with `manager.value` if value is undefined.
