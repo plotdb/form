@@ -56,6 +56,8 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
       # we should pass opt (especially the init flag),
       # so widget such as nest can pass it along to subsequential deserialize determine if they should
       @fire \meta, @serialize!, o{init}
+    # manager call helps update disable status of sub managers based on the disable status of this widget.
+    @manager!
     @_meta_dig = dig
     Promise.resolve!
       .then ~>
@@ -95,9 +97,9 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
       if opt.from-source => return
       @fire \change, (if @_value? => JSON.parse(JSON.stringify @_value) else undefined)
 
-  disabled: -> @_meta.disabled
-  readonly: -> @_meta.readonly
-  is-required: -> @_meta.is-required
+  disabled: -> !!@_meta.disabled
+  readonly: -> !!@_meta.readonly
+  is-required: -> !!@_meta.is-required
 
   is-empty: (v) ->
     if !arguments.length => v = @_value
@@ -180,7 +182,9 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
 
   manager: ({depth = 0} = {}) ->
     ret = if @mod and @mod.manager => @mod.manager.apply(@, [{depth}]) else []
-    return (if Array.isArray(ret) => ret else [ret]).filter(->it)
+    ret = (if Array.isArray(ret) => ret else [ret]).filter(->it)
+    if @disabled! => ret.map -> it.disable!
+    return ret
 
   ctrl: (...args) ->
     if @mod and @mod.ctrl => return @mod.ctrl.apply @, args

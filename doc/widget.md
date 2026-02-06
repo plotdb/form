@@ -186,7 +186,9 @@ mod is a set of functions that can be provided to `widget` for advanced function
  - `config`: config definition in `@plotdb/konfig` spec. ( TBD )
  - `manager()`: optional. if provided, return form manager(s) used in this widget is any.
    - return a form manager (or a list of that) used by this widget to manage child widgets.
-   - note that `widget.manager()` always returns an array (even if empty) to users by converting result from here automatically.
+   - Note:
+     - `widget.manager()` always returns an array (even if empty) by converting result from here automatically.
+     - developers should always disable managers from nested widget if current widget is itself disabled, and only enable managers if it's directly controlled by current widget, because even if current widget is enabled, its nested widget may still be disabled, leading to a disabled sub-manager.
  - `adapt(...)`: optional. adapt api or interface provided from host environment.
    - widgets are responsible of designing and documenting options used.
  - `ctrl()`: optional. return a customized widget control interface for caller to use.
