@@ -85,6 +85,10 @@ Instance API:
        - Please note that, without `partial = true`, value({}) means setting values of all widgets to `undefined`.
  - `content(p)`: get content from widget with path `p`.
    - for more about `content`, see cotnent in `widget` document.
+ - `manager(opt)`: get managers from widgets inside this manager.
+   - return value: a list of form managers (an empty array is returned if no such manager available)
+   - option:
+     - `depth`: default 0 (all depth).
  - `order()`: return information about field visual orders in the form, as an object with followin structure:
 
     {
@@ -95,6 +99,10 @@ Instance API:
         "child": { ... /* recursive definition, for nested widgets */ ... }
       }
     }
+
+ - `disabled()`: if this manager is disabled, return true; otherwise return false.
+ - `disable(opt)`: disable / enable this manager.
+   - opt: true to disable, false to enable. will be true by default if omitted.
 
 with additional, experimental WIP api that is subected to change:
 

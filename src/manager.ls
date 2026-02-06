@@ -5,6 +5,7 @@ form.manager = (o = {}) ->
     p: new WeakMap! # widget to Path
     s: {} # path to status ( as cache )
     l: {} # path to widget change Listener function
+  @_disabled = false
   @_evthdr = {}
   @_status = 1
   @_mode = \edit
@@ -21,6 +22,8 @@ form.manager = (o = {}) ->
 form.manager.prototype = Object.create(Object.prototype) <<< do
   on: (n, cb) -> (if Array.isArray(n) => n else [n]).map (n) ~> @_evthdr.[][n].push cb
   condition: -> @_cond
+  disabled: -> !!@_disabled
+  disable: -> @_disabled = if it? => !!it else true
   fire: (n, ...v) -> for cb in (@_evthdr[n] or []) => cb.apply @, v
   # add(o): add an widget or a list of widgets. o:
   #  - list
@@ -77,7 +80,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
       # `w.manager!` gets all managers under this manager
       # thus we only check progress in them if this progress is not a recursive call.
       if !_recurred and (ms = w.manager!).length =>
-        ms = ms.filter (m) ->
+        ms = ms.filter(->!it.disabled!).filter (m) ->
           p = m.progress {_recurred: true}
           ret.total += p.total
           ret.invalid += p.invalid
@@ -92,7 +95,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
       if e.length == 1 and e.0 == \nested => return
       if o.s? and o.s == 2 => ret.invalid += 1
       if o.s? and o.s == 0 => ret.done += 1
-    ret.percent = ret.done / ( ret.total or 1)
+    ret.percent = if !ret.total => 1 else (ret.done / ( ret.total or 1))
     return ret
 
   _restatus: ->
@@ -240,4 +243,5 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
       if !(w = @widget k) => continue
       if !(mgrs = w.manager(opt) or []).length => continue
       ret ++= mgrs
+    if @disabled! => ret.map -> it.disable!
     return ret
