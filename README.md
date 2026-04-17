@@ -1,21 +1,17 @@
 # @plotdb/form
 
-Form related modules for interactive form design throught GUI, with following (expected, TODO) features:
+`@plotdb/form` is a form management package with following feature:
 
- - design a form through GUI.
- - designed form serializable and renderable in frontend for end users to fill.
- - end user filled result of a form is also serializable.
- - Aware of OT for collaborative editing.
- - Works in both frontend and backend.
+ - form construction with block-based widget
+ - serializable form spec and filled data
 
+It includes following modules:
 
-`@plotdb/form` includes following modules:
-
- - `form.manager`: manage a set of form widgets.
- - `form.widget`: interface between form manager and UI.
- - `form.opset`: a set of op for validating given input from user.
- - `form.op`: a specific operation for validating given input from user.
- - `form.term`: a rule ( a op, opset and config based on the specified op ) for validating given input from user.
+ `form.manager`: a recursive manager of a set of widgets.
+ `form.widget`: a form widget as a bridge between user and manager.
+ `form.opset` and `form.op`: operation set and individual operations for validating given inputs from users.
+ `form.term`: validation rule with configs including used opset/op and corresponding configurations.
+ `form.condctrl`: controller for form dynamics based on given conditions.
 
 
 ## Draft

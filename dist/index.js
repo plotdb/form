@@ -17,44 +17,28 @@
     return this._.enabled[it];
   }, ref$.get = function(it){
     return this._.hash[it];
-  }, ref$.fields = function(){
-    return this._.manager._ws.w;
-  }, ref$.subcond = function(arg$){
-    var path, active, config, itf, ms;
-    path = arg$.path, active = arg$.active, config = arg$.config;
-    if (!((itf = this._.manager.widget(path)) && !itf.disabled() && (ms = itf.manager({
-      depth: 1
-    }) || []).length)) {
-      return;
-    }
-    return ms.map(function(m){
-      var cond;
-      cond = m.condition();
-      cond.apply(import$({
-        active: active
-      }, config));
-      return cond.run();
-    });
   }, ref$.reset = function(opt){
-    var fields, i$, to$, i, cond, results$ = [];
+    var fields, ref$, i$, to$, i, cond, results$ = [];
     opt == null && (opt = {});
     this._.list = opt.conditions || this._.list || [];
-    fields = this.fields();
+    fields = this._.manager.widgets();
+    ref$ = this._ || (this._ = {});
+    ref$.hash = {};
+    ref$.enabled = {};
     for (i$ = 0, to$ = this._.list.length; i$ < to$; ++i$) {
       i = i$;
       cond = this._.list[i];
-      cond.id = cond.id || (i + 1) + "";
+      cond.id = cond.id || "_" + (i + 1);
       this._.hash[cond.id] = cond;
       if (!Array.isArray(cond.config)) {
         cond.config = [cond.config];
       }
-      results$.push(cond.config.map(fn$));
+      results$.push(cond.config.forEach(fn$));
     }
     return results$;
     function fn$(cfg){
-      var k, v;
-      cfg.src = cond.src;
-      cfg.func = cond.func;
+      var ref$, k, v;
+      cfg = (ref$ = import$({}, cfg), ref$.src = cond.src, ref$.func = cond.func, ref$);
       return cfg.path = Array.from(new Set((cfg.prefix
         ? cfg.prefix
         : []).concat(cfg.path || [], (function(){
@@ -81,21 +65,40 @@
         return it.k;
       }))));
     }
+  }, ref$.subcond = function(arg$){
+    var path, active, config, itf, ms;
+    path = arg$.path, active = arg$.active, config = arg$.config;
+    if (!((itf = this._.manager.widget(path)) && !itf.disabled() && (ms = itf.manager({
+      depth: 1
+    }) || []).length)) {
+      return;
+    }
+    return ms.forEach(function(m){
+      var cond;
+      cond = m.condition();
+      cond.apply(import$({
+        active: active
+      }, config));
+      return cond.run();
+    });
   }, ref$.apply = function(opt){
     var path, active, enabled, isRequired, readonly, widget, curMeta, newMeta;
     opt == null && (opt = {});
     path = opt.path, active = opt.active, enabled = opt.enabled, isRequired = opt.isRequired, readonly = opt.readonly;
-    if (Array.isArray(path) && path[1]) {
-      return this.subcond({
-        path: path[0],
-        active: active,
-        config: {
-          path: path.slice(1),
-          enabled: enabled,
-          isRequired: isRequired,
-          readonly: readonly
-        }
-      });
+    if (Array.isArray(path)) {
+      if (path[1]) {
+        return this.subcond({
+          path: path[0],
+          active: active,
+          config: {
+            path: path.slice(1),
+            enabled: enabled,
+            isRequired: isRequired,
+            readonly: readonly
+          }
+        });
+      }
+      path = path[0];
     }
     if (enabled != null) {
       this._.enabled[path] = !(!enabled !== !active && (enabled || active));
@@ -126,25 +129,25 @@
       });
     }
   }, ref$._run = function(cfg, precond){
-    var src, values, path, isRequired, enabled, readonly, func, result, i$, len$, p, active, ref$, itf, content;
+    var src, values, paths, isRequired, enabled, readonly, func, result, i$, len$, path, active, ref$, itf, content;
     cfg == null && (cfg = {});
-    src = cfg.src, values = cfg.values, path = cfg.path, isRequired = cfg.isRequired, enabled = cfg.enabled, readonly = cfg.readonly, func = cfg.func;
+    src = cfg.src, values = cfg.value, paths = cfg.path, isRequired = cfg.isRequired, enabled = cfg.enabled, readonly = cfg.readonly, func = cfg.func;
     if (func) {
       result = true;
-      for (i$ = 0, len$ = path.length; i$ < len$; ++i$) {
-        p = path[i$];
-        active = !!func.apply(this, [(ref$ = import$({}, cfg), ref$.path = p, ref$)]) && !(precond != null && !precond);
+      for (i$ = 0, len$ = paths.length; i$ < len$; ++i$) {
+        path = paths[i$];
+        active = !!func.apply(this, [(ref$ = import$({}, cfg), ref$.path = path, ref$)]) && !(precond != null && !precond);
         result = result && active;
-        if (Array.isArray(p) && p[1]) {
+        if (Array.isArray(path) && path[1]) {
           this.subcond({
-            path: p[0],
-            config: (ref$ = import$({}, cfg), ref$.path = p.slice(1), ref$),
+            path: path[0],
+            config: (ref$ = import$({}, cfg), ref$.path = path.slice(1), ref$),
             active: active
           });
           continue;
         }
         this.apply({
-          path: p[0],
+          path: path,
           enabled: enabled,
           active: active,
           isRequired: isRequired,
@@ -152,36 +155,34 @@
         });
       }
     } else {
+      values = Array.isArray(values)
+        ? values
+        : [values];
       if (!(itf = this._.manager.widget(src))) {
-        console.error("[@plotdb/form] condctrl: run with nonexisted fields '" + src + "'");
-        return;
+        return console.error("[@plotdb/form] condctrl: field '" + src + "' not found");
       }
       content = itf.content();
       content = Array.isArray(content)
         ? content
         : [content];
-      active = !!content.filter(function(c){
-        if (Array.isArray(values)) {
-          return in$(c, values);
-        } else {
-          return c === values;
-        }
+      active = !!content.filter(function(it){
+        return in$(it, values);
       }).length;
       if (precond != null && !precond) {
         active = false;
       }
-      for (i$ = 0, len$ = path.length; i$ < len$; ++i$) {
-        p = path[i$];
-        if (Array.isArray(p) && p[1]) {
+      for (i$ = 0, len$ = paths.length; i$ < len$; ++i$) {
+        path = paths[i$];
+        if (Array.isArray(path) && path[1]) {
           this.subcond({
-            path: p[0],
-            config: (ref$ = import$({}, cfg), ref$.path = p.slice(1), ref$),
+            path: path[0],
+            config: (ref$ = import$({}, cfg), ref$.path = path.slice(1), ref$),
             active: active
           });
           continue;
         }
         this.apply({
-          path: p,
+          path: path,
           enabled: enabled,
           active: active,
           isRequired: isRequired,
@@ -194,8 +195,9 @@
   }, ref$.run = function(){
     var result, _, this$ = this;
     result = {};
-    _ = function(list){
-      var i$, to$, i, lresult$, cond, j$, ref$, len$, cfg, results$ = [];
+    _ = function(list, ref){
+      var i$, to$, i, lresult$, cond, j$, ref$, len$, cfg, r, results$ = [];
+      ref == null && (ref = []);
       for (i$ = 0, to$ = list.length; i$ < to$; ++i$) {
         i = i$;
         lresult$ = [];
@@ -204,11 +206,16 @@
           continue;
         }
         if (cond.precond && this$._.hash[cond.precond]) {
-          _([this$._.hash[cond.precond]]);
+          if (in$(cond.id, ref)) {
+            console.error("[@plotdb/form] condctrl: circular ref id " + cond.id);
+          } else {
+            _([this$._.hash[cond.precond]], ref.concat([cond.id]));
+          }
         }
         for (j$ = 0, len$ = (ref$ = cond.config).length; j$ < len$; ++j$) {
           cfg = ref$[j$];
-          lresult$.push(result[cond.id] = this$._run(cfg, result[cond.precond]));
+          r = this$._run(cfg, result[cond.precond]);
+          lresult$.push(result[cond.id] = result[cond.id] != null ? result[cond.id] && r : r);
         }
         results$.push(lresult$);
       }
@@ -344,6 +351,9 @@
       this._ws.p['delete'](ws);
       delete this._ws.w[o.path];
       return ref1$ = (ref$ = this._ws.l)[key$ = o.path], delete ref$[key$], ref1$;
+    },
+    widgets: function(){
+      return import$({}, this._ws.w || {});
     },
     widget: function(p){
       return this._ws.w[p];

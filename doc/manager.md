@@ -27,6 +27,7 @@ Instance API:
      - TBD we may also use ot path.
  - `remove(o)`: remove an widget from a specific path. option `o` is an object with following fields:
    - `path`: path to remove.
+ - `widgets()`: get widgets in `{path: widget}` object
  - `widget(p)`: get `form.widget` from given path `p`. return null if nothing is found.
  - `afterCheck()`: check overall status after each `check` call.
    - It's a debounced function. Call it immediately by `afterCheck().now()`.
