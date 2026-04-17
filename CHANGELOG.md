@@ -3,6 +3,8 @@
 ## v0.1.3 (upcoming)
 
  - upgrade dependencies
+ - add `widgets` api in manager
+ - tweak `condctrl` interface
 
 
 ## v0.1.2
