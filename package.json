@@ -82,7 +82,7 @@
   },
   "dependencies": {
     "@loadingio/ldcolorpicker": "^3.0.6",
-    "@plotdb/block": "^5.6.3",
+    "@plotdb/block": "^5.7.2",
     "@plotdb/csscope": "^5.0.4",
     "@plotdb/datadom": "^0.2.0",
     "@plotdb/konfig": "^4.10.0",
