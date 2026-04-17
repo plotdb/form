@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.1.3 (upcoming)
+
+ - upgrade dependencies
+
+
 ## v0.1.2
 
  - fix bug: `disabled`, `isRequired`, `readonly` may return undefined, causing issue for caller that need an explicit defined value.
