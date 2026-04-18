@@ -3,14 +3,20 @@
   var form, ref$, wordLen, countOps;
   form = {};
   form.condctrl = function(opt){
-    var ref$;
+    var ref$, this$ = this;
     opt == null && (opt = {});
     ref$ = this._ || (this._ = {});
     ref$.hash = {};
     ref$.enabled = {};
     ref$.manager = opt.manager;
     ref$.list = opt.conditions || [];
+    ref$.autorun = false;
     ref$.applyBaseRule = opt.baseRule || function(){};
+    this._.manager.on('change', function(){
+      if (this$._.autorun) {
+        return this$.run();
+      }
+    });
     return this;
   };
   form.condctrl.prototype = (ref$ = Object.create(Object.prototype), ref$.isEnabled = function(it){
@@ -20,6 +26,7 @@
   }, ref$.reset = function(opt){
     var fields, ref$, i$, to$, i, cond, results$ = [];
     opt == null && (opt = {});
+    this._.autorun = opt.autorun != null && !opt.autorun ? false : true;
     this._.list = opt.conditions || this._.list || [];
     fields = this._.manager.widgets();
     ref$ = this._ || (this._ = {});
@@ -33,12 +40,25 @@
       if (!Array.isArray(cond.config)) {
         cond.config = [cond.config];
       }
-      results$.push(cond.config.forEach(fn$));
+      cond.config = cond.config.map(fn$);
+      results$.push(cond.config.forEach(fn1$));
     }
     return results$;
-    function fn$(cfg){
-      var ref$, k, v;
-      cfg = (ref$ = import$({}, cfg), ref$.src = cond.src, ref$.func = cond.func, ref$);
+    function fn$(it){
+      var ref$;
+      return ref$ = import$({}, JSON.parse(JSON.stringify(it))), ref$.src = cond.src, ref$.func = cond.func, ref$;
+    }
+    function fn1$(cfg){
+      var k, v;
+      if (!cfg.path && cfg.targets) {
+        cfg.path = cfg.targets;
+      }
+      if (!cfg.value && cfg.values) {
+        cfg.value = cfg.values;
+      }
+      if (!cfg.tag && cfg.tags) {
+        cfg.tag = cfg.tags;
+      }
       return cfg.path = Array.from(new Set((cfg.prefix
         ? cfg.prefix
         : []).concat(cfg.path || [], (function(){

@@ -6,7 +6,9 @@ form.condctrl = (opt = {}) ->
   @{}_ <<<
     hash: {}, enabled: {}, manager: opt.manager
     list: opt.conditions or []
+    autorun: false
     apply-base-rule: opt.base-rule or (->)
+  @_.manager.on \change, ~> if @_.autorun => @run!
   @
 
 form.condctrl.prototype = Object.create(Object.prototype) <<<
@@ -14,6 +16,7 @@ form.condctrl.prototype = Object.create(Object.prototype) <<<
   get: -> @_.hash[it]
 
   reset: (opt = {}) ->
+    @_.autorun = if opt.autorun? and !opt.autorun => false else true
     @_.list = opt.conditions or @_.list or []
     fields = @_.manager.widgets!
     @{}_ <<< hash: {}, enabled: {}
@@ -22,11 +25,15 @@ form.condctrl.prototype = Object.create(Object.prototype) <<<
       cond.id = cond.id or "_#{i + 1}"
       @_.hash[cond.id] = cond
       if !Array.isArray(cond.config) => cond.config = [cond.config]
+      cond.config = cond.config.map -> {} <<< JSON.parse(JSON.stringify it) <<< cond{src, func}
       cond.config.for-each (cfg) ~>
+        # backward compatibility
+        if !cfg.path and cfg.targets => cfg.path = cfg.targets
+        if !cfg.value and cfg.values => cfg.value = cfg.values
+        if !cfg.tag and cfg.tags => cfg.tag = cfg.tags
         # COMPATIBILITY NOTE
-        #  rename: source > src, targets > path, tags > tag, values: value
-        #  removed: disabled
-        cfg = {} <<< cfg <<< cond{src, func}
+        #   rename: source > src, targets > path, tags > tag, values: value
+        #   removed: disabled
         cfg.path = Array.from(new Set(
           (if cfg.prefix => cfg.prefix else []) ++
           (cfg.path or []) ++

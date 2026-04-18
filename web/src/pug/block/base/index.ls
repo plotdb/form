@@ -10,9 +10,7 @@ module.exports =
       mode: \object
       fields: fields
       conditions: conditions
-      init: ->
-        (cond = @manager!0.condition!)reset {conditions}
-        @on \change, -> cond.run!
+      init: -> (cond = @manager!0.condition!)reset {conditions}
       view: common: handler: {}
     pubsub.fire("@makeform/nest:init", obj)
 
