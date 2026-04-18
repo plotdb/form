@@ -9,14 +9,20 @@ module.exports =
     fields =
       name:
         type: \@makeform/input
-        meta: title: "name", is-required: true
+        meta: title: "Contact Name", is-required: true
       title:
         type: \@makeform/input
         meta:
-          title: "title", is-required: true
+          title: "Position", is-required: true
           term: [{opset: \length, op: \lte, config: val: 5}]
       gender:
         type: \@makeform/input
-        meta: title: "gender", is-required: false
+        meta: title: "Gender", is-required: false
+      email:
+        type: \@makeform/input
+        meta:
+          title: "Email"
+          desc: "email is required for production project"
+          is-required: false, term: [{opset: \string, op: \email}]
 
     pubsub.fire \@makeform/nest:init, {mode: \object, view: {}, fields, cx: conditions}

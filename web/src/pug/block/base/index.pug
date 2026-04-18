@@ -1,0 +1,11 @@
+div
+  style(type="text/css"): include:stylus index.styl
+  script(type="@plotdb/block"): include:lsc index.ls
+  include @/@loadingio/bootstrap.ext/index.pug
+  include @/@makeform/nest/mixin.pug
+  div(plug="widget")
+    .row
+      .col-md: +widget("name")
+      .col-md: +widget("group")
+    +widget("secret")
+    +widget("contact")

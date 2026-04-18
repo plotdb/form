@@ -2,6 +2,9 @@ div
   include @/@makeform/nest/mixin.pug
   script(type="@plotdb/block"): include:lsc index.ls
   .px-3.py-2.shadow-sm.border.rounded(plug="widget")
-    +widget("name")
-    +widget("title")
-    +widget("gender")
+    .mb-0.font-weight-bold(style="margin-top:-1.2em;-webkit-text-stroke:4px #fff;paint-order: stroke fill;") Contact Info
+    .row
+      .col-md: +widget("name")
+      .col-md: +widget("title")
+      .col-md: +widget("gender")
+    +widget("email")

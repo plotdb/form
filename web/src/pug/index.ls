@@ -8,23 +8,27 @@ mgr = new block.manager registry: ({ns, name, version, path, type}) ->
   return "/assets/lib/#name/#{version or 'main'}/#{path or \index.min.js}"
 
 formmgr = new form.manager!
+/*
 formmgr.condition!reset conditions: [
 * src: \title, config: [
-  * values: <[test]>, path: <[description]>, enabled: false
+  * value: <[test]>, path: <[description]>, enabled: false
   ]
-* src: <[title]>, config: [
-  * values: <[test2]>, path: [<[_ gender]>], enabled: false
+* src: \title, config: [
+  * value: <[test2]>, path: [<[_ gender]>], enabled: false
   ]
 ]
+*/
 fields =
-  _: type: {ns: \local, name: \contact}, meta: {}, order: 3
+  _: type: {ns: \local, name: \base}, meta: {}, order: 4
+#  _: type: {ns: \local, name: \contact}, meta: {}, order: 3
+/*
   title:
     type: \@makeform/input, order: 1
     meta: title: "Title", is-required: true
   description:
     type: \@makeform/textarea, order: 2
     meta: title: "Description", is-required: true
-
+*/
 
 sample-value = _: do
   sig: count: 0, ts: Date.now!,token: Math.random!toString(36)
@@ -75,7 +79,5 @@ view.init!
   .then -> formctl.check init: true .now!
   .then ->
     formmgr.on \change, -> formmgr.condition!run!; view.render!
-    formmgr.on \meta, ->
-      console.log \ok
-      view.render!
+    formmgr.on \meta, -> view.render!
   .then -> view.render!
