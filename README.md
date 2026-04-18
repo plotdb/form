@@ -14,16 +14,22 @@ It includes following modules:
  `form.condctrl`: controller for form dynamics based on given conditions.
 
 
-## Draft
+For more information, check markdown document for corresponding modules under `docs/` folder.
 
-### form.block attrubite
 
-An attribute is an aspect of data from a form.block. For example, a File form.block could contains following attributes:
+## Simple Usage
 
- - `size` - size of all files combined.
- - `count` - count of files.
- - `modifiedtime` - modified time of last touched files.
- - `ext` - type of files.
+    mgr = form.manager!
+    # prepare a widget
+    widget = new form.widget({root: ...})
+    <~ widget.init!then _
+    widget.deserialize({isRequired: true}, {init: true})
+    mgr.add {widget, path: "name"}
+    mgr.on \change, -> console.log mgr.value!
+    # use condition control
+    mgr.condition!reset conditions: [{src: "name", config: {value: "dummy", path: [...]}}]
 
-Every attribute can be associated with one or multiple `form.opset` For example, above `ext` attribute can be associated with `extensions` type, which helps in determining if files in a given `ext` array all belong to certain file type.
 
+## License
+
+MIT

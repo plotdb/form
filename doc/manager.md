@@ -1,11 +1,15 @@
 # form.manager
 
-A manager for oversee widget status.
+A manager of form widgets.
 
 
 ## Usage
 
-    fm = new form.manager(opt)
+    manager = new form.manager(opt)
+    manager.add({width: ..., path: ...}) /* add widgets */
+    manager.value() /* get values from all managed widgets */
+    manager.progress() /* get editing progress information */
+    manager.check() /* validate widget content */
 
 Constructor options:
 
@@ -104,10 +108,7 @@ Instance API:
  - `disabled()`: if this manager is disabled, return true; otherwise return false.
  - `disable(opt)`: disable / enable this manager.
    - opt: true to disable, false to enable. will be true by default if omitted.
-
-with additional, experimental WIP api that is subected to change:
-
- - (WIP) `condition()`: get `condctrl` object of this manager.
+ - `condition()`: get `condctrl` object of this manager.
 
 
 ## Events
