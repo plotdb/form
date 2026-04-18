@@ -8,27 +8,7 @@ mgr = new block.manager registry: ({ns, name, version, path, type}) ->
   return "/assets/lib/#name/#{version or 'main'}/#{path or \index.min.js}"
 
 formmgr = new form.manager!
-/*
-formmgr.condition!reset conditions: [
-* src: \title, config: [
-  * value: <[test]>, path: <[description]>, enabled: false
-  ]
-* src: \title, config: [
-  * value: <[test2]>, path: [<[_ gender]>], enabled: false
-  ]
-]
-*/
-fields =
-  _: type: {ns: \local, name: \base}, meta: {}, order: 4
-#  _: type: {ns: \local, name: \contact}, meta: {}, order: 3
-/*
-  title:
-    type: \@makeform/input, order: 1
-    meta: title: "Title", is-required: true
-  description:
-    type: \@makeform/textarea, order: 2
-    meta: title: "Description", is-required: true
-*/
+fields = _: type: {ns: \local, name: \base}, meta: {}, order: 4
 
 sample-value = _: do
   sig: count: 0, ts: Date.now!,token: Math.random!toString(36)
