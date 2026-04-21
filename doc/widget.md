@@ -1,6 +1,13 @@
 # widget
 
-`widget` ( `form.widget` ) is an interface between form manager and UI.
+`form.widget` defines how a widget is defined and designed, and provide the bridget between form and UI.
+
+
+## Sample Usage
+
+    widget = new form.widget {root}
+    <- widget.init!then _
+    widget.deserialize {...}, {init: true}
 
 
 ## Constructor Options
@@ -40,16 +47,15 @@
      - `force`: true if this validation attempt is triggered by intentional user action.
      - `now`, `skipEmpty`: options from `check` if called from `check`.
        - this is provided for customized validators passing
- - `serialize()`: (TBD)consider renaming to `config`, merge with `deserialize()`
+ - `serialize()`: return serialized object, which is the metadata of this widget.
+   - (TBD)consider renaming to `config`, merge with `deserialize()`
  - `deserialize(meta, opt)`: return a Promise which resolves when validation completes.
    - parameters:
      - `meta`: widget meta. See `meta` section for detail definition.
      - `opt`: an object with following fields:
        - `init`: default false. when true, will init value if needed and validate with `init` set to true.
      - this fires `meta` event with the two parameters `meta` and `opt`.
- - `errors()`
- - `opsets()`
- - `data()`
+ - `errors()`: return list of errors
  - `value(v, opt)`: set/get value
    - return value:
      - get: return the value stored in this widget.
@@ -89,6 +95,7 @@
      - `depth`: default 0 (all depth).
        - when non-zero value specified, widgets should return recursive manager only if depth > 1,
          and should pass down depth - 1 when calling recursive manager api.
+
 
 ## Events
 
@@ -147,18 +154,20 @@ meta should be only editable by administrator. value is inputed by expected end 
  - `readonly`: true if user can edit its value
  - `defaultValue`: default value for this widget
  - `term`: Array of `op.term` objects. should be serialized when stored as data.
+ - `config`: widget specific configuration
 
 
 additional fields ( TBD )
 
  - `hint`: additional hint supposed to be shown after certain interaction
  - `placeholder`: placeholder value
- - `ext`: widget specific configuration
 
 
 ### value
 
 value ( user input ) can be anything ( string, number or object ) and is defined by implementation of specific widget.
+
+However, in order to provide advanced control of widgets, we also define a common specification for how a value can be defined. Check `value.md` for more information.
 
 
 ## Mod
@@ -200,7 +209,7 @@ mod is a set of functions that can be provided to `widget` for advanced function
      used along with terms wit `opset` left empty.
 
 
-## errors
+## Errors
 
 Errors returned by `validate()` are usually string of messages indicating the reason of failure. However, following strings are reserved for special purpose:
 
