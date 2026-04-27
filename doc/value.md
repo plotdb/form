@@ -1,6 +1,10 @@
 # Widget Values
 
-While widgets can define how they store values from user input, it will be helpful if some kind of formats are followed. For simplicity, `@plotdb/form` defines a generic value format, called `Generic Widget Value`; this is by default supported when a value is required, or will consider input value is Generic Widget Value if not specified.
+While widgets can define how they store values from user input, it will be helpful if some kind of formats are followed.
+
+For example, condition-checking, term-validating are all value-based and may required certain characteristics in data, such as array length, value range, etc, and won't be applicable if a given value doesn't have certain characteristics.
+
+Thus, values should be well-defined and declared by widgets based on widget design (see widget.md(TBD)). For simplicity, `@plotdb/form` defines a generic widget value format which will be the implicit type when a widget doesn't provide a  proper format declaration of its value.
 
 This format is described as below.
 
