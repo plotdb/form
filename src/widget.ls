@@ -124,6 +124,18 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
     else if typeof(v) == \object and v and v.hasOwnProperty(v) => v.v
     else v
 
+  valdef: ->
+    if @mod and @mod.valdef =>
+      if typeof(@mod.valdef) == \function => return @mod.valdef.call @
+      return @mod.valdef
+    return null
+
+  valspec: ->
+    if @mod and @mod.valspec =>
+      if typeof(@mod.valspec) == \function => return @mod.valspec.call @
+      return @mod.valspec
+    return null
+
   validate: (opt = {}) ->
     v = @content!
     Promise.resolve!
