@@ -17,6 +17,9 @@ form.op.prototype = Object.create(Object.prototype) <<< do
 # 資料驗證的規則集
 form.opset = (opt={}) ->
   @ <<< opt{name, id, i18n, convert}
+  # valdef: list of supported valdef BID strings.
+  # null / omitted = only supports generic ("@plotdb/form:valdef/generic")
+  @valdef = opt.valdef or null
   @ <<< {ops: {}}
   ops = if Array.isArray(opt.ops) => opt.ops.map -> {v: it, k: it.id}
   else [{k,v} for k,v of opt.ops]
@@ -35,7 +38,14 @@ form.opset.prototype = Object.create(Object.prototype) <<< do
 
 form.opset.register = -> @[]_list.push if it instanceof form.opset => it else new form.opset(it)
 form.opset.get = (id) -> @[]_list.filter(->(it.id or it.name) == id).0
-form.opset.list = -> (@_list or []).map(-> it)
+form.opset.list = (opt = {}) ->
+  list = (@_list or []).map(-> it)
+  if !opt.valdef => return list
+  vd = if Array.isArray(opt.valdef) => opt.valdef else [opt.valdef]
+  list.filter (os) ->
+    # opset without valdef = generic only; match if vd contains null or generic id
+    if !os.valdef => return !vd.length or vd.some(-> !it or it == "@plotdb/form:valdef/generic")
+    vd.some (v) -> v in os.valdef
 
 # TODO abstract this. before this is done, be sure to update following if we patch this function:
 #  - richtext's word-len
@@ -298,6 +308,40 @@ form.opset.default = [
           if c.min? and dmin > dnow => return false
           if c.max? and dmax < dnow => return false
           return true
+  }, {
+    id: \choice
+    valdef: ["@plotdb/form:valdef/choice"]
+    i18n:
+      "zh-TW":
+        choice: "選擇"
+        is: "選了"
+        "is-not": "沒選"
+        "is-any": "選了其中一個"
+        val: "選項值"
+        vals: "選項值（任一）"
+      "en":
+        choice: "Choice"
+        is: "Is"
+        "is-not": "Is Not"
+        "is-any": "Is Any Of"
+        val: "Option value"
+        vals: "Option values (any)"
+    convert: (v) ->
+      to-key = (item) -> if typeof item == \string => item else item.key or item.value or ''
+      if !v => return {list: [], other: {}}
+      if typeof v == \string => return {list: (if v => [v] else []), other: {}}
+      list = (v.list or []).filter(->it).map to-key
+      {list, other: v.other or {}}
+    ops:
+      is:
+        func: (v, c = {}) -> !!(c.val and c.val in v.list)
+        config: {val: {type: \text, name: \val}}
+      "is-not":
+        func: (v, c = {}) -> !(c.val and c.val in v.list)
+        config: {val: {type: \text, name: \val}}
+      "is-any":
+        func: (v, c = {}) -> (c.vals or []).some(-> it in v.list)
+        config: {vals: {type: \text, name: \vals, hint: "comma separated"}}
   }
 ]
 
@@ -313,6 +357,7 @@ form.opset.default.map -> form.opset.register it
  */
 form.term = (opt={}) ->
   @ <<< {enabled: true, opset: null, op: null, config: {}} <<< opt
+  if !@id => @id = Math.random!toString(36)substring(2)
   @set-opset opt.opset, opt.op, opt.config
   @
 
@@ -340,7 +385,7 @@ form.term.prototype = Object.create(Object.prototype) <<< do
     @op.validate(v, @config)
 
   serialize: ->
-    return {enabled: @enabled, opset: @opset.id, op: @op.id, config: @config, msg: @msg}
+    return {id: @id, enabled: @enabled, opset: @opset.id, op: @op.id, config: @config, msg: @msg}
 
   # TBD - do we need this? ( we already can deserialize directly from new form.term(serializedObject) )
   deserialize: (v) ->
