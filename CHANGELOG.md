@@ -1,6 +1,6 @@
 # Change Logs
 
-## v0.1.3 (upcoming)
+## v0.1.3
 
  - upgrade dependencies
  - add `widgets` api in manager
