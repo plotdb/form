@@ -4,13 +4,17 @@ form.op = (opt = {}) ->
   @
 
 form.op.prototype = Object.create(Object.prototype) <<< do
+  get-config: (valspec) ->
+    if typeof(@config) == \function => @config(valspec)
+    else @config
+
   validate: (val, cfg = {}) ->
     if @opset.convert => val = @opset.convert val
     if (ret = @func val, cfg) instanceof Promise => ret else Promise.resolve(!!ret)
 
-  config-default: ->
+  config-default: (valspec) ->
     cfg = {}
-    for k,v of @config => cfg[k] = v.default
+    for k,v of @get-config(valspec) => cfg[k] = v.default
     return cfg
 
 
@@ -209,17 +213,23 @@ form.opset.default = [
     id: 'length'
     i18n:
       "zh-TW":
-        length: "長度"
+        length: "字串長度"
         lte: "≦ 小於或等於"
         range: "範圍"
         number: "數字"
+        method: "計算方式"
+        char: "字元"
+        "simple-word": "簡易計字/詞"
         "minimal length": "長度下限"
         "maximal length": "長度上限"
       "en":
-        length: "Length"
+        length: "String Length"
         lte: "≦"
         range: "Range"
         number: "Number"
+        method: "Method"
+        char: "By Character"
+        "simple-word": "Count Word"
         "minimal length": "Min Length"
         "maximal length": "Max Length"
     ops:
@@ -310,7 +320,7 @@ form.opset.default = [
           return true
   }, {
     id: \choice
-    valdef: ["@plotdb/form:valdef/choice"]
+    valdef: <[@plotdb/form:valdef/choice]>
     i18n:
       "zh-TW":
         choice: "選擇"
@@ -335,13 +345,27 @@ form.opset.default = [
     ops:
       is:
         func: (v, c = {}) -> !!(c.val and c.val in v.list)
-        config: {val: {type: \text, name: \val}}
+        config: (valspec) ->
+          values = (valspec?values or []).map (v) ->
+            value: v.key or v.value or v, name: v.label or v.value or v.key or v
+          val: if values.length => {type: \choice, name: \val, values} else {type: \text, name: \val}
       "is-not":
         func: (v, c = {}) -> !(c.val and c.val in v.list)
-        config: {val: {type: \text, name: \val}}
+        config: (valspec) ->
+          values = (valspec?values or []).map (v) ->
+            value: v.key or v.value or v, name: v.label or v.value or v.key or v
+          val: if values.length => {type: \choice, name: \val, values} else {type: \text, name: \val}
       "is-any":
-        func: (v, c = {}) -> (c.vals or []).some(-> it in v.list)
-        config: {vals: {type: \text, name: \vals, hint: "comma separated"}}
+        func: (v, c = {}) ->
+          vals = if Array.isArray(c.vals) => c.vals
+            else if typeof c.vals == \string => c.vals.split(\,).map((.trim!)).filter(->it)
+            else []
+          vals.some -> it in v.list
+        config: (valspec) ->
+          values = (valspec?values or []).map (v) ->
+            value: v.key or v.value or v, name: v.label or v.value or v.key or v
+          vals: if values.length => {type: \choice, name: \vals, values}
+          else {type: \text, name: \vals, hint: "comma separated"}
   }
 ]
 

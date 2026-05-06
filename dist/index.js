@@ -750,6 +750,13 @@
     return this;
   };
   form.op.prototype = import$(Object.create(Object.prototype), {
+    getConfig: function(valspec){
+      if (typeof this.config === 'function') {
+        return this.config(valspec);
+      } else {
+        return this.config;
+      }
+    },
     validate: function(val, cfg){
       var ret;
       cfg == null && (cfg = {});
@@ -762,10 +769,10 @@
         return Promise.resolve(!!ret);
       }
     },
-    configDefault: function(){
+    configDefault: function(valspec){
       var cfg, k, ref$, v;
       cfg = {};
-      for (k in ref$ = this.config) {
+      for (k in ref$ = this.getConfig(valspec)) {
         v = ref$[k];
         cfg[k] = v['default'];
       }
@@ -1208,18 +1215,24 @@
       id: 'length',
       i18n: {
         "zh-TW": {
-          length: "長度",
+          length: "字串長度",
           lte: "≦ 小於或等於",
           range: "範圍",
           number: "數字",
+          method: "計算方式",
+          char: "字元",
+          "simple-word": "簡易計字/詞",
           "minimal length": "長度下限",
           "maximal length": "長度上限"
         },
         "en": {
-          length: "Length",
+          length: "String Length",
           lte: "≦",
           range: "Range",
           number: "Number",
+          method: "Method",
+          char: "By Character",
+          "simple-word": "Count Word",
           "minimal length": "Min Length",
           "maximal length": "Max Length"
         }
@@ -1446,7 +1459,7 @@
       }
     }, {
       id: 'choice',
-      valdef: ["@plotdb/form:valdef/choice"],
+      valdef: ['@plotdb/form:valdef/choice'],
       i18n: {
         "zh-TW": {
           choice: "選擇",
@@ -1502,11 +1515,26 @@
             c == null && (c = {});
             return !!(c.val && in$(c.val, v.list));
           },
-          config: {
-            val: {
-              type: 'text',
-              name: 'val'
-            }
+          config: function(valspec){
+            var values;
+            values = ((valspec != null ? valspec.values : void 8) || []).map(function(v){
+              return {
+                value: v.key || v.value || v,
+                name: v.label || v.value || v.key || v
+              };
+            });
+            return {
+              val: values.length
+                ? {
+                  type: 'choice',
+                  name: 'val',
+                  values: values
+                }
+                : {
+                  type: 'text',
+                  name: 'val'
+                }
+            };
           }
         },
         "is-not": {
@@ -1514,26 +1542,66 @@
             c == null && (c = {});
             return !(c.val && in$(c.val, v.list));
           },
-          config: {
-            val: {
-              type: 'text',
-              name: 'val'
-            }
+          config: function(valspec){
+            var values;
+            values = ((valspec != null ? valspec.values : void 8) || []).map(function(v){
+              return {
+                value: v.key || v.value || v,
+                name: v.label || v.value || v.key || v
+              };
+            });
+            return {
+              val: values.length
+                ? {
+                  type: 'choice',
+                  name: 'val',
+                  values: values
+                }
+                : {
+                  type: 'text',
+                  name: 'val'
+                }
+            };
           }
         },
         "is-any": {
           func: function(v, c){
+            var vals;
             c == null && (c = {});
-            return (c.vals || []).some(function(it){
+            vals = Array.isArray(c.vals)
+              ? c.vals
+              : typeof c.vals === 'string'
+                ? c.vals.split(',').map(function(it){
+                  return it.trim();
+                }).filter(function(it){
+                  return it;
+                })
+                : [];
+            return vals.some(function(it){
               return in$(it, v.list);
             });
           },
-          config: {
-            vals: {
-              type: 'text',
-              name: 'vals',
-              hint: "comma separated"
-            }
+          config: function(valspec){
+            var values;
+            values = ((valspec != null ? valspec.values : void 8) || []).map(function(v){
+              return {
+                value: v.key || v.value || v,
+                name: v.label || v.value || v.key || v
+              };
+            });
+            return {
+              vals: values.length
+                ? {
+                  type: 'choice',
+                  name: 'vals',
+                  values: values
+                }
+                : {
+                  type: 'text',
+                  name: 'vals',
+                  hint: "comma separated"
+                }
+            };
           }
         }
       }
