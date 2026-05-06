@@ -5,6 +5,9 @@
  - upgrade dependencies
  - add `widgets` api in manager
  - tweak `condctrl` interface
+ - add valspec and valdef support in widget
+ - add choice opset for valspec @plotdb/form:valdef/choice
+ - support id in term
 
 
 ## v0.1.2
