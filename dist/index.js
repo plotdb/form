@@ -779,6 +779,7 @@
     this.id = opt.id;
     this.i18n = opt.i18n;
     this.convert = opt.convert;
+    this.valdef = opt.valdef || null;
     this.ops = {};
     ops = Array.isArray(opt.ops)
       ? opt.ops.map(function(it){
@@ -853,9 +854,27 @@
       return (it.id || it.name) === id;
     })[0];
   };
-  form.opset.list = function(){
-    return (this._list || []).map(function(it){
+  form.opset.list = function(opt){
+    var list, vd;
+    opt == null && (opt = {});
+    list = (this._list || []).map(function(it){
       return it;
+    });
+    if (!opt.valdef) {
+      return list;
+    }
+    vd = Array.isArray(opt.valdef)
+      ? opt.valdef
+      : [opt.valdef];
+    return list.filter(function(os){
+      if (!os.valdef) {
+        return !vd.length || vd.some(function(it){
+          return !it || it === "@plotdb/form:valdef/generic";
+        });
+      }
+      return vd.some(function(v){
+        return in$(v, os.valdef);
+      });
     });
   };
   wordLen = function(v, method){
@@ -1425,6 +1444,99 @@
           }
         }
       }
+    }, {
+      id: 'choice',
+      valdef: ["@plotdb/form:valdef/choice"],
+      i18n: {
+        "zh-TW": {
+          choice: "選擇",
+          is: "選了",
+          "is-not": "沒選",
+          "is-any": "選了其中一個",
+          val: "選項值",
+          vals: "選項值（任一）"
+        },
+        "en": {
+          choice: "Choice",
+          is: "Is",
+          "is-not": "Is Not",
+          "is-any": "Is Any Of",
+          val: "Option value",
+          vals: "Option values (any)"
+        }
+      },
+      convert: function(v){
+        var toKey, list;
+        toKey = function(item){
+          if (typeof item === 'string') {
+            return item;
+          } else {
+            return item.key || item.value || '';
+          }
+        };
+        if (!v) {
+          return {
+            list: [],
+            other: {}
+          };
+        }
+        if (typeof v === 'string') {
+          return {
+            list: v
+              ? [v]
+              : [],
+            other: {}
+          };
+        }
+        list = (v.list || []).filter(function(it){
+          return it;
+        }).map(toKey);
+        return {
+          list: list,
+          other: v.other || {}
+        };
+      },
+      ops: {
+        is: {
+          func: function(v, c){
+            c == null && (c = {});
+            return !!(c.val && in$(c.val, v.list));
+          },
+          config: {
+            val: {
+              type: 'text',
+              name: 'val'
+            }
+          }
+        },
+        "is-not": {
+          func: function(v, c){
+            c == null && (c = {});
+            return !(c.val && in$(c.val, v.list));
+          },
+          config: {
+            val: {
+              type: 'text',
+              name: 'val'
+            }
+          }
+        },
+        "is-any": {
+          func: function(v, c){
+            c == null && (c = {});
+            return (c.vals || []).some(function(it){
+              return in$(it, v.list);
+            });
+          },
+          config: {
+            vals: {
+              type: 'text',
+              name: 'vals',
+              hint: "comma separated"
+            }
+          }
+        }
+      }
     }
   ];
   form.opset['default'].map(function(it){
@@ -1441,6 +1553,9 @@
   form.term = function(opt){
     opt == null && (opt = {});
     import$((this.enabled = true, this.opset = null, this.op = null, this.config = {}, this), opt);
+    if (!this.id) {
+      this.id = Math.random().toString(36).substring(2);
+    }
     this.setOpset(opt.opset, opt.op, opt.config);
     return this;
   };
@@ -1485,6 +1600,7 @@
     },
     serialize: function(){
       return {
+        id: this.id,
         enabled: this.enabled,
         opset: this.opset.id,
         op: this.op.id,
@@ -1763,6 +1879,24 @@
       } else {
         return v;
       }
+    },
+    valdef: function(){
+      if (this.mod && this.mod.valdef) {
+        if (typeof this.mod.valdef === 'function') {
+          return this.mod.valdef.call(this);
+        }
+        return this.mod.valdef;
+      }
+      return null;
+    },
+    valspec: function(){
+      if (this.mod && this.mod.valspec) {
+        if (typeof this.mod.valspec === 'function') {
+          return this.mod.valspec.call(this);
+        }
+        return this.mod.valspec;
+      }
+      return null;
     },
     validate: function(opt){
       var v, this$ = this;
