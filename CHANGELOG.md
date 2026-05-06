@@ -1,5 +1,17 @@
 # Change Logs
 
+## v0.1.3
+
+ - upgrade dependencies
+ - add `widgets` api in manager
+ - tweak `condctrl` interface
+ - add valspec and valdef support in widget
+ - add choice opset for valspec @plotdb/form:valdef/choice
+ - support id in term
+ - support function-based meta in op
+ - tweak length opset i18n
+
+
 ## v0.1.2
 
  - fix bug: `disabled`, `isRequired`, `readonly` may return undefined, causing issue for caller that need an explicit defined value.

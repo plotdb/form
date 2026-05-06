@@ -3,58 +3,62 @@
   var form, ref$, wordLen, countOps;
   form = {};
   form.condctrl = function(opt){
-    var ref$;
+    var ref$, this$ = this;
     opt == null && (opt = {});
     ref$ = this._ || (this._ = {});
     ref$.hash = {};
     ref$.enabled = {};
     ref$.manager = opt.manager;
     ref$.list = opt.conditions || [];
+    ref$.autorun = false;
     ref$.applyBaseRule = opt.baseRule || function(){};
+    this._.manager.on('change', function(){
+      if (this$._.autorun) {
+        return this$.run();
+      }
+    });
     return this;
   };
   form.condctrl.prototype = (ref$ = Object.create(Object.prototype), ref$.isEnabled = function(it){
     return this._.enabled[it];
   }, ref$.get = function(it){
     return this._.hash[it];
-  }, ref$.fields = function(){
-    return this._.manager._ws.w;
-  }, ref$.subcond = function(arg$){
-    var path, active, config, itf, ms;
-    path = arg$.path, active = arg$.active, config = arg$.config;
-    if (!((itf = this._.manager.widget(path)) && !itf.disabled() && (ms = itf.manager({
-      depth: 1
-    }) || []).length)) {
-      return;
-    }
-    return ms.map(function(m){
-      var cond;
-      cond = m.condition();
-      cond.apply(import$({
-        active: active
-      }, config));
-      return cond.run();
-    });
   }, ref$.reset = function(opt){
-    var fields, i$, to$, i, cond, results$ = [];
+    var fields, ref$, i$, to$, i, cond, results$ = [];
     opt == null && (opt = {});
+    this._.autorun = opt.autorun != null && !opt.autorun ? false : true;
     this._.list = opt.conditions || this._.list || [];
-    fields = this.fields();
+    fields = this._.manager.widgets();
+    ref$ = this._ || (this._ = {});
+    ref$.hash = {};
+    ref$.enabled = {};
     for (i$ = 0, to$ = this._.list.length; i$ < to$; ++i$) {
       i = i$;
       cond = this._.list[i];
-      cond.id = cond.id || (i + 1) + "";
+      cond.id = cond.id || "_" + (i + 1);
       this._.hash[cond.id] = cond;
       if (!Array.isArray(cond.config)) {
         cond.config = [cond.config];
       }
-      results$.push(cond.config.map(fn$));
+      cond.config = cond.config.map(fn$);
+      results$.push(cond.config.forEach(fn1$));
     }
     return results$;
-    function fn$(cfg){
+    function fn$(it){
+      var ref$;
+      return ref$ = import$({}, JSON.parse(JSON.stringify(it))), ref$.src = cond.src, ref$.func = cond.func, ref$;
+    }
+    function fn1$(cfg){
       var k, v;
-      cfg.src = cond.src;
-      cfg.func = cond.func;
+      if (!cfg.path && cfg.targets) {
+        cfg.path = cfg.targets;
+      }
+      if (!cfg.value && cfg.values) {
+        cfg.value = cfg.values;
+      }
+      if (!cfg.tag && cfg.tags) {
+        cfg.tag = cfg.tags;
+      }
       return cfg.path = Array.from(new Set((cfg.prefix
         ? cfg.prefix
         : []).concat(cfg.path || [], (function(){
@@ -81,21 +85,40 @@
         return it.k;
       }))));
     }
+  }, ref$.subcond = function(arg$){
+    var path, active, config, itf, ms;
+    path = arg$.path, active = arg$.active, config = arg$.config;
+    if (!((itf = this._.manager.widget(path)) && !itf.disabled() && (ms = itf.manager({
+      depth: 1
+    }) || []).length)) {
+      return;
+    }
+    return ms.forEach(function(m){
+      var cond;
+      cond = m.condition();
+      cond.apply(import$({
+        active: active
+      }, config));
+      return cond.run();
+    });
   }, ref$.apply = function(opt){
     var path, active, enabled, isRequired, readonly, widget, curMeta, newMeta;
     opt == null && (opt = {});
     path = opt.path, active = opt.active, enabled = opt.enabled, isRequired = opt.isRequired, readonly = opt.readonly;
-    if (Array.isArray(path) && path[1]) {
-      return this.subcond({
-        path: path[0],
-        active: active,
-        config: {
-          path: path.slice(1),
-          enabled: enabled,
-          isRequired: isRequired,
-          readonly: readonly
-        }
-      });
+    if (Array.isArray(path)) {
+      if (path[1]) {
+        return this.subcond({
+          path: path[0],
+          active: active,
+          config: {
+            path: path.slice(1),
+            enabled: enabled,
+            isRequired: isRequired,
+            readonly: readonly
+          }
+        });
+      }
+      path = path[0];
     }
     if (enabled != null) {
       this._.enabled[path] = !(!enabled !== !active && (enabled || active));
@@ -126,25 +149,25 @@
       });
     }
   }, ref$._run = function(cfg, precond){
-    var src, values, path, isRequired, enabled, readonly, func, result, i$, len$, p, active, ref$, itf, content;
+    var src, values, paths, isRequired, enabled, readonly, func, result, i$, len$, path, active, ref$, itf, content;
     cfg == null && (cfg = {});
-    src = cfg.src, values = cfg.values, path = cfg.path, isRequired = cfg.isRequired, enabled = cfg.enabled, readonly = cfg.readonly, func = cfg.func;
+    src = cfg.src, values = cfg.value, paths = cfg.path, isRequired = cfg.isRequired, enabled = cfg.enabled, readonly = cfg.readonly, func = cfg.func;
     if (func) {
       result = true;
-      for (i$ = 0, len$ = path.length; i$ < len$; ++i$) {
-        p = path[i$];
-        active = !!func.apply(this, [(ref$ = import$({}, cfg), ref$.path = p, ref$)]) && !(precond != null && !precond);
+      for (i$ = 0, len$ = paths.length; i$ < len$; ++i$) {
+        path = paths[i$];
+        active = !!func.apply(this, [(ref$ = import$({}, cfg), ref$.path = path, ref$)]) && !(precond != null && !precond);
         result = result && active;
-        if (Array.isArray(p) && p[1]) {
+        if (Array.isArray(path) && path[1]) {
           this.subcond({
-            path: p[0],
-            config: (ref$ = import$({}, cfg), ref$.path = p.slice(1), ref$),
+            path: path[0],
+            config: (ref$ = import$({}, cfg), ref$.path = path.slice(1), ref$),
             active: active
           });
           continue;
         }
         this.apply({
-          path: p[0],
+          path: path,
           enabled: enabled,
           active: active,
           isRequired: isRequired,
@@ -152,36 +175,34 @@
         });
       }
     } else {
+      values = Array.isArray(values)
+        ? values
+        : [values];
       if (!(itf = this._.manager.widget(src))) {
-        console.error("[@plotdb/form] condctrl: run with nonexisted fields '" + src + "'");
-        return;
+        return console.error("[@plotdb/form] condctrl: field '" + src + "' not found");
       }
       content = itf.content();
       content = Array.isArray(content)
         ? content
         : [content];
-      active = !!content.filter(function(c){
-        if (Array.isArray(values)) {
-          return in$(c, values);
-        } else {
-          return c === values;
-        }
+      active = !!content.filter(function(it){
+        return in$(it, values);
       }).length;
       if (precond != null && !precond) {
         active = false;
       }
-      for (i$ = 0, len$ = path.length; i$ < len$; ++i$) {
-        p = path[i$];
-        if (Array.isArray(p) && p[1]) {
+      for (i$ = 0, len$ = paths.length; i$ < len$; ++i$) {
+        path = paths[i$];
+        if (Array.isArray(path) && path[1]) {
           this.subcond({
-            path: p[0],
-            config: (ref$ = import$({}, cfg), ref$.path = p.slice(1), ref$),
+            path: path[0],
+            config: (ref$ = import$({}, cfg), ref$.path = path.slice(1), ref$),
             active: active
           });
           continue;
         }
         this.apply({
-          path: p,
+          path: path,
           enabled: enabled,
           active: active,
           isRequired: isRequired,
@@ -194,8 +215,9 @@
   }, ref$.run = function(){
     var result, _, this$ = this;
     result = {};
-    _ = function(list){
-      var i$, to$, i, lresult$, cond, j$, ref$, len$, cfg, results$ = [];
+    _ = function(list, ref){
+      var i$, to$, i, lresult$, cond, j$, ref$, len$, cfg, r, results$ = [];
+      ref == null && (ref = []);
       for (i$ = 0, to$ = list.length; i$ < to$; ++i$) {
         i = i$;
         lresult$ = [];
@@ -204,11 +226,16 @@
           continue;
         }
         if (cond.precond && this$._.hash[cond.precond]) {
-          _([this$._.hash[cond.precond]]);
+          if (in$(cond.id, ref)) {
+            console.error("[@plotdb/form] condctrl: circular ref id " + cond.id);
+          } else {
+            _([this$._.hash[cond.precond]], ref.concat([cond.id]));
+          }
         }
         for (j$ = 0, len$ = (ref$ = cond.config).length; j$ < len$; ++j$) {
           cfg = ref$[j$];
-          lresult$.push(result[cond.id] = this$._run(cfg, result[cond.precond]));
+          r = this$._run(cfg, result[cond.precond]);
+          lresult$.push(result[cond.id] = result[cond.id] != null ? result[cond.id] && r : r);
         }
         results$.push(lresult$);
       }
@@ -344,6 +371,9 @@
       this._ws.p['delete'](ws);
       delete this._ws.w[o.path];
       return ref1$ = (ref$ = this._ws.l)[key$ = o.path], delete ref$[key$], ref1$;
+    },
+    widgets: function(){
+      return import$({}, this._ws.w || {});
     },
     widget: function(p){
       return this._ws.w[p];
@@ -720,6 +750,13 @@
     return this;
   };
   form.op.prototype = import$(Object.create(Object.prototype), {
+    getConfig: function(valspec){
+      if (typeof this.config === 'function') {
+        return this.config(valspec);
+      } else {
+        return this.config;
+      }
+    },
     validate: function(val, cfg){
       var ret;
       cfg == null && (cfg = {});
@@ -732,10 +769,10 @@
         return Promise.resolve(!!ret);
       }
     },
-    configDefault: function(){
+    configDefault: function(valspec){
       var cfg, k, ref$, v;
       cfg = {};
-      for (k in ref$ = this.config) {
+      for (k in ref$ = this.getConfig(valspec)) {
         v = ref$[k];
         cfg[k] = v['default'];
       }
@@ -749,6 +786,7 @@
     this.id = opt.id;
     this.i18n = opt.i18n;
     this.convert = opt.convert;
+    this.valdef = opt.valdef || null;
     this.ops = {};
     ops = Array.isArray(opt.ops)
       ? opt.ops.map(function(it){
@@ -823,9 +861,27 @@
       return (it.id || it.name) === id;
     })[0];
   };
-  form.opset.list = function(){
-    return (this._list || []).map(function(it){
+  form.opset.list = function(opt){
+    var list, vd;
+    opt == null && (opt = {});
+    list = (this._list || []).map(function(it){
       return it;
+    });
+    if (!opt.valdef) {
+      return list;
+    }
+    vd = Array.isArray(opt.valdef)
+      ? opt.valdef
+      : [opt.valdef];
+    return list.filter(function(os){
+      if (!os.valdef) {
+        return !vd.length || vd.some(function(it){
+          return !it || it === "@plotdb/form:valdef/generic";
+        });
+      }
+      return vd.some(function(v){
+        return in$(v, os.valdef);
+      });
     });
   };
   wordLen = function(v, method){
@@ -1159,18 +1215,24 @@
       id: 'length',
       i18n: {
         "zh-TW": {
-          length: "長度",
+          length: "字串長度",
           lte: "≦ 小於或等於",
           range: "範圍",
           number: "數字",
+          method: "計算方式",
+          char: "字元",
+          "simple-word": "簡易計字/詞",
           "minimal length": "長度下限",
           "maximal length": "長度上限"
         },
         "en": {
-          length: "Length",
+          length: "String Length",
           lte: "≦",
           range: "Range",
           number: "Number",
+          method: "Method",
+          char: "By Character",
+          "simple-word": "Count Word",
           "minimal length": "Min Length",
           "maximal length": "Max Length"
         }
@@ -1395,6 +1457,154 @@
           }
         }
       }
+    }, {
+      id: 'choice',
+      valdef: ['@plotdb/form:valdef/choice'],
+      i18n: {
+        "zh-TW": {
+          choice: "選擇",
+          is: "選了",
+          "is-not": "沒選",
+          "is-any": "選了其中一個",
+          val: "選項值",
+          vals: "選項值（任一）"
+        },
+        "en": {
+          choice: "Choice",
+          is: "Is",
+          "is-not": "Is Not",
+          "is-any": "Is Any Of",
+          val: "Option value",
+          vals: "Option values (any)"
+        }
+      },
+      convert: function(v){
+        var toKey, list;
+        toKey = function(item){
+          if (typeof item === 'string') {
+            return item;
+          } else {
+            return item.key || item.value || '';
+          }
+        };
+        if (!v) {
+          return {
+            list: [],
+            other: {}
+          };
+        }
+        if (typeof v === 'string') {
+          return {
+            list: v
+              ? [v]
+              : [],
+            other: {}
+          };
+        }
+        list = (v.list || []).filter(function(it){
+          return it;
+        }).map(toKey);
+        return {
+          list: list,
+          other: v.other || {}
+        };
+      },
+      ops: {
+        is: {
+          func: function(v, c){
+            c == null && (c = {});
+            return !!(c.val && in$(c.val, v.list));
+          },
+          config: function(valspec){
+            var values;
+            values = ((valspec != null ? valspec.values : void 8) || []).map(function(v){
+              return {
+                value: v.key || v.value || v,
+                name: v.label || v.value || v.key || v
+              };
+            });
+            return {
+              val: values.length
+                ? {
+                  type: 'choice',
+                  name: 'val',
+                  values: values
+                }
+                : {
+                  type: 'text',
+                  name: 'val'
+                }
+            };
+          }
+        },
+        "is-not": {
+          func: function(v, c){
+            c == null && (c = {});
+            return !(c.val && in$(c.val, v.list));
+          },
+          config: function(valspec){
+            var values;
+            values = ((valspec != null ? valspec.values : void 8) || []).map(function(v){
+              return {
+                value: v.key || v.value || v,
+                name: v.label || v.value || v.key || v
+              };
+            });
+            return {
+              val: values.length
+                ? {
+                  type: 'choice',
+                  name: 'val',
+                  values: values
+                }
+                : {
+                  type: 'text',
+                  name: 'val'
+                }
+            };
+          }
+        },
+        "is-any": {
+          func: function(v, c){
+            var vals;
+            c == null && (c = {});
+            vals = Array.isArray(c.vals)
+              ? c.vals
+              : typeof c.vals === 'string'
+                ? c.vals.split(',').map(function(it){
+                  return it.trim();
+                }).filter(function(it){
+                  return it;
+                })
+                : [];
+            return vals.some(function(it){
+              return in$(it, v.list);
+            });
+          },
+          config: function(valspec){
+            var values;
+            values = ((valspec != null ? valspec.values : void 8) || []).map(function(v){
+              return {
+                value: v.key || v.value || v,
+                name: v.label || v.value || v.key || v
+              };
+            });
+            return {
+              vals: values.length
+                ? {
+                  type: 'choice',
+                  name: 'vals',
+                  values: values
+                }
+                : {
+                  type: 'text',
+                  name: 'vals',
+                  hint: "comma separated"
+                }
+            };
+          }
+        }
+      }
     }
   ];
   form.opset['default'].map(function(it){
@@ -1411,6 +1621,9 @@
   form.term = function(opt){
     opt == null && (opt = {});
     import$((this.enabled = true, this.opset = null, this.op = null, this.config = {}, this), opt);
+    if (!this.id) {
+      this.id = Math.random().toString(36).substring(2);
+    }
     this.setOpset(opt.opset, opt.op, opt.config);
     return this;
   };
@@ -1455,6 +1668,7 @@
     },
     serialize: function(){
       return {
+        id: this.id,
         enabled: this.enabled,
         opset: this.opset.id,
         op: this.op.id,
@@ -1733,6 +1947,24 @@
       } else {
         return v;
       }
+    },
+    valdef: function(){
+      if (this.mod && this.mod.valdef) {
+        if (typeof this.mod.valdef === 'function') {
+          return this.mod.valdef.call(this);
+        }
+        return this.mod.valdef;
+      }
+      return null;
+    },
+    valspec: function(){
+      if (this.mod && this.mod.valspec) {
+        if (typeof this.mod.valspec === 'function') {
+          return this.mod.valspec.call(this);
+        }
+        return this.mod.valspec;
+      }
+      return null;
     },
     validate: function(opt){
       var v, this$ = this;
