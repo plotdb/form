@@ -1128,7 +1128,7 @@
                 max: {
                   type: 'number',
                   name: 'max-size',
-                  hint: "minimal size"
+                  hint: "maximal size"
                 }
               }
             };

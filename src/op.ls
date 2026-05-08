@@ -169,7 +169,7 @@ form.opset.default = [
             !v.filter(->!((!c.min? or it[k] >= (c.min or 0)) and (!c.max? or it[k] <= c.max))).length
           config:
             min: {type: \number, name: 'min-size', hint: "minimal size"}
-            max: {type: \number, name: 'max-size', hint: "minimal size"}
+            max: {type: \number, name: 'max-size', hint: "maximal size"}
         }) n.1
       ]
     )
