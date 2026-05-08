@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.1.4 (upcoming)
+
+ - fix typo in image opset
+
+
 ## v0.1.3
 
  - upgrade dependencies
