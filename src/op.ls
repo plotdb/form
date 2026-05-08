@@ -108,7 +108,8 @@ form.opset.default = [
     i18n:
       "zh-TW":
         "file": "檔案"
-        "size-limit": "檔案大小上限"
+        "max-size": "檔案大小上限(位元數)"
+        "min-size": "檔案大小下限(位元數)"
         "count-limit": "檔案數量上限"
         "extension": "副檔名限制"
         "count-max": "檔案數量上限"
@@ -116,7 +117,8 @@ form.opset.default = [
         "count-range": "檔案數量範圍"
       "en":
         "file": "File"
-        "size-limit": "Maximal File Size"
+        "max-size": "Max File Size (bytes)"
+        "min-size": "Min File Size (bytes)"
         "count-limit": "Max File Count"
         "extension": "File Extension"
         "count-max": "Max File Count"
@@ -125,8 +127,10 @@ form.opset.default = [
     convert: (v) -> (if Array.isArray(v) => v else [v]).filter -> it
     ops: {
       "size-limit":
-        func: (v, c = {}) -> !v.filter(-> it.size > c.val).length
-        config: {val: {type: \number, name: \size-limit, hint: "maximal size"}}
+        func: (v, c = {}) -> !v.filter(-> it.size > c.val and (!it.min or it.min < c.val)).length
+        config:
+          size: type: \number, name: \max-size
+          min: type: \number, name: \min-size
       extension:
         func: (v, c = {}) ->
           exts = (c.str.split(',') or []).map(-> (it or '').trim!toLowerCase!).filter -> it

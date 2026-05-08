@@ -1001,7 +1001,8 @@
       i18n: {
         "zh-TW": {
           "file": "檔案",
-          "size-limit": "檔案大小上限",
+          "max-size": "檔案大小上限(位元數)",
+          "min-size": "檔案大小下限(位元數)",
           "count-limit": "檔案數量上限",
           "extension": "副檔名限制",
           "count-max": "檔案數量上限",
@@ -1010,7 +1011,8 @@
         },
         "en": {
           "file": "File",
-          "size-limit": "Maximal File Size",
+          "max-size": "Max File Size (bytes)",
+          "min-size": "Min File Size (bytes)",
           "count-limit": "Max File Count",
           "extension": "File Extension",
           "count-max": "Max File Count",
@@ -1030,14 +1032,17 @@
           func: function(v, c){
             c == null && (c = {});
             return !v.filter(function(it){
-              return it.size > c.val;
+              return it.size > c.val && (!it.min || it.min < c.val);
             }).length;
           },
           config: {
-            val: {
+            size: {
               type: 'number',
-              name: 'size-limit',
-              hint: "maximal size"
+              name: 'max-size'
+            },
+            min: {
+              type: 'number',
+              name: 'min-size'
             }
           }
         },
