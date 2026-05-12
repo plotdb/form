@@ -1,3 +1,5 @@
+<-(->it.apply {}) _
+
 custom-formmgr = true
 
 mgr = new block.manager registry: ({ns, name, version, path, type}) ->
