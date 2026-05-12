@@ -1,0 +1,17 @@
+div
+  include @/@makeform/nest/mixin.pug
+  script(type="@plotdb/block"): include:lsc index.ls
+  .px-3.py-2.shadow-sm.border.rounded(plug="widget")
+    .mb-2.font-weight-bold(style="margin-top:-1.2em;-webkit-text-stroke:4px #fff;paint-order:stroke fill;") 作品資訊
+    .row
+      .col-md-8: +widget("work-title")
+      .col-md-4: +widget("year")
+    +widget("category")
+    +widget("brief")
+    +widget("concept")
+    +widget("features")
+    +widget("url")
+    +widget("cover")
+    +widget("attachment")
+    .mt-3
+    +widget("agreement")

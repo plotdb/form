@@ -33,7 +33,7 @@ fields =
       is-required: true
       desc: "Please provide secret code for this specific project"
   contact:
-    type: ns: \local, name: \contact
+    type: ns: \local, name: \simple/contact
     meta: {}
 
 conditions = [
@@ -44,4 +44,3 @@ conditions = [
   * value: \Production, path: [<[contact email]>], enabled: true
   ]
 ]
-

@@ -1,0 +1,3 @@
+[submodule "context/shared"]
+	path = context/shared
+	url = https://github.com/plotdb/prompts

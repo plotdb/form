@@ -1,0 +1,16 @@
+div
+  include @/@makeform/nest/mixin.pug
+  script(type="@plotdb/block"): include:lsc index.ls
+  .px-3.py-2.shadow-sm.border.rounded(plug="widget")
+    .mb-2.font-weight-bold(style="margin-top:-1.2em;-webkit-text-stroke:4px #fff;paint-order:stroke fill;") 團隊成員
+    .text-muted.small.mb-2(ld="no-entry") 尚未新增任何成員
+    .border.rounded.px-3.pt-2.pb-1.mb-2(ld-each="entry")
+      .row
+        .col-md-4: +widget("name")
+        .col-md-4: +widget("role")
+        .col-md-4: +widget("organization")
+      .row
+        .col-md-6: +widget("email")
+      .d-flex.justify-content-end.pb-1
+        button.btn.btn-sm.btn-outline-danger(ld="delete") 移除
+    button.btn.btn-sm.btn-outline-secondary(ld="add") ＋ 新增成員

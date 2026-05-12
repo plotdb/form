@@ -8,7 +8,7 @@ mgr = new block.manager registry: ({ns, name, version, path, type}) ->
   return "/assets/lib/#name/#{version or 'main'}/#{path or \index.min.js}"
 
 formmgr = new form.manager!
-fields = _: type: {ns: \local, name: \base}, meta: {}, order: 4
+fields = _: type: {ns: \local, name: \award/base}, meta: {}, order: 4
 
 sample-value = _: do
   sig: count: 0, ts: Date.now!,token: Math.random!toString(36)
@@ -19,7 +19,7 @@ sample-value = _: do
 formctl = new form.controller {
   formmgr: formmgr
   root: ld$.find("[ld=form]", 0)
-  widget: if !custom-formmgr => {ns: \local, name: \contact} else null
+  widget: if !custom-formmgr => {ns: \local, name: \simple/contact} else null
   meta: {}
 }
 
@@ -53,7 +53,14 @@ view = new ldview do
           ctx.itf.deserialize ctx.v.meta, {init: true}
           formmgr.add path: ctx.k, widget: ctx.itf
 
-view.init!
+choice-cover = new ldcover root: document.querySelector('.choice-cover')
+
+choice-cover.get!
+  .then (choice) ->
+    fields._.type = if choice == \award
+      then {ns: \local, name: \award/base}
+      else {ns: \local, name: \simple/base}
+  .then -> view.init!
   .then -> formctl.init!
   .then -> formmgr.value sample-value
   .then -> formctl.check init: true .now!

@@ -1,0 +1,14 @@
+div
+  style(type="text/css"): include:stylus index.styl
+  script(type="@plotdb/block"): include:lsc index.ls
+  include @/@loadingio/bootstrap.ext/index.pug
+  include @/@makeform/nest/mixin.pug
+  div(plug="widget")
+    .award-header.mb-4
+      .award-title 數位內容創新獎
+      .award-subtitle 徵件申請表
+    +widget("contact")
+    .mt-3
+    +widget("member")
+    .mt-3
+    +widget("detail")

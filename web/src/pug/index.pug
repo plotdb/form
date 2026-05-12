@@ -2,7 +2,14 @@ extends /base.pug
 block head
   style(type="text/css"): include:stylus index.styl
 block body
-  .w-1024.rwd.mx-auto.my-5
+  template.choice-cover
+    .ldcv: .base: .inner.p-4.text-center
+      h5.mb-3 請選擇表單類型
+      .d-flex.justify-content-center.g-3
+        button.btn.btn-outline-secondary(data-ldcv-set="simple") 一般範例
+        button.btn.btn-primary(data-ldcv-set="award") 數位內容創新獎
+
+  .w-1024.rwd.mx-auto.my-5.pb-5
     div(ld-each="widget")
     div(ld="form")
 
