@@ -344,7 +344,7 @@ form.opset.default = [
       to-key = (item) -> if typeof item == \string => item else item.key or item.value or ''
       if !v => return {list: [], other: {}}
       if typeof v == \string => return {list: (if v => [v] else []), other: {}}
-      list = (v.list or []).filter(->it).map to-key
+      list = (v.list or v or []).filter(->it).map to-key
       {list, other: v.other or {}}
     ops:
       is:
