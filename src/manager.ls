@@ -246,3 +246,23 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
       ret ++= mgrs
     if @disabled! => ret.map -> it.disable!
     return ret
+
+  # resolve(path): traverse path and return matching widget(s).
+  # returns Array<widget>. supports fan-out for container widgets (e.g. nest in list mode).
+  resolve: (path) ->
+    if !path or !path.length => return []
+    [head, ...tail] = path
+    w = @_ws.w[head]
+    if !w => return []
+    if !tail.length => return [w]
+    w.resolve tail
+
+  # paths(path): return available next-segment options after the given path prefix.
+  # returns Array<{id, name}>, for use in form builder UI autocomplete.
+  paths: (path) ->
+    if !path or !path.length =>
+      return [{id: k, name: (v._meta.title or k)} for k, v of @_ws.w]
+    [head, ...tail] = path
+    w = @_ws.w[head]
+    if !w => return []
+    w.paths tail

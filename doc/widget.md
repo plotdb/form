@@ -89,6 +89,16 @@
    - setting mode triggers validation. return a Promise which resolves when validation completes.
    - set widget mode to `v`, return current mode if `v` is omitted.
    - check constructor options for possible values of mode.
+ - `resolve(path)`: traverse the remaining path starting from inside this widget and return all matching widgets.
+   - `path`: an array of segment strings representing the remaining path after this widget has been reached.
+   - returns `Array<form.widget>`. container widgets (e.g. nest) should fan-out across their entries and delegate to their sub-managers.
+   - non-container widgets return `[]` by default.
+   - this is called by `manager.resolve` after the first segment is consumed; widget is responsible for handling the rest.
+ - `paths(path)`: return available next-segment options inside this widget for the given path prefix. used by form builder UI.
+   - `path`: an array of segment strings representing the remaining path prefix.
+   - returns `Array<{id, name}>` listing the selectable next segments within this widget.
+   - non-container widgets return `[]` by default.
+   - container widgets should return available child segments based on their schema, independent of current runtime data.
  - `manager(opt)`: return form manager(s) used by this widget.
    - return value: a list of form managers (an empty array is returned if no such manager available)
    - option:

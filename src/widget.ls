@@ -200,3 +200,6 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
 
   ctrl: (...args) ->
     if @mod and @mod.ctrl => return @mod.ctrl.apply @, args
+
+  resolve: (path) -> if @mod and @mod.resolve => @mod.resolve.apply(@, [path]) else []
+  paths: (path) -> if @mod and @mod.paths => @mod.paths.apply(@, [path]) else []

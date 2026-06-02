@@ -109,6 +109,17 @@ Instance API:
  - `disable(opt)`: disable / enable this manager.
    - opt: true to disable, false to enable. will be true by default if omitted.
  - `condition()`: get `condctrl` object of this manager.
+ - `resolve(path)`: traverse a path and return all matching widgets. used by `conditor` at runtime.
+   - `path`: an array of segment strings, e.g. `["member", "email"]`.
+   - returns `Array<form.widget>`. may return multiple widgets when a container widget fans out (e.g. a nest in list mode returns one widget per entry).
+   - only dispatches the first segment; delegates the rest to the matched widget's `resolve`.
+   - returns `[]` if any segment is not found.
+ - `paths(path)`: return available next-segment options after the given path prefix. used by form builder UI for autocomplete / breadcrumb pickers.
+   - `path`: an array of segment strings representing a path prefix.
+   - returns `Array<{id, name}>` listing the selectable next segments.
+   - when `path` is empty, returns all top-level widgets managed by this manager.
+   - delegates deeper segments to the matched widget's `paths`.
+   - returns `[]` if the prefix cannot be resolved.
 
 
 ## Events
