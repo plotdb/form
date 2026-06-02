@@ -9,7 +9,7 @@ module.exports =
     ]
 
     fields =
-      \work-title :
+      "work-title":
         type: \@makeform/input
         meta:
           title: "作品名稱"
@@ -28,6 +28,39 @@ module.exports =
           config:
             values: <[數位影音 互動體驗 數位出版 行動應用 其他]>
             layout: \inline
+      "video-category":
+        type: \@makeform/checkbox
+        meta:
+          title: "影音類別"
+          is-required: true
+          disabled: true
+          desc: "請選擇影片所屬子類別（可複選）"
+          config:
+            values: <[劇情片 紀錄片 動畫 實驗影像 音樂錄影帶]>
+            layout: \inline
+      duration:
+        type: \@makeform/input
+        meta:
+          title: "片長"
+          is-required: true
+          disabled: true
+          config:
+            placeholder: "例：90"
+            unit: "分鐘"
+      series:
+        type: \@makeform/radio
+        meta:
+          title: "分集"
+          is-required: true
+          disabled: true
+          config: values: <[是 否]>
+      episodes:
+        type: \@makeform/input
+        meta:
+          title: "集數"
+          is-required: true
+          disabled: true
+          config: placeholder: "例：12"
       brief:
         type: \@makeform/textarea
         meta:
@@ -86,4 +119,47 @@ module.exports =
           config:
             value: "本人已詳閱並同意「數位內容創新獎」參賽規則，確認所提交之作品為原創，且未侵犯任何第三方之智慧財產權，並授權主辦單位於活動推廣使用。"
 
-    pubsub.fire \@makeform/nest:init, {mode: \object, view: {}, fields, conditions}
+    pubsub.fire \@makeform/nest:init,
+      mode: \object
+      view: {}
+      fields: fields
+      conditions: conditions
+      init: ->
+        mgr = @manager!0
+        conditor = new form.conditor manager: mgr
+        conditor.init [
+          * id: \is-video
+            when:
+              src: \category
+              term: [{opset: \choice, op: \is, config: {val: \數位影音}}]
+            effect:
+              targets: [\video-category, \duration, \series]
+              enabled: true
+          * when:
+              logic: \and
+              cond:
+                * src: \video-category
+                  term: [{opset: \choice, op: \is-any, config: {vals: "劇情片,動畫"}}]
+                * src: \duration
+                  term: [{opset: \number, op: \gte, config: {val: 121}}]
+            effect:
+              targets: [\series]
+              readonly: true
+              value: \是
+          * when:
+              logic: \or
+              cond:
+                * logic: \and
+                  cond:
+                    * src: \video-category
+                      term: [{opset: \choice, op: \is-any, config: {vals: "劇情片,動畫"}}]
+                    * src: \duration
+                      term: [{opset: \number, op: \gte, config: {val: 121}}]
+                * id: \is-series
+                  src: \series
+                  term: [{opset: \choice, op: \is, config: {val: \是}}]
+            effect:
+              targets: [\episodes]
+              enabled: true
+        ]
+        conditor.run!
