@@ -4,6 +4,8 @@
 
  - fix typo in image opset
  - tweak file opset: update i18n and add min-size in size-limit op
+ - add `paths` and `resolve` api
+ - add experimental conditor module
 
 
 ## v0.1.3
