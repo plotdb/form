@@ -1,0 +1,59 @@
+extends /base.pug
+block head
+  style(type="text/css"): include:stylus index.styl
+  +css([
+    {name: "ldiconfont"}
+  ])
+block body
+  mixin field
+    .d-flex.g-2
+      .rounded-lg.border.p-2.d-flex.g-2.align-items-center(style="width:350px")
+        each i in [1,2,3,4].slice(0, Math.ceil(Math.random() * 3) + 1)
+          select.form-control.form-control-sm(style="border-width:0 0 1px 0")
+
+  .w-1024.rwd.mx-auto.d-flex.g-4.flex-column
+    .rounded.shadow-sm(ld-each="condition",style="border-left:4px solid #444")
+      .d-flex.g-4.align-items-center.p-3.border-bottom.bg-light
+        .text-nowrap 規則 #1
+        input.form-control(placeholder="規則名稱")
+        input.form-control(placeholder="規則ID")
+        .btn.btn-light.text-danger: i.i-trashcan
+      .p-4
+        .d-flex.flex-column.g-4
+          div
+            div 當此欄位
+            +field
+          div
+            div 符合下列條件
+            .d-flex.g-2.flex-column.align-items-start
+              each i in [1,2,3]
+                .d-flex.g-2
+                  select.form-control(style="width:100px",value="123")
+                  select.form-control(style="width:100px",value="123")
+                  div: input.form-control
+              .btn.btn-outline-secondary: i.i-plus
+
+      .p-4
+        .d-flex.g-4
+          div
+            div 則對這些欄位：
+            .d-flex.g-2.flex-column.align-items-start
+              each i in [1,2,3]
+                +field
+              .btn.btn-outline-secondary: i.i-plus
+          div
+            div 設定為
+            .d-flex.g-4
+              .d-flex.g-2.align-items-center #[span 必填] #[.switch]
+              .d-flex.g-2.align-items-center #[span 唯讀] #[.switch]
+              .d-flex.g-2.align-items-center #[span 啟用] #[.switch]
+              .d-flex.g-2.align-items-center
+                span.text-nowrap 數值指定為
+                input.form-control.form-control-sm
+
+
+
+
+
+block script
+  script(type="module"): include:lsc index.ls

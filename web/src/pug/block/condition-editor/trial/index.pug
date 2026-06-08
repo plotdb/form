@@ -1,0 +1,11 @@
+.ldcv.auto-gap.scroll
+  style(type="text/css"): include:stylus index.styl
+  script(type="@plotdb/block"): include:lsc index.ls
+  .base.rwd.w-1024: .inner.p-4
+    h5.mb-3 條件編輯器
+    .ce-condition-list
+    .d-flex.justify-content-between.align-items-center.mt-3
+      button.btn.btn-outline-secondary(ld="add-condition") + 新增條件
+      .d-flex.g-2
+        button.btn.btn-outline-secondary(ld="cancel") 取消
+        button.btn.btn-primary(ld="ok") 完成

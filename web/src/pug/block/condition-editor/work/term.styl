@@ -1,0 +1,26 @@
+#test
+  position: relative
+  background: #f5f6f7
+  border-top: 1px solid #ddd
+#test:before
+  display: block
+  content: " "
+  position: absolute
+  transform: translate(11em, -50%) rotate(45deg)
+  border-width: 1px 0 0 1px
+  border-style: solid
+  border-color: #ddd
+  top: 0
+  left: 0
+  width: 2em
+  height: 2em
+  background: #f5f6f7
+
+.form-merge
+  .flex-grow-1:not(:last-child) .form-control
+    border-top-right-radius: 0
+    border-bottom-right-radius: 0
+    border-right: 0
+  .flex-grow-1:not(:first-child) .form-control
+    border-top-left-radius: 0
+    border-bottom-left-radius: 0

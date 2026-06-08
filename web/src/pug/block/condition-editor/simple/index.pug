@@ -1,0 +1,41 @@
+extends /base.pug
+block head
+  style(type="text/css"): include:stylus index.styl
+  +css([
+    {name: "ldiconfont"}
+  ])
+block body
+  mixin field
+    .d-flex.g-2
+      .rounded-lg.border.px-2.py-1.d-flex.g-2.align-items-center(style="width:350px")
+        each i in [1,2,3,4].slice(0, Math.ceil(Math.random() * 3) + 1)
+          select.form-control.form-control-sm(style="border-width:0 0 1px 0;height:25px")
+
+  .w-1024.rwd.mx-auto.my-4
+    .border.rounded.shadow-sm(style="border-left:6px solid #222!important")
+      .d-flex.justify-content-between.bg-light.p-2
+        .btn 規則 #1
+        .btn.btn-link: i.i-trashcan.text-danger
+      .d-flex.g-3.p-2
+        div
+          div 當這個欄位
+          +field
+        div
+          div 等於
+          input.form-control(value="創作組")
+        div
+          div &nbsp;
+          .btn 的時候
+      .p-2.d-flex.g-3
+        div
+          div 把這些欄位
+          .d-flex.flex-column.g-2: +field
+        div
+          div 設定為
+          .d-flex.g-2.py-2
+            .d-flex.g-2.align-items-center #[span 必填] #[.switch]
+            .d-flex.g-2.align-items-center #[span 唯讀] #[.switch]
+            .d-flex.g-2.align-items-center #[span 啟用] #[.switch]
+
+block script
+  script(type="module"): include:lsc index.ls

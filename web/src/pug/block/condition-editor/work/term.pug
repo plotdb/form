@@ -1,0 +1,45 @@
+extends /base.pug
+block head
+  style(type="text/css"): include:stylus term.styl
+block body
+  .w-1024.rwd.mx-auto.my-5: .d-flex.flex-column.g-4
+    .d-flex.flex-column.border.rounded.shadow
+      .d-flex.g-4.p-4
+        .d-flex
+          div(style="width:100px")
+            div 規則集
+            select.form-control(style="border-top-right-radius:0;border-bottom-right-radius:0")
+          div(style="width:100px")
+            div 規則
+            select.form-control(style="border-top-left-radius:0;border-bottom-left-radius:0;border-left:0")
+        //- msg
+        .flex-grow-1
+          div 驗證失敗時顯示此訊息
+          input.form-control
+      .p-4#test
+        .d-flex.g-4
+          each i in [1,2,3,4]
+            .flex-grow-1
+              div 計算方式
+              input.form-control
+
+    .d-flex.flex-column.border.rounded.shadow
+      .d-flex.g-4.p-4
+        .d-flex
+          div(style="width:100px")
+            div 規則集
+            select.form-control(style="border-top-right-radius:0;border-bottom-right-radius:0")
+          div(style="width:100px")
+            div 規則
+            select.form-control(style="border-top-left-radius:0;border-bottom-left-radius:0;border-left:0")
+        .d-flex.g-0.form-merge
+          each i in [1,2]
+            .flex-grow-1
+              div 計算方式
+              input.form-control
+        .flex-grow-1
+          div 驗證失敗時顯示此訊息
+          input.form-control
+
+block script
+  script(type="module"): include:lsc term.ls

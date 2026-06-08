@@ -6,6 +6,7 @@ mgr = new block.manager registry: ({ns, name, version, path, type}) ->
   if type == \block =>
     return if ns == \local => "/block/#name/index.html"
     else if name == \@makeform/nest => "/assets/lib/@makeform/nest/main/index.html"
+    else if name == \@makeform/common => "/assets/lib/@makeform/common/main/#{path or 'index.html'}"
     else "https://cdn.jsdelivr.net/npm/#name@latest/index.html"
   return "/assets/lib/#name/#{version or 'main'}/#{path or \index.min.js}"
 
@@ -31,6 +32,13 @@ if !custom-formmgr =>
   sample-value = sample-value["_"]["object"]
   fields = {}
 
+cond-editor-itf = null
+saved-conditions = []
+active-conditor = null
+
+mgr.from {ns: \local, name: \condition-editor}, {root: document.querySelector('.condition-editor-mount'), data: {}} .then (ret) ->
+  cond-editor-itf := ret.interface
+
 view = new ldview do
   init-render: false
   root: document.body
@@ -38,6 +46,16 @@ view = new ldview do
     validate: -> formctl.check force: true .now!then -> view.render!
     dump: -> console.log formctl.formmgr!value!
     order: -> console.log formctl.formmgr!order!
+    "edit-conditions": ->
+      if !cond-editor-itf => return
+      cond-editor-itf.get {manager: formmgr, conditions: JSON.parse JSON.stringify saved-conditions}
+        .then (result) ->
+          if !result => return
+          saved-conditions := result
+          if active-conditor => active-conditor._.manager.off \change, active-conditor._on-change
+          active-conditor := new form.conditor manager: formmgr
+          active-conditor.init saved-conditions
+          active-conditor.run!
   handler:
     "progress-bar": ({node}) ->
       stat = formmgr.progress!
