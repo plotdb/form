@@ -7,9 +7,15 @@
  - add `paths` and `resolve` api
  - add experimental conditor module
  - upgrade dependencies
- - support `export` api
- - support lazy get of widget value when validating to improve performance
+ - fix bug: child isn't reinitialized in manager.order api
+ - support export api in manager and widget
  - support `mod.value` api
+ - explicitly define the purpose of fromSource option in value api
+ - widget.validate: lazy get of widget content to improve performance
+ - widget.value: equality check in widget.validate use internal value.
+ - add form.value.toString api for convert generic widget value to string
+ - add additional utils api for merging exported json
+
 
 
 ## v0.1.3
