@@ -227,6 +227,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
         if ms.length =>
           child = {}
           ms.map (m) -> _ m, child
+        else child = null
         opt = {idx: 0}
         node-idx document.body, v._root, opt
         obj[k] =
@@ -236,6 +237,26 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
           meta: v.serialize!
     _ @, obj = {}
     return obj
+
+  export: ->
+    node-idx = (r, n, opt) ->
+      opt.idx++
+      if r == n => return true
+      if !(r and r.childNodes) => return
+      for i from 0 til r.childNodes.length
+        v = node-idx r.childNodes[i], n, opt
+        if v => return true
+      return
+    cols = []
+    for k,v of @_ws.w =>
+      opt = {idx: 0}
+      node-idx document.body, v._root, opt
+      dom-idx = opt.idx
+      cols ++= v.export!map (col) ->
+        col.sort-key = [dom-idx] ++ col.sort-key
+        col.uid      = if col.uid => "#{k}|#{col.uid}" else k
+        col
+    cols.sort (a, b) -> form.utils.lex-compare a.sort-key, b.sort-key
 
   manager: (opt) ->
     ret = []

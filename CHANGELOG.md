@@ -1,12 +1,15 @@
 # Change Logs
 
-## v0.1.4 (upcoming)
+## v0.2.0 (upcoming)
 
  - fix typo in image opset
  - tweak file opset: update i18n and add min-size in size-limit op
  - add `paths` and `resolve` api
  - add experimental conditor module
  - upgrade dependencies
+ - support `export` api
+ - support lazy get of widget value when validating to improve performance
+ - support `mod.value` api
 
 
 ## v0.1.3

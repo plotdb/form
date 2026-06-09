@@ -63,13 +63,11 @@
    - options:
      - `v`: value to set. call `value` without parameters to get its value.
      - `opt`: additional options, including:
-       - `fromSource`: (TBD) this option may cause some issue. definition and implementation are contradicted
-         - in this doc it's defined as `called from source, should fire change event.`
-           however, in the code it prevent from firing `change` event.
-           originally it should be designed to suppress change event,
-           however nest block relys on `change` event to update its internal formmgr.
-           that is, before we find use cases of suppressing change event, we should not use it.
-         - for now, only `@makeform/table` and `widget.deserialize` use it.
+       - `fromSource`:
+         - when true, it means value is set by the caller who can take care of value update manually
+           and thus it shouldn't fire change event.
+           thus this suppress change event when true.
+         - (REF) for now, `@makeform/table`, `widget.deserialize` and `@makeform/nest` use it.
        - `init`: this is for initialization. won't trigger status change ( leave it as `1` )
  - `content(v)`: get content from this widget.
    - get content from v if v is provided, otherwise from `value()`
@@ -189,6 +187,10 @@ mod is a set of functions that can be provided to `widget` for advanced function
  - `isEmpty(v)`: provide `isEmpty` check above basic check against undefined or '' values.
    - if omitted, by default a value is empty if a value is undefined or is an empty string ( '' ).
  - `isEqual(u,v)`: compare `u`, `v` and only return true if `u` and `v` are equivalent.
+ - `value(v)`: optional. update value.
+   - called after widget internal value is updated, before validating.
+     for widgets that manages internal value separately and have to update sub widgets asynchronously
+   - should return promise which resolves when value is properly set.
  - `validate(opt)`: optional. content valiadator.
    - see `validate` in API for detail explanation of `opt`.
    - when provided, it should also update status manually with `status()`

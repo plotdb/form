@@ -82,6 +82,8 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
 
   # NOTE: in order to perform synchronous data analysis, value update here must be done synchrnously.
   # however, it still returns a Promise which resolve after validation is done.
+  # yet synchronous value update wno't be possible if nested widget must wait before subwidgets initialized,
+  # which happens in mod.value. TODO consider to define this in a consistent way.
   value: (v, opt = {}) ->
     if arguments.length == 0 =>
       # internal value should be kept as a new, standalone object
@@ -89,11 +91,20 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
       return if @_value? => JSON.parse(JSON.stringify @_value) else @_value
     # dont update value if these values are exactly the same
     if @is-equal(v, @_value) => return Promise.resolve!
-    _v = if v? => JSON.parse(JSON.stringify(v)) else v
+    _v = if v? => JSON.parse(_vs = JSON.stringify(v)) else v
     @ <<< _value: _v, _empty: @is-empty(_v)
+    # for nested widget ( or any widgets that manipulate values )
+    # they might want to be notified once value is updated, even before validation
+    # also, they may want to block value / validation until their internal jobs are done.
+    p = if @mod and @mod.value =>
+      # clone is required, otherwise `is-equal` test above would pass
+      # even if there should be difference (due to writing to the same object)
+      # and thus validation and events won't be triggered.
+      Promise.resolve(@mod.value.call @, JSON.parse _vs)
+    else Promise.resolve!
+    <~ p.then _
     @validate opt{init} .then ~>
-      # NOTE: definition of from-source is contradicted in doc and here.
-      # before we clarify its purpose, don't use it. also, check doc for more information.
+      # from-source = true: value is set from source, aka we dont need a change event.
       if opt.from-source => return
       @fire \change, (if @_value? => JSON.parse(JSON.stringify @_value) else undefined)
 
@@ -137,11 +148,14 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
     return null
 
   validate: (opt = {}) ->
-    v = @content!
+    lc = v: null, _value: @_value
+    # lazy value get since @content! is expensive
+    get-val = ~> if lc.v => lc.v else lc.v = @content!
     Promise.resolve!
       .then ~>
         if @mod and @mod.validate => return @mod.validate.call @, opt
-        if @_validate => return @_validate v
+        # complex widget tend to have own validate.
+        if @_validate => return @_validate get-val!
       .then (ret = []) ~>
         # status 3 (editing) means validation isn't done yet,
         # perhaps due to untouched internal fields, thus we shouldn't skip further checks for now.
@@ -170,17 +184,23 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
             @render!
             return @_errors = []
         Promise.all(
-          @_meta.term
+          (@_meta?term or [])
             .filter (t) -> t.enabled
-            .map (t) ~> t.validate(v).then (v) ~> [t,v]
+            .map (t) ~> t.validate(get-val!).then (v) ~> [t,v]
         )
-          .then ~>
-            # since term is Promise-based,
+          .then (ret) ~>
+            # Reviews / Tests required
+            # we compare value because since term is Promise-based,
             # validation result may expire if between this a new value has been set.
-            # TODO we may need a better way to check this. before that we simply check if value is different.
-            nv = @content!
-            if !@is-equal nv, v => return
-            @_errors = it.filter(->!it.1).map -> it.0.msg or 'error'
+            # not sure if this is still required,
+            # since custom validation above returns early anyway,
+            # also we would always validate if there is changes anyway.
+            # also, skip validation is expensive so we only do it if there is any term.
+            # check term only since custom validation above return early anyway.
+            if @_meta?term?length and (lc._value != @_value) => return
+            # the old approach, even slower (due to content call to huge nested widget)
+            #  if !@is-equal (nv = @content!), lc.v => return
+            @_errors = ret.filter(->!it.1).map -> it.0.msg or 'error'
             @status if @_errors.length => 2 else 0
             @render!
           .then ~> @_errors
@@ -203,3 +223,7 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
 
   resolve: (path) -> if @mod and @mod.resolve => @mod.resolve.apply(@, [path]) else []
   paths: (path) -> if @mod and @mod.paths => @mod.paths.apply(@, [path]) else []
+
+  export: ->
+    if @mod and @mod.export => return @mod.export.apply @
+    [{uid: "", header: (@_meta.title or ""), sort-key: [], value: form.value.toString(@value!)}]

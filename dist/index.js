@@ -2,6 +2,112 @@
 (function(){
   var form, ref$, wordLen, countOps, slice$ = [].slice;
   form = {};
+  form.value = {
+    toString: function(v){
+      var list2str, parts;
+      list2str = function(list){
+        if (list[0] && list[0].key != null && list[0].value != null) {
+          return list.map(function(it){
+            return form.value.toString(it.value);
+          }).join(' / ');
+        } else {
+          return list.map(function(it){
+            return form.value.toString(it);
+          }).join(' / ');
+        }
+      };
+      if (typeof v === 'string') {
+        return v;
+      } else if (v == null) {
+        return '';
+      } else if (Array.isArray(v)) {
+        return list2str(v);
+      } else if (v.filename) {
+        return v.filename;
+      } else if (v.key != null && v.value != null) {
+        return form.value.toString(v.value);
+      } else if (v.list && v.other) {
+        parts = (v.list || []).map(function(it){
+          return form.value.toString(it);
+        });
+        if (v.other.enabled && v.other.text) {
+          parts = parts.concat([v.other.text]);
+        }
+        return parts.join(' / ');
+      } else if (v.list && Array.isArray(v.list)) {
+        return list2str(v.list);
+      } else if (v.v != null) {
+        return form.value.toString(v.v);
+      } else {
+        return JSON.stringify(v);
+      }
+    }
+  };
+  form.utils = {
+    lexCompare: function(a, b){
+      var i$, to$, i;
+      for (i$ = 0, to$ = Math.max(a.length, b.length); i$ < to$; ++i$) {
+        i = i$;
+        if (a[i] == null && b[i] != null) {
+          return -1;
+        }
+        if (a[i] != null && b[i] == null) {
+          return 1;
+        }
+        if (a[i] == null && b[i] == null) {
+          return 0;
+        }
+        if (a[i] !== b[i]) {
+          return a[i] - b[i];
+        }
+      }
+      return 0;
+    },
+    mergeExports: function(records){
+      var uidMap, headers, k, v, rows;
+      uidMap = {};
+      records.map(function(cols){
+        return cols.map(function(col){
+          if (!uidMap[col.uid]) {
+            return uidMap[col.uid] = {
+              uid: col.uid,
+              header: col.header,
+              sortKey: col.sortKey
+            };
+          }
+        });
+      });
+      headers = (function(){
+        var ref$, results$ = [];
+        for (k in ref$ = uidMap) {
+          v = ref$[k];
+          results$.push({
+            k: k,
+            v: v
+          });
+        }
+        return results$;
+      }()).sort(function(a, b){
+        return form.utils.lexCompare(a.v.sortKey, b.v.sortKey);
+      });
+      rows = records.map(function(cols){
+        var valMap;
+        valMap = {};
+        cols.map(function(it){
+          return valMap[it.uid] = it.value;
+        });
+        return headers.map(function(it){
+          return valMap[it.k] || '';
+        });
+      });
+      return {
+        headers: headers.map(function(it){
+          return it.v.header;
+        }),
+        rows: rows
+      };
+    }
+  };
   form.condctrl = function(opt){
     var ref$, this$ = this;
     opt == null && (opt = {});
@@ -904,6 +1010,8 @@
           if (ms.length) {
             child = {};
             ms.map(fn$);
+          } else {
+            child = null;
           }
           opt = {
             idx: 0
@@ -923,6 +1031,44 @@
       };
       _(this, obj = {});
       return obj;
+    },
+    'export': function(){
+      var nodeIdx, cols, k, ref$, v, opt, domIdx;
+      nodeIdx = function(r, n, opt){
+        var i$, to$, i, v;
+        opt.idx++;
+        if (r === n) {
+          return true;
+        }
+        if (!(r && r.childNodes)) {
+          return;
+        }
+        for (i$ = 0, to$ = r.childNodes.length; i$ < to$; ++i$) {
+          i = i$;
+          v = nodeIdx(r.childNodes[i], n, opt);
+          if (v) {
+            return true;
+          }
+        }
+      };
+      cols = [];
+      for (k in ref$ = this._ws.w) {
+        v = ref$[k];
+        opt = {
+          idx: 0
+        };
+        nodeIdx(document.body, v._root, opt);
+        domIdx = opt.idx;
+        cols = cols.concat(v['export']().map(fn$));
+      }
+      return cols.sort(function(a, b){
+        return form.utils.lexCompare(a.sortKey, b.sortKey);
+      });
+      function fn$(col){
+        col.sortKey = [domIdx].concat(col.sortKey);
+        col.uid = col.uid ? k + "|" + col.uid : k;
+        return col;
+      }
     },
     manager: function(opt){
       var ret, k, ref$, s, w, mgrs;
@@ -2127,7 +2273,7 @@
       return this._errors;
     },
     value: function(v, opt){
-      var _v, this$ = this;
+      var _v, _vs, p, this$ = this;
       opt == null && (opt = {});
       if (arguments.length === 0) {
         return this._value != null
@@ -2137,16 +2283,21 @@
       if (this.isEqual(v, this._value)) {
         return Promise.resolve();
       }
-      _v = v != null ? JSON.parse(JSON.stringify(v)) : v;
+      _v = v != null ? JSON.parse(_vs = JSON.stringify(v)) : v;
       this._value = _v;
       this._empty = this.isEmpty(_v);
-      return this.validate({
-        init: opt.init
-      }).then(function(){
-        if (opt.fromSource) {
-          return;
-        }
-        return this$.fire('change', this$._value != null ? JSON.parse(JSON.stringify(this$._value)) : undefined);
+      p = this.mod && this.mod.value
+        ? Promise.resolve(this.mod.value.call(this, JSON.parse(_vs)))
+        : Promise.resolve();
+      return p.then(function(){
+        return this$.validate({
+          init: opt.init
+        }).then(function(){
+          if (opt.fromSource) {
+            return;
+          }
+          return this$.fire('change', this$._value != null ? JSON.parse(JSON.stringify(this$._value)) : undefined);
+        });
       });
     },
     disabled: function(){
@@ -2217,17 +2368,28 @@
       return null;
     },
     validate: function(opt){
-      var v, this$ = this;
+      var lc, getVal, this$ = this;
       opt == null && (opt = {});
-      v = this.content();
+      lc = {
+        v: null,
+        _value: this._value
+      };
+      getVal = function(){
+        if (lc.v) {
+          return lc.v;
+        } else {
+          return lc.v = this$.content();
+        }
+      };
       return Promise.resolve().then(function(){
         if (this$.mod && this$.mod.validate) {
           return this$.mod.validate.call(this$, opt);
         }
         if (this$._validate) {
-          return this$._validate(v);
+          return this$._validate(getVal());
         }
       }).then(function(ret){
+        var ref$;
         ret == null && (ret = []);
         if (ret.status === 3) {
           this$._errors = ret.errors || [];
@@ -2253,19 +2415,18 @@
             return this$._errors = [];
           }
         }
-        return Promise.all(this$._meta.term.filter(function(t){
+        return Promise.all((((ref$ = this$._meta) != null ? ref$.term : void 8) || []).filter(function(t){
           return t.enabled;
         }).map(function(t){
-          return t.validate(v).then(function(v){
+          return t.validate(getVal()).then(function(v){
             return [t, v];
           });
-        })).then(function(it){
-          var nv;
-          nv = this$.content();
-          if (!this$.isEqual(nv, v)) {
+        })).then(function(ret){
+          var ref$, ref1$;
+          if (((ref$ = this$._meta) != null && ((ref1$ = ref$.term) != null && ref1$.length)) && lc._value !== this$._value) {
             return;
           }
-          this$._errors = it.filter(function(it){
+          this$._errors = ret.filter(function(it){
             return !it[1];
           }).map(function(it){
             return it[0].msg || 'error';
@@ -2340,6 +2501,17 @@
       } else {
         return [];
       }
+    },
+    'export': function(){
+      if (this.mod && this.mod['export']) {
+        return this.mod['export'].apply(this);
+      }
+      return [{
+        uid: "",
+        header: this._meta.title || "",
+        sortKey: [],
+        value: form.value.toString(this.value())
+      }];
     }
   });
   if (typeof module != 'undefined' && module !== null) {
