@@ -73,6 +73,15 @@ Instance API:
    - `total`: total number of widgets
    - `done`: how many widgets has to be filled
    - `percent`: `done/total`. 1 when this form completes.
+ - `invalid-widgets()`: return all currently invalid (status=2) widgets using the same traversal as `progress()`.
+   - Intended for rebuilding an invalid widget list without triggering a force-validate.
+   - Returns an array of `{widget, path, status}` objects.
+   - Traversal rules (consistent with `progress()`):
+     - Disabled widgets are excluded.
+     - For container widgets (those with sub-managers, e.g. nest):
+       - Recurses into sub-managers to collect invalid leaf widgets.
+       - Also includes the container itself if it has its own non-child errors (i.e. errors other than `["nested"]`), e.g. a list-mode term validating item count.
+     - For leaf widgets: included if `status == 2`, unless error is exactly `["nested"]`.
  - `mode(v)`: set current mode.
    - setting mode triggers validation. return Promise, resolved when validation completes.
    - set widget mode to `v`, return current mode if `v` is omitted.

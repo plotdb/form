@@ -99,6 +99,28 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     ret.percent = if !ret.total => 1 else (ret.done / ( ret.total or 1))
     return ret
 
+  # returns all currently invalid (status=2) non-disabled leaf widgets,
+  # using the same traversal logic as progress! so container/leaf hierarchy is handled correctly.
+  # intended for rebuilding invalid lists without a force-validate.
+  invalid-widgets: ->
+    ret = []
+    list = [{k,s} for k,s of @_ws.s].filter ~>
+      @_ws.w[it.k] and @_ws.w[it.k]._meta and !@_ws.w[it.k]._meta.disabled
+    list.for-each (o) ~>
+      w = @_ws.w[o.k]
+      if (ms = w.manager!).length =>
+        ms.filter(->!it.disabled!).for-each (m) ->
+          ret ++= m.invalid-widgets!
+        # also capture container's own errors beyond child propagation (e.g. list-mode terms)
+        e = w.errors!
+        if o.s? and o.s == 2 and !(e.length == 1 and e.0 == \nested) =>
+          ret.push {widget: w, path: o.k, status: 2}
+        return
+      e = w.errors!
+      if e.length == 1 and e.0 == \nested => return
+      if o.s? and o.s == 2 => ret.push {widget: w, path: o.k, status: 2}
+    ret
+
   _restatus: ->
     os = @_status
     delete @_status
