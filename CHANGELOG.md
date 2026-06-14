@@ -1,5 +1,12 @@
 # Change Logs
 
+## v0.2.1
+
+ - add `invalidWidgets` api to recursively list all current invalid widgets
+ - upgrade dependencies
+ - use `@plotdb/quill` to replace `quill`
+
+
 ## v0.2.0
 
  - fix typo in image opset

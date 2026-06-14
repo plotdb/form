@@ -763,6 +763,55 @@
         : ret.done / (ret.total || 1);
       return ret;
     },
+    invalidWidgets: function(){
+      var ret, list, k, s, this$ = this;
+      ret = [];
+      list = (function(){
+        var ref$, results$ = [];
+        for (k in ref$ = this._ws.s) {
+          s = ref$[k];
+          results$.push({
+            k: k,
+            s: s
+          });
+        }
+        return results$;
+      }.call(this)).filter(function(it){
+        return this$._ws.w[it.k] && this$._ws.w[it.k]._meta && !this$._ws.w[it.k]._meta.disabled;
+      });
+      list.forEach(function(o){
+        var w, ms, e;
+        w = this$._ws.w[o.k];
+        if ((ms = w.manager()).length) {
+          ms.filter(function(it){
+            return !it.disabled();
+          }).forEach(function(m){
+            return ret = ret.concat(m.invalidWidgets());
+          });
+          e = w.errors();
+          if (o.s != null && o.s === 2 && !(e.length === 1 && e[0] === 'nested')) {
+            ret.push({
+              widget: w,
+              path: o.k,
+              status: 2
+            });
+          }
+          return;
+        }
+        e = w.errors();
+        if (e.length === 1 && e[0] === 'nested') {
+          return;
+        }
+        if (o.s != null && o.s === 2) {
+          return ret.push({
+            widget: w,
+            path: o.k,
+            status: 2
+          });
+        }
+      });
+      return ret;
+    },
     _restatus: function(){
       var os, ret, k, v, this$ = this;
       os = this._status;
