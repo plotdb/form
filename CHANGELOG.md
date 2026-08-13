@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.2.2
+
+ - fix bug: widget.value throws SyntaxError when clearing value (null/undefined) on widgets with `mod.value`
+
+
 ## v0.2.1
 
  - add `invalidWidgets` api to recursively list all current invalid widgets

@@ -2336,7 +2336,7 @@
       this._value = _v;
       this._empty = this.isEmpty(_v);
       p = this.mod && this.mod.value
-        ? Promise.resolve(this.mod.value.call(this, JSON.parse(_vs)))
+        ? Promise.resolve(this.mod.value.call(this, _vs != null ? JSON.parse(_vs) : _v))
         : Promise.resolve();
       return p.then(function(){
         return this$.validate({
