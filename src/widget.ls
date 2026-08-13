@@ -100,7 +100,7 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
       # clone is required, otherwise `is-equal` test above would pass
       # even if there should be difference (due to writing to the same object)
       # and thus validation and events won't be triggered.
-      Promise.resolve(@mod.value.call @, JSON.parse _vs)
+      Promise.resolve(@mod.value.call @, (if _vs? => JSON.parse _vs else _v))
     else Promise.resolve!
     <~ p.then _
     @validate opt{init} .then ~>

@@ -3,7 +3,7 @@
   "name": "@plotdb/form",
   "license": "MIT",
   "description": "form blocks",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "browser": "dist/index.min.js",
   "main": "dist/index.min.js",
   "files": [
@@ -37,7 +37,7 @@
     "bootstrap": "^4.6.1",
     "bootstrap.native": "^3.0.13",
     "dayjs": "^1.11.20",
-    "fedep": "^1.7.3",
+    "fedep": "^1.7.6",
     "i18next": "^19.9.2",
     "imgtype": "^0.0.3",
     "ldcover": "^3.5.6",
