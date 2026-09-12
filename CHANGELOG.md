@@ -1,6 +1,6 @@
 # Change Logs
 
-## v0.2.3 (upcoming)
+## v0.2.3
 
  - fix bug: size-limit ops function returns incorrect result
  - size-limit ops: use `max` with `size`/`val` as fallback for backward compatibility
