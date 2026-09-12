@@ -1470,13 +1470,19 @@
       ops: import$({
         "size-limit": {
           func: function(v, c){
+            var max;
             c == null && (c = {});
+            max = c.max != null
+              ? c.max
+              : c.size != null
+                ? c.size
+                : c.val;
             return !v.filter(function(it){
-              return it.size > c.val && (!it.min || it.min < c.val);
+              return (max != null && it.size > max) || (c.min != null && it.size < c.min);
             }).length;
           },
           config: {
-            size: {
+            max: {
               type: 'number',
               name: 'max-size'
             },

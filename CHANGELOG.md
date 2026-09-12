@@ -1,5 +1,11 @@
 # Change Logs
 
+## v0.2.3
+
+ - fix bug: size-limit ops function returns incorrect result
+ - size-limit ops: use `max` with `size`/`val` as fallback for backward compatibility
+
+
 ## v0.2.2
 
  - fix bug: widget.value throws SyntaxError when clearing value (null/undefined) on widgets with `mod.value`
