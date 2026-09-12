@@ -127,9 +127,13 @@ form.opset.default = [
     convert: (v) -> (if Array.isArray(v) => v else [v]).filter -> it
     ops: {
       "size-limit":
-        func: (v, c = {}) -> !v.filter(-> it.size > c.val and (!it.min or it.min < c.val)).length
+        func: (v, c = {}) ->
+          max = if c.max? => c.max else if c.size? => c.size else c.val
+          !v.filter(-> (max? and it.size > max) or (c.min? and it.size < c.min)).length
         config:
-          size: type: \number, name: \max-size
+          # size, val: legacy value for max-size.
+          # we still check them for backward compatibility but should use max from now.
+          max: type: \number, name: \max-size
           min: type: \number, name: \min-size
       extension:
         func: (v, c = {}) ->
