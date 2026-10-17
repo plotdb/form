@@ -261,21 +261,18 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
     return obj
 
   export: ->
-    node-idx = (r, n, opt) ->
-      opt.idx++
-      if r == n => return true
-      if !(r and r.childNodes) => return
-      for i from 0 til r.childNodes.length
-        v = node-idx r.childNodes[i], n, opt
-        if v => return true
-      return
+    # sort-key: rank in DOM order instead of absolute DOM index, so it's comparable across records.
+    attached = (w) -> w._root and w._root.isConnected
+    ws = [{k, v} for k,v of @_ws.w]
+    ws.sort (a, b) ->
+      [ra, rb] = [attached(a.v), attached(b.v)]
+      if !(ra and rb) => return if ra => -1 else if rb => 1 else 0
+      if a.v._root == b.v._root => return 0
+      if a.v._root.compareDocumentPosition(b.v._root) .&. Node.DOCUMENT_POSITION_FOLLOWING => -1 else 1
     cols = []
-    for k,v of @_ws.w =>
-      opt = {idx: 0}
-      node-idx document.body, v._root, opt
-      dom-idx = opt.idx
+    for {k, v}, rank in ws =>
       cols ++= v.export!map (col) ->
-        col.sort-key = [dom-idx] ++ col.sort-key
+        col.sort-key = [rank] ++ col.sort-key
         col.uid      = if col.uid => "#{k}|#{col.uid}" else k
         col
     cols.sort (a, b) -> form.utils.lex-compare a.sort-key, b.sort-key

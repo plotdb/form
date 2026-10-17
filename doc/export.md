@@ -25,19 +25,21 @@ Fields:
 
 ### Sort Key
 
-Sort keys are hierarchical arrays built by prepending each level's DOM index:
+Sort keys are hierarchical arrays built by prepending each level's rank - the position of a widget among widgets of the same manager, in DOM order:
 
 ```
-root manager widget (dom-idx=2)         → [2]
+root manager widget (rank=2)            → [2]
   nest widget, entry 0
-    sub-widget (dom-idx=0)              → [2, 0, 0]
-    sub-widget (dom-idx=1)              → [2, 0, 1]
+    sub-widget (rank=0)                 → [2, 0, 0]
+    sub-widget (rank=1)                 → [2, 0, 1]
   nest widget, entry 1
-    sub-widget (dom-idx=0)              → [2, 1, 0]
-root manager widget (dom-idx=3)         → [3]
+    sub-widget (rank=0)                 → [2, 1, 0]
+root manager widget (rank=3)            → [3]
 ```
 
 Lexicographic comparison guarantees that fields after a nest always sort after all entries of that nest, regardless of how many entries exist.
+
+Rank, instead of absolute DOM index, is used so that sort keys depend only on form structure: absolute DOM index of a widget shifts with the amount of entries in preceding lists, which makes sort keys from different records incomparable when merging. Widgets not in document are ranked last.
 
 
 ### Export Flow
@@ -72,8 +74,8 @@ The `form.value` namespace is the intended scope for GWV-related utilities, prov
 Returns a flat column array representing the current state of all widgets owned by this manager.
 
 Behaviour:
-- Iterates widgets in DOM order (using the same traversal as `order()`)
-- For each widget, calls `widget.export()` and prepends the widget's DOM index to `sort-key`, and its path key to `uid`
+- Iterates widgets in DOM order
+- For each widget, calls `widget.export()` and prepends the widget's rank to `sort-key`, and its path key to `uid`
 - Does **not** directly recurse into child managers; that is delegated to `widget.export()`
 - Returns columns sorted by `sort-key`
 

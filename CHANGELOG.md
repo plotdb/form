@@ -1,5 +1,11 @@
 # Change Logs
 
+## v0.2.4 (unreleased)
+
+ - fix bug: `manager.export` uses absolute DOM index as sort-key, which shifts with amount of entries in preceding lists
+   and leads to incorrect column order in `merge-exports`. use rank among sibling widgets in DOM order instead.
+
+
 ## v0.2.3
 
  - fix bug: size-limit ops function returns incorrect result
