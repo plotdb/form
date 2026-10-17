@@ -226,7 +226,10 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
 
   export: ->
     if @mod and @mod.export => return @mod.export.apply @
-    [{uid: "", header: (@_meta.title or ""), sort-key: [], value: form.value.toString(@value!)}]
+    # fields in different variants ( e.g., languages ) may share the same title.
+    variant = (@_meta.config or {}).variant
+    header = (@_meta.title or "") + (if variant => "(#variant)" else "")
+    [{uid: "", header, sort-key: [], value: form.value.toString(@value!)}]
 
   # widgets with sub managers must implement `mod.export` to expand them,
   # and so are their sub managers. sub managers may come from an older form without `exportable`.

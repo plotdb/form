@@ -2590,12 +2590,15 @@
       }
     },
     'export': function(){
+      var variant, header;
       if (this.mod && this.mod['export']) {
         return this.mod['export'].apply(this);
       }
+      variant = (this._meta.config || {}).variant;
+      header = (this._meta.title || "") + (variant ? "(" + variant + ")" : "");
       return [{
         uid: "",
-        header: this._meta.title || "",
+        header: header,
         sortKey: [],
         value: form.value.toString(this.value())
       }];

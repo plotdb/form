@@ -90,7 +90,7 @@ Default implementation (fallback for widgets that do not define `mod.export`):
 - Returns a single column using `form.value.toString(widget.value())` as the cell value
 - `uid` is `""` (the manager prepends the widget's own path)
 - `sort-key` is `[]` (the manager prepends the DOM index)
-- `header` is `widget._meta.title`
+- `header` is `widget._meta.title`, followed by `(variant)` if `widget._meta.config.variant` is set
 
 Widgets with child managers (e.g. `@makeform/nest`) **must** implement `mod.export` to expand their sub-fields. Without it, the entire nested GWV is collapsed into a single cell and sub-field ordering is lost.
 
