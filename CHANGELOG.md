@@ -1,5 +1,14 @@
 # Change Logs
 
+## v0.2.4
+
+ - fix bug: `manager.export` uses absolute DOM index as sort-key, which shifts with amount of entries in preceding lists
+   and leads to incorrect column order in `merge-exports`. use rank among sibling widgets in DOM order instead.
+ - add `settle` api in manager and widget for waiting until values are fully applied
+ - add `exportable` api in manager and widget for checking if `export` covers all content
+ - widget.export: append variant to default header, since fields in different variants may share the same title
+
+
 ## v0.2.3
 
  - fix bug: size-limit ops function returns incorrect result
