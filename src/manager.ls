@@ -285,7 +285,7 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
   manager: (opt) ->
     ret = []
     for k,s of @_ws.s =>
-      if !(@_ws.w[it.k] and @_ws.w[it.k]._meta and !@_ws.w[it.k]._meta.disabled) => continue
+      if !(@_ws.w[k] and @_ws.w[k]._meta and !@_ws.w[k]._meta.disabled) => continue
       if !(w = @widget k) => continue
       if !(mgrs = w.manager(opt) or []).length => continue
       ret ++= mgrs

@@ -1156,7 +1156,7 @@
       ret = [];
       for (k in ref$ = this._ws.s) {
         s = ref$[k];
-        if (!(this._ws.w[it.k] && this._ws.w[it.k]._meta && !this._ws.w[it.k]._meta.disabled)) {
+        if (!(this._ws.w[k] && this._ws.w[k]._meta && !this._ws.w[k]._meta.disabled)) {
           continue;
         }
         if (!(w = this.widget(k))) {
