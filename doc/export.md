@@ -45,6 +45,8 @@ Rank, instead of absolute DOM index, is used so that sort keys depend only on fo
 ### Export Flow
 
 ```
+manager.value(data)              → load a record
+manager.settle()                 → wait until widgets are ready ( e.g., nest entries are created )
 manager.export()                 → flat column array (one record)
 form.utils.merge-exports([...])  → { headers, rows } (spreadsheet-ready)
 ```

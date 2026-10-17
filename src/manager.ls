@@ -277,6 +277,11 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
         col
     cols.sort (a, b) -> form.utils.lex-compare a.sort-key, b.sort-key
 
+  exportable: -> [v for k,v of @_ws.w].every -> it.exportable!
+
+  # wait until widgets finish applying values set previously, e.g., nest entries being created.
+  settle: -> Promise.all [v.settle! for k,v of @_ws.w]
+
   manager: (opt) ->
     ret = []
     for k,s of @_ws.s =>

@@ -1082,42 +1082,74 @@
       return obj;
     },
     'export': function(){
-      var nodeIdx, cols, k, ref$, v, opt, domIdx;
-      nodeIdx = function(r, n, opt){
-        var i$, to$, i, v;
-        opt.idx++;
-        if (r === n) {
-          return true;
-        }
-        if (!(r && r.childNodes)) {
-          return;
-        }
-        for (i$ = 0, to$ = r.childNodes.length; i$ < to$; ++i$) {
-          i = i$;
-          v = nodeIdx(r.childNodes[i], n, opt);
-          if (v) {
-            return true;
-          }
-        }
+      var attached, ws, res$, k, ref$, v, cols, i$, len$, rank;
+      attached = function(w){
+        return w._root && w._root.isConnected;
       };
-      cols = [];
+      res$ = [];
       for (k in ref$ = this._ws.w) {
         v = ref$[k];
-        opt = {
-          idx: 0
-        };
-        nodeIdx(document.body, v._root, opt);
-        domIdx = opt.idx;
+        res$.push({
+          k: k,
+          v: v
+        });
+      }
+      ws = res$;
+      ws.sort(function(a, b){
+        var ref$, ra, rb;
+        ref$ = [attached(a.v), attached(b.v)], ra = ref$[0], rb = ref$[1];
+        if (!(ra && rb)) {
+          return ra
+            ? -1
+            : rb ? 1 : 0;
+        }
+        if (a.v._root === b.v._root) {
+          return 0;
+        }
+        if (a.v._root.compareDocumentPosition(b.v._root) & Node.DOCUMENT_POSITION_FOLLOWING) {
+          return -1;
+        } else {
+          return 1;
+        }
+      });
+      cols = [];
+      for (i$ = 0, len$ = ws.length; i$ < len$; ++i$) {
+        rank = i$;
+        ref$ = ws[i$], k = ref$.k, v = ref$.v;
         cols = cols.concat(v['export']().map(fn$));
       }
       return cols.sort(function(a, b){
         return form.utils.lexCompare(a.sortKey, b.sortKey);
       });
       function fn$(col){
-        col.sortKey = [domIdx].concat(col.sortKey);
+        col.sortKey = [rank].concat(col.sortKey);
         col.uid = col.uid ? k + "|" + col.uid : k;
         return col;
       }
+    },
+    exportable: function(){
+      var k, v;
+      return (function(){
+        var ref$, results$ = [];
+        for (k in ref$ = this._ws.w) {
+          v = ref$[k];
+          results$.push(v);
+        }
+        return results$;
+      }.call(this)).every(function(it){
+        return it.exportable();
+      });
+    },
+    settle: function(){
+      var k, v;
+      return Promise.all((function(){
+        var ref$, results$ = [];
+        for (k in ref$ = this._ws.w) {
+          v = ref$[k];
+          results$.push(v.settle());
+        }
+        return results$;
+      }.call(this)));
     },
     manager: function(opt){
       var ret, k, ref$, s, w, mgrs;
@@ -2567,6 +2599,23 @@
         sortKey: [],
         value: form.value.toString(this.value())
       }];
+    },
+    exportable: function(){
+      var ms;
+      if (!(ms = this.manager({
+        depth: 1
+      })).length) {
+        return true;
+      }
+      if (!(this.mod && this.mod['export'])) {
+        return false;
+      }
+      return ms.every(function(it){
+        return it.exportable && it.exportable();
+      });
+    },
+    settle: function(){
+      return Promise.resolve(this.mod && this.mod.settle ? this.mod.settle.apply(this) : null);
     }
   });
   if (typeof module != 'undefined' && module !== null) {

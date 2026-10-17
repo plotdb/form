@@ -227,3 +227,12 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
   export: ->
     if @mod and @mod.export => return @mod.export.apply @
     [{uid: "", header: (@_meta.title or ""), sort-key: [], value: form.value.toString(@value!)}]
+
+  # widgets with sub managers must implement `mod.export` to expand them,
+  # and so are their sub managers. sub managers may come from an older form without `exportable`.
+  exportable: ->
+    if !(ms = @manager {depth: 1}).length => return true
+    if !(@mod and @mod.export) => return false
+    ms.every -> it.exportable and it.exportable!
+
+  settle: -> Promise.resolve(if @mod and @mod.settle => @mod.settle.apply @ else null)

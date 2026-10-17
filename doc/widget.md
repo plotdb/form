@@ -103,6 +103,12 @@
      - `depth`: default 0 (all depth).
        - when non-zero value specified, widgets should return recursive manager only if depth > 1,
          and should pass down depth - 1 when calling recursive manager api.
+ - `export()`: return a flat column array for spreadsheet export. see `export.md`.
+ - `exportable()`: true if `export()` covers all content of this widget.
+   - widgets without sub managers are always exportable.
+   - widgets with sub managers must implement `mod.export`, and all sub managers must be exportable.
+ - `settle()`: return a Promise resolved when this widget finishes applying values set previously.
+   - see also `mod.settle` in following section.
 
 
 ## Events
@@ -213,6 +219,12 @@ mod is a set of functions that can be provided to `widget` for advanced function
  - `adapt(...)`: optional. adapt api or interface provided from host environment.
    - widgets are responsible of designing and documenting options used.
  - `ctrl()`: optional. return a customized widget control interface for caller to use.
+ - `export()`: optional. return a flat column array for spreadsheet export. see `export.md`.
+   - required if this widget has sub managers.
+ - `settle()`: optional. return a Promise resolved when value set previously is fully applied,
+   including asynchronous jobs such as creating sub widgets, and sub managers are settled.
+   - unlike `value(v)`, which existing callers depend on for timing, this is only for callers
+     which need a complete result, so widgets can wait here without changing existing flow.
  - `readonly()`: return true if this widget is readonly.
  - `isRequired`: true if this widget is required.
  - `disabled()`: return true if this widget is disabled.

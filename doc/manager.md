@@ -129,6 +129,11 @@ Instance API:
    - when `path` is empty, returns all top-level widgets managed by this manager.
    - delegates deeper segments to the matched widget's `paths`.
    - returns `[]` if the prefix cannot be resolved.
+ - `export()`: return a flat column array of current values. see `export.md`.
+ - `exportable()`: true if every widget in this manager is `exportable()`. see `export.md`.
+ - `settle()`: return a Promise resolved when all widgets finish applying values set previously.
+   - `value(v)` may resolve before widgets with asynchronous internal jobs ( e.g., nest creating entries ) are done.
+     call `settle()` after `value(v)` when the result has to be complete, such as `export()`.
 
 
 ## Events
