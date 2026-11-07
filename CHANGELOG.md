@@ -1,6 +1,6 @@
 # Change Logs
 
-## v0.2.5 (unreleased)
+## v0.2.5
 
  - fix bug: `manager.manager` throws ReferenceError since it uses undefined `it` instead of loop key
  - widget meta keeps `condition` and `tag` in `serialize` / `deserialize`, so condition evaluators
