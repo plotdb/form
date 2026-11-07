@@ -44,10 +44,13 @@ form.widget.prototype = Object.create(Object.prototype) <<< do
     ret = {} <<< @_meta{key, title, desc, is-required, disabled, readonly, default-value}
     ret.config = JSON.parse(JSON.stringify(@_meta.config or {}))
     ret.term = (@_meta.term or []).map -> it.serialize!
+    # kept for whoever evaluates conditions ( e.g., @makeform/nest condctrl reads `meta.condition` / `meta.tag` )
+    for k in <[condition tag]> => if @_meta[k]? => ret[k] = JSON.parse(JSON.stringify(@_meta[k]))
     ret
   deserialize: (v, o = {}) ->
     @_meta <<< v{key, title, desc, is-required, disabled, readonly, default-value}
     @_meta.config = JSON.parse(JSON.stringify(v.config or {}))
+    for k in <[condition tag]> => @_meta[k] = if v[k]? => JSON.parse(JSON.stringify(v[k])) else undefined
     @_meta.term = (v.term or []).map (t) ~>
       new form.term({} <<< t <<< (if @_opsets[t.opset or ''] => {opset: that} else {}))
     dig = JSON.stringify(v)
