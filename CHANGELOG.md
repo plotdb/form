@@ -1,6 +1,6 @@
 # Change Logs
 
-## v0.3.0 (unreleased)
+## v0.3.0
 
  - rewrite `conditor`: serializable rules with JSONLogic expressions ( `when` ) and paths with selectors ( `effect.targets` ).
    rules are re-evaluated only when values they read change. effects from all conditors on a widget are merged.
