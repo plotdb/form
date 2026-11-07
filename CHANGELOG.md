@@ -1,5 +1,15 @@
 # Change Logs
 
+## v0.3.0
+
+ - rewrite `conditor`: serializable rules with JSONLogic expressions ( `when` ) and paths with selectors ( `effect.targets` ).
+   rules are re-evaluated only when values they read change. effects from all conditors on a widget are merged.
+   see `doc/conditor/index.md`.
+ - add `manager.conditor()`
+ - `manager.resolve` supports selectors in path segments: `*`, `#<key>`, `[tag~=<tag>]`
+ - deprecate `condctrl`. `manager.condition()` now creates it on first call.
+
+
 ## v0.2.5
 
  - fix bug: `manager.manager` throws ReferenceError since it uses undefined `it` instead of loop key

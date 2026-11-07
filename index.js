@@ -353,210 +353,485 @@
     var this$ = this;
     opt == null && (opt = {});
     this._ = {
+      id: "c" + Math.random().toString(36).substring(2),
       manager: opt.manager,
-      conditions: [],
-      results: {},
-      virtual: {}
+      rules: [],
+      hash: {},
+      result: {},
+      dep: {},
+      tgt: {},
+      touched: new Set(),
+      pending: null
     };
-    this._.manager.on('change', debounce(50, function(){
-      return this$.run();
-    }));
+    this._.manager.on('change', function(arg$){
+      var path;
+      path = (arg$ != null
+        ? arg$
+        : {}).path;
+      return this$._schedule(path);
+    });
     return this;
   };
-  form.conditor.prototype = (ref$ = Object.create(Object.prototype), ref$.init = function(conditions){
-    conditions == null && (conditions = []);
-    this._.conditions = conditions.map(function(c, i){
+  form.conditor.prototype = (ref$ = Object.create(Object.prototype), ref$.init = function(rules){
+    var ref$, i$, len$, r, j$, ref1$, len1$, k, ref2$, p;
+    rules == null && (rules = []);
+    this.clear();
+    this._.rules = rules.map(function(r, i){
       var ref$;
-      return ref$ = import$({}, c), ref$.id = c.id || "_c" + i, ref$;
+      return ref$ = import$({}, r), ref$.id = r.id || "_r" + (i + 1), ref$;
     });
-    this._.results = {};
-    return this;
-  }, ref$.eval = function(cond){
-    var sub, cached, src, widgets, vals, terms, this$ = this;
-    if (cond == null) {
-      return Promise.resolve(false);
+    ref$ = this._;
+    ref$.hash = {};
+    ref$.result = {};
+    ref$.dep = {};
+    ref$.tgt = {};
+    for (i$ = 0, len$ = (ref$ = this._.rules).length; i$ < len$; ++i$) {
+      r = ref$[i$];
+      this._.hash[r.id] = r;
+      for (j$ = 0, len1$ = (ref1$ = form.conditor.deps(r)).length; j$ < len1$; ++j$) {
+        k = ref1$[j$];
+        ((ref2$ = this._.dep)[k] || (ref2$[k] = [])).push(r.id);
+      }
+      for (j$ = 0, len1$ = (ref1$ = form.conditor.targets(r)).length; j$ < len1$; ++j$) {
+        p = ref1$[j$];
+        k = typeof p[0] === 'string' && !form.conditor.isSelector(p[0]) ? p[0] : '*';
+        ((ref2$ = this._.tgt)[k] || (ref2$[k] = [])).push(r.id);
+      }
     }
-    if (typeof cond === 'function') {
-      return Promise.resolve().then(function(){
-        return !!cond.call(this$);
-      });
+    return this.run();
+  }, ref$.rules = function(){
+    return this._.rules;
+  }, ref$.result = function(id){
+    if (arguments.length) {
+      return this._.result[id];
+    } else {
+      return import$({}, this._.result);
     }
-    if (Array.isArray(cond)) {
-      return Promise.all(cond.map(function(it){
-        return this$.eval(it);
-      })).then(function(it){
-        return it.every(function(it){
-          return it;
-        });
-      });
-    }
-    if (cond.logic) {
-      sub = Array.isArray(cond.cond)
-        ? cond.cond
-        : [cond.cond];
-      return Promise.all(sub.map(function(it){
-        return this$.eval(it);
-      })).then(function(rs){
-        switch (cond.logic) {
-        case 'and':
-          return rs.every(function(it){
-            return it;
-          });
-        case 'or':
-          return rs.some(function(it){
-            return it;
-          });
-        case 'xor':
-          return rs.filter(function(it){
-            return it;
-          }).length === 1;
-        case 'not':
-          return !rs[0];
-        default:
-          return false;
+  }, ref$.clear = function(){
+    var this$ = this;
+    this._.touched.forEach(function(w){
+      var k;
+      if (!(w._conditor && w._conditor.fx)) {
+        return;
+      }
+      for (k in w._conditor.fx) {
+        if (k.startsWith(this$._.id + "/")) {
+          delete w._conditor.fx[k];
         }
-      });
+      }
+      return form.conditor.merge(w);
+    });
+    return this._.touched = new Set();
+  }, ref$._schedule = function(key){
+    var this$ = this;
+    this._.pending = this._.pending || new Set();
+    this._.pending.add(key != null ? key : '*');
+    if (this._.pending.size > 1) {
+      return;
     }
-    if (cond.src != null && typeof cond.src === 'string' && (cached = this._.results[cond.src]) != null) {
-      return Promise.resolve(cached);
-    }
-    if (cond.func != null) {
-      return Promise.resolve().then(function(){
-        return !!cond.func.call(this$);
-      });
-    }
-    if (cond.src != null) {
-      src = Array.isArray(cond.src)
-        ? cond.src
-        : [cond.src];
-      widgets = this._.manager.resolve(src);
-      if (!widgets.length) {
-        return Promise.resolve(false);
+    return Promise.resolve().then(function(){
+      var keys, ids, i$, ref$, len$, k, j$, ref1$, len1$, id;
+      keys = Array.from(this$._.pending);
+      this$._.pending = null;
+      if (in$('*', keys)) {
+        return this$.run();
       }
-      if (widgets.some(function(w){
-        return w.disabled();
-      })) {
-        return Promise.resolve(false);
+      ids = new Set();
+      for (i$ = 0, len$ = (ref$ = keys.concat(['*'])).length; i$ < len$; ++i$) {
+        k = ref$[i$];
+        for (j$ = 0, len1$ = (ref1$ = (this$._.dep[k] || []).concat(this$._.tgt[k] || [])).length; j$ < len1$; ++j$) {
+          id = ref1$[j$];
+          ids.add(id);
+        }
       }
-      if (cond.values != null) {
-        vals = Array.isArray(cond.values)
-          ? cond.values
-          : [cond.values];
-        return Promise.resolve(widgets.every(function(w){
-          var content;
-          content = w.content();
-          content = Array.isArray(content)
-            ? content
-            : [content];
-          return content.some(function(it){
-            return in$(it, vals);
-          });
-        }));
-      }
-      if (cond.term && cond.term.length) {
-        terms = cond.term.map(function(t){
-          if (t instanceof form.term) {
-            return t;
-          } else {
-            return new form.term(t);
-          }
-        });
-        return Promise.all(widgets.map(function(w){
-          var v;
-          v = w.content();
-          return Promise.all(terms.map(function(t){
-            return t.validate(v);
-          })).then(function(it){
-            return it.every(function(it){
-              return it !== false;
-            });
-          });
-        })).then(function(it){
-          return it.every(function(it){
-            return it;
-          });
-        });
-      }
-      return Promise.resolve(widgets.every(function(w){
-        return !w.isEmpty();
+      return this$.run(Array.from(ids));
+    });
+  }, ref$.run = function(ids){
+    var list, queue, seen, r, i$, ref$, len$, o, result, stack, evalRule, this$ = this;
+    list = ids
+      ? ids.map(function(it){
+        return this$._.hash[it];
+      }).filter(function(it){
+        return it;
+      })
+      : this._.rules.slice();
+    if (ids) {
+      queue = list.slice();
+      seen = new Set(list.map(function(it){
+        return it.id;
       }));
-    }
-    return Promise.resolve(false);
-  }, ref$.apply = function(effect, active){
-    var targets, i$, len$, target, lresult$, path, j$, ref$, len1$, w, cur, next, changed, results$ = [];
-    targets = effect.targets || (effect.target
-      ? [effect.target]
-      : []);
-    for (i$ = 0, len$ = targets.length; i$ < len$; ++i$) {
-      target = targets[i$];
-      lresult$ = [];
-      path = Array.isArray(target)
-        ? target
-        : [target];
-      if (typeof path[0] === 'string' && path[0].startsWith('$')) {
-        this._.virtual[path[0]] = active;
-        continue;
+      while (queue.length) {
+        r = queue.shift();
+        for (i$ = 0, len$ = (ref$ = this._.rules).length; i$ < len$; ++i$) {
+          o = ref$[i$];
+          if (!seen.has(o.id) && (o.precond === r.id || in$(r.id, form.conditor.refs(o)))) {
+            seen.add(o.id);
+            list.push(o);
+            queue.push(o);
+          }
+        }
       }
-      for (j$ = 0, len1$ = (ref$ = this._.manager.resolve(path)).length; j$ < len1$; ++j$) {
-        w = ref$[j$];
-        cur = w.serialize();
-        next = JSON.parse(JSON.stringify(cur));
-        if (effect.enabled != null) {
-          next.disabled = !!(!effect.enabled !== !active && (effect.enabled || active));
+    }
+    result = {};
+    stack = [];
+    evalRule = function(r){
+      var ret, e;
+      if (result[r.id] != null) {
+        return result[r.id];
+      }
+      if (in$(r.id, stack)) {
+        console.error("[@plotdb/form] conditor: circular reference in rule `" + r.id + "`");
+        return false;
+      }
+      stack.push(r.id);
+      ret = r.precond && this$._.hash[r.precond] && !evalRule(this$._.hash[r.precond])
+        ? false
+        : (function(){
+          try {
+            return form.conditor.truthy(this.eval(r.when, {
+              rule: evalRule
+            }));
+          } catch (e$) {
+            e = e$;
+            console.error("[@plotdb/form] conditor: rule `" + r.id + "` failed:", e);
+            return false;
+          }
+        }.call(this$));
+      stack.pop();
+      return this$._.result[r.id] = result[r.id] = ret;
+    };
+    for (i$ = 0, len$ = list.length; i$ < len$; ++i$) {
+      r = list[i$];
+      this._apply(r, evalRule(r));
+    }
+    return result;
+  }, ref$.eval = function(x, ctx){
+    var op, a, v, r, i$, to$, i, ret, b, c, list, test, this$ = this;
+    ctx == null && (ctx = {});
+    if (typeof x === 'function') {
+      return x.call(this, ctx);
+    }
+    if (Array.isArray(x)) {
+      return x.map(function(it){
+        return this$.eval(it, ctx);
+      });
+    }
+    if (!(x && typeof x === 'object')) {
+      return x;
+    }
+    op = Object.keys(x)[0];
+    a = x[op];
+    a = Array.isArray(a)
+      ? a
+      : [a];
+    v = function(i){
+      return this$.eval(a[i], ctx);
+    };
+    switch (op) {
+    case 'var':
+      if (ctx.data != null) {
+        return form.conditor.dig(ctx.data, a.length === 1 ? a[0] : a);
+      }
+      return this.value(a);
+    case 'rule':
+      if (!(r = this._.hash[v(0)])) {
+        return false;
+      } else if (ctx.rule) {
+        return ctx.rule(r);
+      } else {
+        return !!this._.result[r.id];
+      }
+    case 'and':
+      for (i$ = 0, to$ = a.length; i$ < to$; ++i$) {
+        i = i$;
+        if (!form.conditor.truthy(ret = v(i))) {
+          return ret;
         }
-        if (effect.isRequired != null) {
-          next.isRequired = !(!effect.isRequired !== !active && (effect.isRequired || active));
+      }
+      return ret;
+    case 'or':
+      for (i$ = 0, to$ = a.length; i$ < to$; ++i$) {
+        i = i$;
+        if (form.conditor.truthy(ret = v(i))) {
+          return ret;
         }
-        if (effect.readonly != null) {
-          next.readonly = !(!effect.readonly !== !active && (effect.readonly || active));
+      }
+      return ret;
+    case '!':
+      return !form.conditor.truthy(v(0));
+    case '!!':
+      return form.conditor.truthy(v(0));
+    case 'if':
+      for (i$ = 0, to$ = a.length - 1; i$ < to$; i$ += 2) {
+        i = i$;
+        if (form.conditor.truthy(v(i))) {
+          return v(i + 1);
         }
-        changed = !!cur.disabled !== !!next.disabled || !!cur.isRequired !== !!next.isRequired || !!cur.readonly !== !!next.readonly;
-        if (changed) {
-          w.deserialize(next, {
-            init: true
-          });
+      }
+      if (a.length % 2) {
+        return v(a.length - 1);
+      } else {
+        return null;
+      }
+    case '==':
+      return v(0) == v(1);
+    case '!=':
+      return v(0) != v(1);
+    case '===':
+      return v(0) === v(1);
+    case '!==':
+      return v(0) !== v(1);
+    case '<':
+      return v(0) < v(1) && (a.length < 3 || v(1) < v(2));
+    case '<=':
+      return v(0) <= v(1) && (a.length < 3 || v(1) <= v(2));
+    case '>':
+      return v(0) > v(1);
+    case '>=':
+      return v(0) >= v(1);
+    case 'in':
+      b = v(1);
+      if (Array.isArray(b) || typeof b === 'string') {
+        return b.indexOf(v(0)) >= 0;
+      } else {
+        return false;
+      }
+    case 'empty':
+      c = v(0);
+      return c == null || c === '' || (Array.isArray(c) && !c.length);
+    case 'some':
+    case 'all':
+    case 'none':
+      list = a[0] && typeof a[0] === 'object' && a[0]['var'] != null
+        ? ctx.data != null
+          ? form.conditor.dig(ctx.data, a[0]['var'])
+          : this.values(a[0]['var'])
+        : v(0);
+      list = Array.isArray(list)
+        ? list
+        : list != null
+          ? [list]
+          : [];
+      test = function(item){
+        var ref$;
+        return form.conditor.truthy(this$.eval(a[1], (ref$ = import$({}, ctx), ref$.data = item, ref$)));
+      };
+      if (op === 'some') {
+        return list.some(test);
+      } else if (op === 'none') {
+        return !list.some(test);
+      } else {
+        return !!list.length && list.every(test);
+      }
+    default:
+      throw new Error("unsupported operator `" + op + "`");
+    }
+  }, ref$.value = function(path){
+    var ws;
+    path = Array.isArray(path)
+      ? path
+      : [path];
+    if (form.conditor.fan(path)) {
+      return this.values(path);
+    }
+    ws = this._.manager.resolve(path).filter(function(it){
+      return !it.disabled();
+    });
+    if (ws.length === 1) {
+      return ws[0].content();
+    } else if (ws.length) {
+      return this.values(path);
+    } else {
+      return null;
+    }
+  }, ref$.values = function(path){
+    var ret, i$, ref$, len$, w, c;
+    ret = [];
+    for (i$ = 0, len$ = (ref$ = this._.manager.resolve(Array.isArray(path)
+      ? path
+      : [path])).length; i$ < len$; ++i$) {
+      w = ref$[i$];
+      if (!w.disabled()) {
+        c = w.content();
+        if (Array.isArray(c)) {
+          ret = ret.concat(c);
+        } else if (c != null) {
+          ret.push(c);
         }
-        if (effect.value != null && active) {
-          lresult$.push(w.value(effect.value));
-        }
+      }
+    }
+    return ret;
+  }, ref$._apply = function(rule, active){
+    var fx, state, i$, ref$, len$, k, key, p, lresult$, j$, ref1$, len1$, w, ref2$, results$ = [];
+    fx = rule.effect || {};
+    state = {};
+    if (fx.enabled != null) {
+      state.disabled = !!(!fx.enabled !== !active && (fx.enabled || active));
+    } else if (fx.disabled != null) {
+      state.disabled = !(!fx.disabled !== !active && (fx.disabled || active));
+    }
+    for (i$ = 0, len$ = (ref$ = ['isRequired', 'readonly']).length; i$ < len$; ++i$) {
+      k = ref$[i$];
+      if (fx[k] != null) {
+        state[k] = !(!fx[k] !== !active && (fx[k] || active));
+      }
+    }
+    key = this._.id + "/" + rule.id;
+    for (i$ = 0, len$ = (ref$ = form.conditor.targets(rule)).length; i$ < len$; ++i$) {
+      p = ref$[i$];
+      lresult$ = [];
+      for (j$ = 0, len1$ = (ref1$ = this._.manager.resolve(p)).length; j$ < len1$; ++j$) {
+        w = ref1$[j$];
+        ((ref2$ = w._conditor || (w._conditor = {})).fx || (ref2$.fx = {}))[key] = state;
+        this._.touched.add(w);
+        lresult$.push(form.conditor.merge(w));
       }
       results$.push(lresult$);
     }
     return results$;
-  }, ref$.run = function(){
-    var results, evalWithDeps, this$ = this;
-    results = this._.results = {};
-    evalWithDeps = function(cond){
-      var pre, parent;
-      if (results[cond.id] != null) {
-        return Promise.resolve(results[cond.id]);
-      }
-      pre = Promise.resolve();
-      if (cond.precond) {
-        parent = this$._.conditions.find(function(it){
-          return it.id === cond.precond;
-        });
-        if (parent) {
-          pre = evalWithDeps(parent);
-        }
-      }
-      return pre.then(function(){
-        if (cond.precond != null && !results[cond.precond]) {
-          return results[cond.id] = false;
-        }
-        return this$.eval(cond.when).then(function(active){
-          results[cond.id] = active;
-          if (cond.effect) {
-            this$.apply(cond.effect, active);
-          }
-          return active;
-        });
-      });
-    };
-    return Promise.all(this._.conditions.map(function(c){
-      return evalWithDeps(c);
-    }));
   }, ref$);
+  form.conditor.merge = function(w){
+    var lc, cur, next, i$, ref$, len$, k, vs, res$, id, ref1$, s;
+    lc = w._conditor;
+    lc.base = lc.base || {};
+    cur = w.serialize();
+    next = JSON.parse(JSON.stringify(cur));
+    for (i$ = 0, len$ = (ref$ = ['disabled', 'isRequired', 'readonly']).length; i$ < len$; ++i$) {
+      k = ref$[i$];
+      res$ = [];
+      for (id in ref1$ = lc.fx) {
+        s = ref1$[id];
+        if (s[k] != null) {
+          res$.push(s[k]);
+        }
+      }
+      vs = res$;
+      if (vs.length) {
+        if (!(k in lc.base)) {
+          lc.base[k] = !!cur[k];
+        }
+        next[k] = vs.some(fn$);
+      } else if (k in lc.base) {
+        next[k] = lc.base[k];
+        delete lc.base[k];
+      }
+    }
+    if (['disabled', 'isRequired', 'readonly'].every(function(k){
+      return !!cur[k] === !!next[k];
+    })) {
+      return;
+    }
+    return w.deserialize(next, {
+      init: true
+    });
+    function fn$(it){
+      return it;
+    }
+  };
+  form.conditor.truthy = function(v){
+    if (Array.isArray(v)) {
+      return !!v.length;
+    } else {
+      return !!v;
+    }
+  };
+  form.conditor.dig = function(o, p){
+    var i$, ref$, len$, k;
+    if (p === '' || p == null) {
+      return o;
+    }
+    for (i$ = 0, len$ = (ref$ = Array.isArray(p)
+      ? p
+      : (p + "").split('.')).length; i$ < len$; ++i$) {
+      k = ref$[i$];
+      if (!(o != null && typeof o === 'object')) {
+        return null;
+      }
+      o = o[k];
+    }
+    return o;
+  };
+  form.conditor.isSelector = function(s){
+    return typeof s === 'number' || (typeof s === 'string' && !!/^(\*$|#|:|\[)/.exec(s));
+  };
+  form.conditor.fan = function(p){
+    return p.some(function(s){
+      return form.conditor.isSelector(s) && typeof s !== 'number' && !/^#/.exec(s);
+    });
+  };
+  form.conditor.targets = function(r){
+    return ((r.effect || {}).targets || []).map(function(it){
+      if (Array.isArray(it)) {
+        return it;
+      } else {
+        return [it];
+      }
+    });
+  };
+  form.conditor.deps = function(r){
+    var ret, walk;
+    ret = new Set();
+    walk = function(x, inner){
+      var op, a, p;
+      if (typeof x === 'function') {
+        return ret.add('*');
+      }
+      if (Array.isArray(x)) {
+        return x.map(function(it){
+          return walk(it, inner);
+        });
+      }
+      if (!(x && typeof x === 'object')) {
+        return;
+      }
+      op = Object.keys(x)[0];
+      a = x[op];
+      if (op === 'var') {
+        if (inner) {
+          return;
+        }
+        p = Array.isArray(a)
+          ? a
+          : [a];
+        return ret.add(typeof p[0] === 'string' && !form.conditor.isSelector(p[0]) ? p[0] : '*');
+      }
+      a = Array.isArray(a)
+        ? a
+        : [a];
+      if (op === 'some' || op === 'all' || op === 'none') {
+        walk(a[0], inner);
+        return walk(a.slice(1), true);
+      } else {
+        return walk(a, inner);
+      }
+    };
+    walk(r.when, false);
+    return Array.from(ret);
+  };
+  form.conditor.refs = function(r){
+    var ret, walk;
+    ret = [];
+    walk = function(x){
+      var k, v, results$ = [];
+      if (Array.isArray(x)) {
+        return x.map(walk);
+      }
+      if (!(x && typeof x === 'object')) {
+        return;
+      }
+      for (k in x) {
+        v = x[k];
+        if (k === 'rule' && typeof v === 'string') {
+          results$.push(ret.push(v));
+        } else {
+          results$.push(walk(v));
+        }
+      }
+      return results$;
+    };
+    walk(r.when);
+    return ret;
+  };
   form.manager = function(o){
     var this$ = this;
     o == null && (o = {});
@@ -571,9 +846,6 @@
     this._status = 1;
     this._mode = 'edit';
     this._mod = {};
-    this._cond = new form.condctrl({
-      manager: this
-    });
     this._checkDebounced = debounce(10, function(){
       var args, res$, i$, to$;
       res$ = [];
@@ -605,7 +877,14 @@
       });
     },
     condition: function(){
-      return this._cond;
+      return this._cond || (this._cond = new form.condctrl({
+        manager: this
+      }));
+    },
+    conditor: function(){
+      return this._conditor || (this._conditor = new form.conditor({
+        manager: this
+      }));
     },
     disabled: function(){
       return !!this._disabled;
@@ -1175,19 +1454,58 @@
       return ret;
     },
     resolve: function(path){
-      var head, tail, w;
+      var head, tail, ws, that;
       if (!path || !path.length) {
         return [];
       }
       head = path[0], tail = slice$.call(path, 1);
-      w = this._ws.w[head];
-      if (!w) {
+      ws = form.conditor.isSelector(head)
+        ? this._select(head)
+        : (that = this._ws.w[head])
+          ? [that]
+          : [];
+      if (!tail.length) {
+        return ws;
+      }
+      return ws.map(function(it){
+        return it.resolve(tail);
+      }).reduce(function(a, b){
+        return a.concat(b);
+      }, []);
+    },
+    _select: function(s){
+      var k, v, m, that;
+      if (s === '*') {
+        return (function(){
+          var ref$, results$ = [];
+          for (k in ref$ = this._ws.w) {
+            v = ref$[k];
+            results$.push(v);
+          }
+          return results$;
+        }.call(this));
+      }
+      if (typeof s !== 'string') {
         return [];
       }
-      if (!tail.length) {
-        return [w];
+      if (m = /^#(.+)$/.exec(s)) {
+        return (that = this._ws.w[m[1]])
+          ? [that]
+          : [];
       }
-      return w.resolve(tail);
+      if (m = /^\[tag~=["']?([^"'\]]+)["']?\]$/.exec(s)) {
+        return (function(){
+          var ref$, results$ = [];
+          for (k in ref$ = this._ws.w) {
+            v = ref$[k];
+            results$.push(v);
+          }
+          return results$;
+        }.call(this)).filter(function(it){
+          return in$(m[1], it._meta.tag || []);
+        });
+      }
+      return [];
     },
     paths: function(path){
       var k, v, head, tail, w;
