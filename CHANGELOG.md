@@ -1,5 +1,12 @@
 # Change Logs
 
+## v0.2.5
+
+ - fix bug: `manager.manager` throws ReferenceError since it uses undefined `it` instead of loop key
+ - widget meta keeps `condition` and `tag` in `serialize` / `deserialize`, so condition evaluators
+   ( e.g., `@makeform/nest` condctrl, which reads `meta.condition` / `meta.tag` ) get them from widgets
+
+
 ## v0.2.4
 
  - fix bug: `manager.export` uses absolute DOM index as sort-key, which shifts with amount of entries in preceding lists

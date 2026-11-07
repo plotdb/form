@@ -1156,7 +1156,7 @@
       ret = [];
       for (k in ref$ = this._ws.s) {
         s = ref$[k];
-        if (!(this._ws.w[it.k] && this._ws.w[it.k]._meta && !this._ws.w[it.k]._meta.disabled)) {
+        if (!(this._ws.w[k] && this._ws.w[k]._meta && !this._ws.w[k]._meta.disabled)) {
           continue;
         }
         if (!(w = this.widget(k))) {
@@ -2279,16 +2279,22 @@
       }
     },
     serialize: function(){
-      var ref$, ret, ref1$;
+      var ref$, ret, ref1$, i$, len$, k;
       ret = (ref1$ = {}, ref1$.key = (ref$ = this._meta).key, ref1$.title = ref$.title, ref1$.desc = ref$.desc, ref1$.isRequired = ref$.isRequired, ref1$.disabled = ref$.disabled, ref1$.readonly = ref$.readonly, ref1$.defaultValue = ref$.defaultValue, ref1$);
       ret.config = JSON.parse(JSON.stringify(this._meta.config || {}));
       ret.term = (this._meta.term || []).map(function(it){
         return it.serialize();
       });
+      for (i$ = 0, len$ = (ref1$ = ['condition', 'tag']).length; i$ < len$; ++i$) {
+        k = ref1$[i$];
+        if (this._meta[k] != null) {
+          ret[k] = JSON.parse(JSON.stringify(this._meta[k]));
+        }
+      }
       return ret;
     },
     deserialize: function(v, o){
-      var ref$, dig, this$ = this;
+      var ref$, i$, len$, k, dig, this$ = this;
       o == null && (o = {});
       ref$ = this._meta;
       ref$.key = v.key;
@@ -2299,6 +2305,10 @@
       ref$.readonly = v.readonly;
       ref$.defaultValue = v.defaultValue;
       this._meta.config = JSON.parse(JSON.stringify(v.config || {}));
+      for (i$ = 0, len$ = (ref$ = ['condition', 'tag']).length; i$ < len$; ++i$) {
+        k = ref$[i$];
+        this._meta[k] = v[k] != null ? JSON.parse(JSON.stringify(v[k])) : undefined;
+      }
       this._meta.term = (v.term || []).map(function(t){
         var that;
         return new form.term(import$(import$({}, t), (that = this$._opsets[t.opset || ''])
