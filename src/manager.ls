@@ -10,7 +10,6 @@ form.manager = (o = {}) ->
   @_status = 1
   @_mode = \edit
   @_mod = {}
-  @_cond = new form.condctrl manager: @
   @_check-debounced = debounce 10, (...args) ~> @_check.apply @, args
   @_restatus-debounced = debounce 10, (...args) ~> @_restatus.apply @, args
   @
@@ -21,7 +20,10 @@ form.manager = (o = {}) ->
 #   - change
 form.manager.prototype = Object.create(Object.prototype) <<< do
   on: (n, cb) -> (if Array.isArray(n) => n else [n]).map (n) ~> @_evthdr.[][n].push cb
-  condition: -> @_cond
+  # deprecated: use `conditor` instead.
+  condition: -> @_cond or= new form.condctrl manager: @
+  # conditional states of widgets under this manager, including ones in nested widgets. see `form.conditor`.
+  conditor: -> @_conditor or= new form.conditor manager: @
   disabled: -> !!@_disabled
   disable: -> @_disabled = if it? => !!it else true
   fire: (n, ...v) -> for cb in (@_evthdr[n] or []) => cb.apply @, v
@@ -294,13 +296,21 @@ form.manager.prototype = Object.create(Object.prototype) <<< do
 
   # resolve(path): traverse path and return matching widget(s).
   # returns Array<widget>. supports fan-out for container widgets (e.g. nest in list mode).
+  # segments may be selectors ( see `form.conditor.is-selector` ); here: `*`, `#<key>` and `[tag~=<tag>]`.
   resolve: (path) ->
     if !path or !path.length => return []
     [head, ...tail] = path
-    w = @_ws.w[head]
-    if !w => return []
-    if !tail.length => return [w]
-    w.resolve tail
+    ws = if form.conditor.is-selector(head) => @_select head else if @_ws.w[head] => [that] else []
+    if !tail.length => return ws
+    ws.map(-> it.resolve tail).reduce(((a, b) -> a ++ b), [])
+
+  _select: (s) ->
+    if s == \* => return [v for k,v of @_ws.w]
+    if typeof(s) != \string => return []
+    if (m = /^#(.+)$/.exec s) => return if @_ws.w[m.1] => [that] else []
+    if (m = /^\[tag~=["']?([^"'\]]+)["']?\]$/.exec s) =>
+      return [v for k,v of @_ws.w].filter -> m.1 in (it._meta.tag or [])
+    []
 
   # paths(path): return available next-segment options after the given path prefix.
   # returns Array<{id, name}>, for use in form builder UI autocomplete.

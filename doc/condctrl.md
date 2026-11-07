@@ -1,5 +1,7 @@
 # form.condctrl
 
+**Deprecated**: use `form.conditor` ( `manager.conditor!` ) instead. see `conditor/index.md`.
+
 (WIP) Condition controller. **Working in Progress** and the spec is subjected to change.
 
 given a condition list, an array of objects with following fields:

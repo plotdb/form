@@ -1,3 +1,5 @@
+> 早期的設計筆記。實作與規格以 `index.md` 為準。
+
 condctrl 必須重新設計. 現有 conditions 做為 legacy 方法, 持續支援, 保持向下相容.
 目前 production 上只有 @makeform/nest/src/condctrl.ls 有在用, @plotdb/form 的可以放棄沒關係.
 
