@@ -105,6 +105,19 @@ module.exports =
               enabled: true
               width: 1200
               height: 675
+      "concept-images":
+        type: \@makeform/image
+        meta:
+          title: "作品概念圖"
+          is-required: false
+          desc: "可上傳多張作品概念圖"
+          config: multiple: true
+      presentation:
+        type: \@makeform/upload
+        meta:
+          title: "簡報檔"
+          is-required: false
+          desc: "請上傳一份作品簡報"
       attachment:
         type: \@makeform/upload
         meta:
