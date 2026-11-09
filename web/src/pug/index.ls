@@ -7,7 +7,7 @@ mgr = new block.manager registry: ({ns, name, version, path, type}) ->
     return if ns == \local => "/block/#name/index.html"
     else if name == \@makeform/nest => "/assets/lib/@makeform/nest/main/index.html"
     else if name == \@makeform/common => "/assets/lib/@makeform/common/main/#{path or 'index.html'}"
-    else "https://cdn.jsdelivr.net/npm/#name@latest/index.html"
+    else "https://cdn.jsdelivr.net/npm/#name@latest/#{path or 'index.html'}"
   return "/assets/lib/#name/#{version or 'main'}/#{path or \index.min.js}"
 
 formmgr = new form.manager!
@@ -72,6 +72,16 @@ view = new ldview do
           ctx <<< itf: ret.interface, instance: ret.instance
           ctx.itf.deserialize ctx.v.meta, {init: true}
           formmgr.add path: ctx.k, widget: ctx.itf
+          ctx.itf.adapt upload: ({file, progress}) ->
+            progress percent: 0
+            new Promise (res) ->
+              setTimeout (->
+                progress percent: 1
+                res do
+                  filename: file.name, size: file.size
+                  url: "#{window.location.origin}/favicon.ico"
+                  modifiedtime: file.lastModified
+              ), 3000
 
 choice-cover = new ldcover root: document.querySelector('.choice-cover')
 
