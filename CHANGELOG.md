@@ -1,5 +1,11 @@
 # Change Logs
 
+## v0.3.1
+
+ - `conditor`: disabled widgets are read as usual instead of as empty, so results depend on values only.
+   rules relying on an upstream condition should state it explicitly, via `precond` or in `when`.
+
+
 ## v0.3.0
 
  - rewrite `conditor`: serializable rules with JSONLogic expressions ( `when` ) and paths with selectors ( `effect.targets` ).
