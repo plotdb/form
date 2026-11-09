@@ -33,7 +33,7 @@ JSONLogic ( https://jsonlogic.com ) 的子集合:
 
  - `var`: 不在 `some` / `all` / `none` 的判斷式中時，讀取路徑上 widget 的 content ( 見「路徑」 )。
    - 路徑對應到一個 widget 時，為它的 content；路徑含有 `*` 或 tag 選擇器時，為所有 widget content 攤平後的陣列。
-   - 停用的 widget 讀為空值。
+   - 停用的 widget 照常讀取，規則的結果只取決於欄位的值，不受其他規則的效果影響。若要隨上游條件失效，請使用 `precond` 或在 `when` 中明確加上該條件。
    - 不支援 JSONLogic 的預設值寫法 ( `{"var": ["a", 1]}` 在這裡是路徑 `a` > `1` )。
  - `some` / `all` / `none`: `[<陣列>, <判斷式>]`。陣列若是 `var`，一律讀為攤平的陣列，
    因此 checkbox 這類有多個值的欄位，和多筆資料中的同一欄位，用法相同。

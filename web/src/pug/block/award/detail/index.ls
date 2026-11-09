@@ -143,35 +143,24 @@ module.exports =
         conditor = new form.conditor manager: mgr
         conditor.init [
           * id: \is-video
-            when:
-              src: \category
-              term: [{opset: \choice, op: \is, config: {val: \數位影音}}]
+            when: some: [{var: \category}, {'==': [{var: ''}, \數位影音]}]
             effect:
               targets: [\video-category, \duration, \series]
               enabled: true
-          * when:
-              logic: \and
-              cond:
-                * src: \video-category
-                  term: [{opset: \choice, op: \is-any, config: {vals: "劇情片,動畫"}}]
-                * src: \duration
-                  term: [{opset: \number, op: \gte, config: {val: 121}}]
+          * id: \is-long-video
+            precond: \is-video
+            when: and: [
+              {some: [{var: \video-category}, {'in': [{var: ''}, <[劇情片 動畫]>]}]}
+              {'>=': [{var: \duration}, 121]}
+            ]
             effect:
               targets: [\series]
-              readonly: true
-              value: \是
-          * when:
-              logic: \or
-              cond:
-                * logic: \and
-                  cond:
-                    * src: \video-category
-                      term: [{opset: \choice, op: \is-any, config: {vals: "劇情片,動畫"}}]
-                    * src: \duration
-                      term: [{opset: \number, op: \gte, config: {val: 121}}]
-                * id: \is-series
-                  src: \series
-                  term: [{opset: \choice, op: \is, config: {val: \是}}]
+              disabled: true
+          * precond: \is-video
+            when: or: [
+              {rule: \is-long-video}
+              {some: [{var: \series}, {'==': [{var: ''}, \是]}]}
+            ]
             effect:
               targets: [\episodes]
               enabled: true

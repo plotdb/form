@@ -634,9 +634,7 @@
     if (form.conditor.fan(path)) {
       return this.values(path);
     }
-    ws = this._.manager.resolve(path).filter(function(it){
-      return !it.disabled();
-    });
+    ws = this._.manager.resolve(path);
     if (ws.length === 1) {
       return ws[0].content();
     } else if (ws.length) {
@@ -651,13 +649,11 @@
       ? path
       : [path])).length; i$ < len$; ++i$) {
       w = ref$[i$];
-      if (!w.disabled()) {
-        c = w.content();
-        if (Array.isArray(c)) {
-          ret = ret.concat(c);
-        } else if (c != null) {
-          ret.push(c);
-        }
+      c = w.content();
+      if (Array.isArray(c)) {
+        ret = ret.concat(c);
+      } else if (c != null) {
+        ret.push(c);
       }
     }
     return ret;

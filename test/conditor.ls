@@ -120,3 +120,26 @@ do ->
     assert.deepEqual form.conditor.refs(r), <[r0]>
     Promise.resolve!
   ) .then _
+  <- ok "disabled widgets are read as usual; precond for upstream conditions" (->
+    ws = s: mk!, x: mk!, y: mk!, z: mk!, t: mk!
+    is-x = {'==': [{var: \x}, \v]}
+    root2 = mgr ws
+    c2 = root2.conditor!
+    c2.init [
+    * id: \gate, when: {'==': [{var: \s}, \on]}, effect: {targets: [\x], enabled: true}
+    * when: is-x, effect: {targets: [\y], enabled: true}
+    * when: {some: [{var: \x}, {'==': [{var: ''}, \v]}]}, effect: {targets: [\t], enabled: true}
+    * precond: \gate, when: is-x, effect: {targets: [\z], enabled: true}
+    ]
+    ws.s.value(\on).then(-> ws.x.value \v).then(wait).then ->
+      for k in <[x y t z]> => assert.equal st(ws[k]).0, false, k
+      ws.s.value(\off)
+    .then(wait).then ->
+      assert.equal st(ws.x).0, true
+      assert.equal ws.x.content!, \v
+      # x is disabled, while rules reading it still see its value
+      assert.equal st(ws.y).0, false
+      assert.equal st(ws.t).0, false
+      # unless stated explicitly with precond
+      assert.equal st(ws.z).0, true
+  ) .then _

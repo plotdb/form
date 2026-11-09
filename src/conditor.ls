@@ -149,15 +149,15 @@ form.conditor.prototype = Object.create(Object.prototype) <<<
     | _ => throw new Error "unsupported operator `#op`"
 
   # content of widgets matched by path: a single widget gives its content; a selector gives a flattened list.
-  # disabled widgets read as empty.
+  # disabled widgets are read as usual, so that results depend on values only and effects never feed back into rules.
   value: (path) ->
     path = if Array.isArray(path) => path else [path]
     if form.conditor.fan(path) => return @values path
-    ws = @_.manager.resolve(path).filter -> !it.disabled!
+    ws = @_.manager.resolve(path)
     if ws.length == 1 => ws.0.content! else if ws.length => @values path else null
   values: (path) ->
     ret = []
-    for w in @_.manager.resolve(if Array.isArray(path) => path else [path]) => if !w.disabled! =>
+    for w in @_.manager.resolve(if Array.isArray(path) => path else [path]) =>
       c = w.content!
       if Array.isArray(c) => ret ++= c else if c? => ret.push c
     ret
