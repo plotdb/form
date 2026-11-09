@@ -111,6 +111,7 @@ module.exports =
           title: "其他附件"
           is-required: false
           desc: "可附上作品簡報、說明文件或補充資料（PDF，最大 20MB）"
+          config: multiple: true
       agreement:
         type: \@makeform/agreement
         meta:
