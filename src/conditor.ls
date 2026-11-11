@@ -49,9 +49,10 @@ form.conditor.prototype = Object.create(Object.prototype) <<<
 
   # changes are batched and handled in a microtask, running only rules concerned
   _schedule: (key) ->
-    @_.pending = (@_.pending or new Set!)
-    @_.pending.add(if key? => key else \*)
-    if @_.pending.size > 1 => return
+    # already queued: a key repeated in the same tick doesn't grow the set, so check the set instead of its size
+    queued = @_.pending?
+    (@_.pending or= new Set!).add(if key? => key else \*)
+    if queued => return
     Promise.resolve!then ~>
       keys = Array.from(@_.pending)
       @_.pending = null

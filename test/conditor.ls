@@ -143,3 +143,20 @@ do ->
       # unless stated explicitly with precond
       assert.equal st(ws.z).0, true
   ) .then _
+  <- ok "changes of a key repeated in the same tick are handled once" (->
+    ws = x: mk!, y: mk!
+    c3 = mgr(ws).conditor!
+    c3.init [{when: {'==': [{var: \x}, \v]}, effect: {targets: [\y], enabled: true}}]
+    errs = []
+    h = -> errs.push it
+    process.on \unhandledRejection, h
+    ws.x.value(\v).then(wait).then ->
+      c3._schedule \x
+      c3._schedule \x
+      c3._schedule \y
+      wait!
+    .then ->
+      process.off \unhandledRejection, h
+      assert.deepEqual errs, []
+      assert.equal st(ws.y).0, false
+  ) .then _

@@ -1,5 +1,11 @@
 # Change Logs
 
+## v0.3.2
+
+ - fix bug: `conditor` throws `TypeError: object null is not iterable` when a key changes more than once in the same tick
+   ( e.g., widgets being filled on load ), since the second change also queues a microtask
+
+
 ## v0.3.1
 
  - `conditor`: disabled widgets are read as usual instead of as empty, so results depend on values only.

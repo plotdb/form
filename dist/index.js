@@ -423,10 +423,10 @@
     });
     return this._.touched = new Set();
   }, ref$._schedule = function(key){
-    var this$ = this;
-    this._.pending = this._.pending || new Set();
-    this._.pending.add(key != null ? key : '*');
-    if (this._.pending.size > 1) {
+    var queued, ref$, this$ = this;
+    queued = this._.pending != null;
+    ((ref$ = this._).pending || (ref$.pending = new Set())).add(key != null ? key : '*');
+    if (queued) {
       return;
     }
     return Promise.resolve().then(function(){
