@@ -1,13 +1,6 @@
 module.exports =
   pkg: extend: name: \@makeform/nest, dom: \overwrite
   init: ({pubsub}) ->
-    conditions = [
-    * src: \category, config:
-        values: <[互動體驗 行動應用]>
-        targets: [\features]
-        enabled: true
-    ]
-
     fields =
       "work-title":
         type: \@makeform/input
@@ -82,6 +75,7 @@ module.exports =
         meta:
           title: "技術特色"
           is-required: false
+          disabled: true
           desc: "說明作品採用的技術方案、互動設計或創新功能（限互動體驗、行動應用類別填寫）"
           config: placeholder: "請描述作品的技術亮點..."
       url:
@@ -137,11 +131,15 @@ module.exports =
       mode: \object
       view: {}
       fields: fields
-      conditions: conditions
       init: ->
         mgr = @manager!0
         conditor = new form.conditor manager: mgr
         conditor.init [
+          * id: \is-interactive
+            when: some: [{var: \category}, {'in': [{var: ''}, <[互動體驗 行動應用]>]}]
+            effect:
+              targets: [\features]
+              enabled: true
           * id: \is-video
             when: some: [{var: \category}, {'==': [{var: ''}, \數位影音]}]
             effect:
